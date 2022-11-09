@@ -33,12 +33,14 @@ public class MainPage extends Page{
 			buttonPanel.add(new JLabel());	//위치 맟추기 위한 빈 레이블 부착
 			buttonPanel.add(logoutButton);	//로그아웃 버튼 부착
 			buttonPanel.add(quitButton);	//종료하기 버튼 부착
-			
 		}
-				
-				
-				
+		
+		JTable infoTable = new JTable(5, 1);
+		
+		
 		mainPagePanel.add(buttonPanel);
+		mainPagePanel.add(infoTable );
+		
 		
 		ct.add(mainPagePanel);
 		
