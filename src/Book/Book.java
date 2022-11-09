@@ -20,7 +20,7 @@ public class Book {
 		this.totalCount = totalCount;
 		this.borrowCount = borrowCount;
 	}
-	
+	Book(){}
 	//get 메소드들
 	String getName() { return this.name; }
 	String getAuthor() { return this.author; }

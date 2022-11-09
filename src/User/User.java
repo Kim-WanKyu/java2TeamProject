@@ -29,10 +29,10 @@ public class User {
 	}
 	
 	//get 메소드들
-	String getName() { return this.name; }
-	String getID() { return this.id; }
-	String getPassword() { return this.password; }
-	Boolean getIsAdmin() { return this.isAdmin; }
+	public	String getName() { return this.name; }
+	public	String getID() { return this.id; }
+	public	String getPassword() { return this.password; }
+	public	Boolean getIsAdmin() { return this.isAdmin; }
 	Book[] getBorrowBooks() { return this.borrowBooks; }
 	LocalDate[] getBorrowDates() { return this.borrowDates; }
 	String[] getDelayInfo() { return this.delayInfo; }
