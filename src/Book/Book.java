@@ -6,7 +6,7 @@ public class Book {
 	String publisher;	//출판사명
 	String id;			//ID(ISBN)
 	String category;	//분류(KDC기준 간략하게)
-	int totalCount;		//총 권 수
+	private static int totalCount;		//총 권 수
 	int borrowCount;	//빌린 권 수
 	
 	//Book 생성자

@@ -1,6 +1,5 @@
 package Book;
 import java.sql.Connection;
-import java.sql.PreparedStatement; 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,7 +7,7 @@ import java.util.Vector;
 
 import User.User;
 public class USERDAO {
-	public class BookDAO {
+	public class UserDAO {
 		private static USERDAO user_instance = new USERDAO();
 		public static USERDAO getInstance() {
 			return user_instance;
@@ -29,21 +28,22 @@ public class USERDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs =null;
 		String price = null;
-		String sql = "select *from books";
+		String sql = "select *from User";
 		try
 		{
 			conn = JDBBOOK.connect();
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
-				Book book = new Book();
-				book.setId(rs.getString("ID"));
-				book.setName(rs.getString("서명"));
-				book.setPublisher(rs.getString("출판사"));
-				book.setCategory(rs.getString("KDC"));
-				book.setTotalCount(rs.getInt("권"));
-				book.setBorrowCount(rs.getInt("대출건수"));
-				System.out.println(book.getId());
+				User user = new User();
+				user.setName(rs.getString("Name"));
+				user.setID(rs.getString("id"));
+				user.setuserdata(user.getID(),user.getName());
+				user.setIsAdmin(rs.getBoolean("isAdmin"));
+				user.setBorrowBooks(rs.getString("BorrowbooksandBooks"));
+				
+				//반목문 안의 반복문으로 구현해야함!!
+				user.setUserbook(rs.getString("borrowbooks"), rs.getString("borrowdates"));
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -52,35 +52,13 @@ public class USERDAO {
 		}
 		return list;
 	}
-
+	//연체 리스트 뽑기
+	public void PrintLoanlist() {
+		User user = new User();
+		
+	}
+	
 	//책 품목 추가
-		public boolean insertBook(Book book) {
-			Connection conn = null;
-			PreparedStatement pstmt = null;
-			//데베에 책을 추가
-			String sql = "INSERT INTO booklist ('ID','서명','저자','출판사','KDC','권','대출건수') VALUES(?,?,?)";
-			boolean result =false;
-			try {
-				conn = JDBBOOK.connect();
-				pstmt = conn.prepareStatement(sql);
-				pstmt.setString(1, book.getId());
-				pstmt.setString(2,book.getName());
-				pstmt.setString(3, book.getAuthor());
-				pstmt.setString(4, book.getPublisher());
-				pstmt.setString(5,book.getCategory());
-				pstmt.setInt(6, book.getTotalCount());
-				pstmt.setInt(7, book.getBorrowCount());
-				int r = pstmt.executeUpdate();
-				System.out.println("return result = "+r);//처리된 row 개수
-				if(r>0) {
-					return true;
-				}
-			}catch(Exception e){
-				e.printStackTrace();//오류 출력 이 메소드를 호출하게 되면 예외 발생 당시의 호출 스택(Call stack)에 있던 메소드의 정보와 예외 결과를 화면에 출력한다.
-			}finally {
-				JDBBOOK.close();
-			}
-			return result;
-		}
+
 }
 }

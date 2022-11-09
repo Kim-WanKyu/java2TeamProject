@@ -10,8 +10,8 @@ import java.sql.SQLException;
 
 public class JDBBOOK {
 	public static final String databaseDriver = "com.mysql.cj.jdbc.Driver";
-	public static final String databaseUrl = "jdbc:mysql://localhost/sys?serverTimezone=UTC&useundicode=true&characterEncoding=UTF8";
-	public static final String databaseUser = "root";
+	public static final String databaseUrl = "jdbc:mysql://127.0.0.1:3306/library_schema?serverTimezone=UTC&useundicode=true&characterEncoding=UTF8";
+	public static final String databaseUser = "Library";
 	public static final String databasePassword = "jdj2001@@";
 	public static Connection connection = null;
 	

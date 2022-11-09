@@ -27,7 +27,7 @@ public Vector<Book> getAllBook() throws SQLException{
 	PreparedStatement pstmt = null;
 	ResultSet rs =null;
 	String price = null;
-	String sql = "select *from books";
+	String sql = "select *from book_list";
 	try
 	{
 		conn = JDBBOOK.connect();
