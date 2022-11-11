@@ -14,8 +14,6 @@ public class MainPage extends Page{
 	public MainPage(){
 		//창 설정
 		setTitle(super.getTitle() + " 메인 화면");
-		setSize(800,600);	//창 크기 800x600
-		setLocation(getX()-getWidth()/2,getY()-getHeight()/2);	//StartPage 창 정가운데에 띄우기
 		
 		//초기화면 패널 (leftPanel패널, rightPanel 포함)
 		WhitePanel mainPagePanel = new WhitePanel();
@@ -44,9 +42,7 @@ public class MainPage extends Page{
 		
 		ct.add(mainPagePanel);
 		
-		
-		mainPagePanel.setVisible(true);
-		setVisible(true);
+		packWindow();
 	}
 
 	@Override
