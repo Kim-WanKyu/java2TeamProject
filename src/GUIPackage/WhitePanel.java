@@ -13,12 +13,12 @@ import javax.swing.LayoutStyle;
 public class WhitePanel extends JPanel{
 	
 	//WhitePanel생성자
-	WhitePanel(){
-		setBackground(Color.WHITE);
+	WhitePanel() {
+		this(new FlowLayout());
 	}
 	
 	//WhitePanel생성자(레이아웃)
-	WhitePanel(LayoutManager manager){
+	WhitePanel(LayoutManager manager) {
 		setLayout(manager);
 		setBackground(Color.WHITE);
 	}

@@ -36,7 +36,8 @@ public class FindPage  extends Page{
 			
 			add(Exit0Button);
 
-
+			//test
+			//test2
 		}
 		
 		public void actionPerformed(ActionEvent ae) {
