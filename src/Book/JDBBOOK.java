@@ -15,7 +15,7 @@ public class JDBBOOK {
 	public static final String databasePassword = "jdj2001@@";
 	public static Connection connection = null;
 	
-	public static void main(String []args) {
+	public  void main(String []args) {
 	
 		connect();
 		

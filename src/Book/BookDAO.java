@@ -11,6 +11,11 @@ public class BookDAO {
 	public static BookDAO getInstance() {
 		return instance;
 	}
+	public static void main(String []args) throws SQLException {
+		Book books = new Book();
+		BookDAO.getAllBook();
+		
+	}
 	//모든 책 가져오기
 public Vector<String> getBook() throws SQLException{
 	Vector<Book> dbBooklist = getAllBook();
@@ -21,7 +26,7 @@ public Vector<String> getBook() throws SQLException{
 	return booklist;
 }
 //모든 책 품목 가져오기
-public Vector<Book> getAllBook() throws SQLException{
+public static Vector<Book> getAllBook() throws SQLException{
 	Vector<Book>list = new Vector<>();
 	Connection conn = null;
 	PreparedStatement pstmt = null;
@@ -56,7 +61,7 @@ public Vector<Book> getAllBook() throws SQLException{
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		//데베에 책을 추가
-		String sql = "INSERT INTO booklist ('ID','서명','저자','출판사','KDC','권','대출건수') VALUES(?,?,?)";
+		String sql = "insert into booklist ('ID','서명','저자','출판사','KDC','권','대출건수') VALUES(?,?,?,?,?,?,?)";
 		boolean result =false;
 		try {
 			conn = JDBBOOK.connect();
@@ -71,7 +76,7 @@ public Vector<Book> getAllBook() throws SQLException{
 			int r = pstmt.executeUpdate();
 			System.out.println("return result = "+r);//처리된 row 개수
 			if(r>0) {
-				return true;
+				System.out.println("데베가 삽입됨");				return true;
 			}
 		}catch(Exception e){
 			e.printStackTrace();//오류 출력 이 메소드를 호출하게 되면 예외 발생 당시의 호출 스택(Call stack)에 있던 메소드의 정보와 예외 결과를 화면에 출력한다.

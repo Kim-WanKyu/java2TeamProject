@@ -135,7 +135,7 @@ public class StartPage extends Page{
 		
 		case "로그인":
 			dispose();		//초기화면 창 끄고
-			new MainPage();	//메인화면 창 생성
+			new MainPage(); //메인화면 창 생성
 			break;
 		
 		case "회원등록":
