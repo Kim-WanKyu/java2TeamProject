@@ -56,4 +56,10 @@ public class FindPage  extends Page{
 			}
 			
 		}
+
+		@Override
+		void setPage() {
+			// TODO Auto-generated method stub
+			
+		}
 }

@@ -5,23 +5,30 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class StartPage extends Page{	
-
-	JTextField idTextField;			//id입력 텍스트필드
-	JPasswordField pwPasswordField;	//pw입력 패스워드필드 (JPasswordField = 입력한 값과 관계없이 지정한 문자로 출력)
-	JButton loginButton;			//로그인 버튼
 	
-	JButton signUpButton;			//회원등록 버튼
-	JButton findButton;				//ID/PW찾기 버튼
-	JButton quitButton;				//종료하기 버튼
+	private static WhitePanel startPagePanel;	 //startPagePanel = 초기화면 패널
+	
+	private JTextField idTextField;			//id입력 텍스트필드
+	private JPasswordField pwPasswordField;	//pw입력 패스워드필드 (JPasswordField = 입력한 값과 관계없이 지정한 문자로 출력)
+	private JButton loginButton;			//로그인 버튼
+	
+	private JButton quitButton;				//종료하기 버튼
+	private static JButton signUpButton;	//회원등록 버튼
+	private static JButton findButton;		//ID/PW찾기 버튼
 	
 	//StartPage 생성자
 	public StartPage(){
 		setTitle(super.getTitle() + "_초기 화면");
+		setDefaultCloseOperation(EXIT_ON_CLOSE);	//x 누를 시 전체 창 끄기
+		//+ 유저 도서 데이터베이스 로딩 메소드 필요
 		
 		setPage();		//페이지 설정
-		
 		packWindow();	//창 크기 및 위치 맟춤
 	}
+	
+	//버튼 get 메소드들
+	public static JButton getSignUpButton() { return signUpButton; }
+	public static JButton getFindButton() { return findButton; }
 	
 	//setPage 메소드
 	@Override
@@ -40,13 +47,13 @@ public class StartPage extends Page{
 			//loginPanel패널 (textPanel 패널, loginButton 버튼 포함)
 			WhitePanel loginPanel = new WhitePanel(new FlowLayout(FlowLayout.RIGHT));
 			{
-				//textPanel패널 (idPanel, pwPanel 패널 포함)
+				//textPanel패널 (idPanel 패널, pwPanel 패널 포함)
 				WhitePanel textPanel = new WhitePanel(new BorderLayout());
 				{
 					//id패널 (("아이디 : ") 레이블, idTextField 텍스트필드 포함)
 					WhitePanel idPanel = new WhitePanel(new FlowLayout(FlowLayout.RIGHT));
 					{
-						idPanel.add(new JLabel("아이디 : "));						//id패널에 ("아이디 : ")레이블을 부착(오른쪽에 붙여서)
+						idPanel.add(new JLabel("아이디 : "));						//id패널에 ("아이디 : ")레이블을 부착
 						idPanel.add(idTextField = new JTextField(15));			//id패널에 id텍스트필드를 부착
 					}
 					//pw패널 (("비밀번호 : ") 레이블 포함, pwTextField 패스워드필드 포함)
@@ -92,7 +99,7 @@ public class StartPage extends Page{
 		}
 		
 		//startPagePanel = 초기화면 패널 (leftPanel패널, rightPanel 포함)
-		WhitePanel startPagePanel = new WhitePanel();
+		startPagePanel = new WhitePanel();
 		startPagePanel.add(leftPanel);
 		startPagePanel.add(rightPanel);
 		
@@ -106,12 +113,26 @@ public class StartPage extends Page{
 		switch(ae.getActionCommand()) {
 		
 		case "로그인":
+			String id = idTextField.getText(); //입력한 id
+			String password = new String(pwPasswordField.getPassword()); //입력한 pw
+			
+			//로그인 메소드(id, pw)
 			//로그인 메소드 추가 필요
+			//if(boolean 로그인 메소드(id, pw) == true) //성공
+			//{
+			//	dispose();		//초기화면 창 끄고
+			//	new MainPage(user);	//메인화면 창 생성 / 추후에 MainPage클래스 생성자에 (user정보) 추가 필요
+			//}
+			//else
+			//{
+			//	//메시지창 띄우는 메소드
+			//	JOptionPane.showMessageDialog(null, "입력한 정보가 없거나, \n비밀번호가 일치하지 않습니다.", "WARNING_MESSAGE", JOptionPane.WARNING_MESSAGE);
+			//}
 			
 			//임시로 지정
-			if(idTextField.getText() == "123")
+			if(id.equals("123") && password.equals("123"))
 			{
-				//user가 맞는지 확인 if(user's_id&pw isin userDB)
+				//user가 맞는지 확인 if(user's_id & id's_pw isIn userDB)
 				dispose();		//초기화면 창 끄고
 				new MainPage();	//메인화면 창 생성 / 추후에 MainPage클래스 생성자에 (user정보) 추가 필요
 			}
@@ -119,19 +140,19 @@ public class StartPage extends Page{
 			else
 			{
 				//메시지창 띄우는 메소드
-				JOptionPane.showMessageDialog(null, "입력한 정보가 없거나, \n비밀번호가 일치하지 않습니다.", "WARNING_MESSAGE", JOptionPane.WARNING_MESSAGE);
+				MessageBox.printWarningMessageBox("입력한 정보가 없거나, \n비밀번호가 일치하지 않습니다.");
 			}
 			
 			break;
 			
 		case "회원등록":
 			signUpButton.setEnabled(false);
-			//new MainPage();
+			new SignUpPage();
 			break;
 			
 		case "ID/PW찾기":
 			findButton.setEnabled(false);
-			//new FindPage();
+			new FindPage();
 			break;
 			
 		case "종료하기":
