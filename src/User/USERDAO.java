@@ -1,9 +1,11 @@
 package User;
 import java.sql.Connection;
+import java.time.*;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -14,17 +16,17 @@ import Book.JDBBOOK;
 public class USERDAO {
 	//USERDAO 데이터 종류
 	private static	Vector<User>list;	
-	private	User user;
 	
-	public static void main(String args[]) throws SQLException {
-		
-		USERDAO user_instance =	USERDAO.getInstance();
-		User user = new User();
-		user_instance.insertUser(user);
-		user_instance.deleteUser(user);
-		JDBBOOK jdb = new JDBBOOK();
-	}
 	
+//	public static void main(String args[]) throws SQLException {
+//		
+//		USERDAO user_instance =	USERDAO.getInstance();
+//		User user = new User();
+//		user_instance.insertUser(user);
+//		user_instance.setAllUser();
+//		JDBBOOK jdb = new JDBBOOK();
+//	}
+//	
 	private static USERDAO user_instance = new USERDAO();
 		public static USERDAO getInstance() {
 			System.out.print("인스턴스 반환");
@@ -48,14 +50,30 @@ public class USERDAO {
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
+				User user = new User();
 				user = new User();
 				user.setName(rs.getString("Name"));
-				user.setID(rs.getInt("id"));
-				user.setuserdata(user.getID(),user.getName());
-				user.setIsAdmin(rs.getBoolean("isAdmin"));
-				user.setBorrowBooks(rs.getString("Borrowbook"));
-				System.out.println("유저 세팅 유저디에이오");
+				user.setID(rs.getString("hakbun"));
+				user.setIsAdmin(rs.getInt("isAdmin"));
+				user.setPassword(rs.getString("password"));
+				list.add(user);
+				System.out.println(list);
+				System.out.println(user.getID()+ " "+user.getName()+" "+user.getPassword()+" "+user.getBorrowDates());
 				//반목문 안의 반복문으로 구현해야함!!
+			}
+			sql = "select *from borrowbooksanddates";
+			pstmt= conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			Timestamp accessDate;
+			while(rs.next()) {
+				User user = new User();
+				 user.setBorrowBooks(0,rs.getString("book1"));
+				user.setBorrowBooks(1, rs.getString("book2"));
+				user.setBorrowBooks(2, rs.getString("book3"));
+				user.setBorrowDates(0,rs.getTime("date1"));
+				user.setBorrowDates(1, rs.getTime("date2"));
+				user.setBorrowDates(2, rs.getTime("date3"));
+				list.add(user);
 			}
 			
 		}catch(Exception e) {
@@ -66,31 +84,30 @@ public class USERDAO {
 
 	}
 	//빌린 책 그리고 연체 날짜 저장 메서드
-public HashMap<String,String> getborrowbooksanddata(String id)throws SQLException{
-	Connection conn = null;
-	PreparedStatement ptsmt = null;
-	ResultSet rs = null;
-	String BooksandBorrow = null;
-	String sql = "select BorrowandBooks from student where id=? ";
-	User user;
-	HashMap<String,String> BooksandBorrowMap = new HashMap<String,String>();
-		try {
-			conn=JDBBOOK.connect();
-			ptsmt=conn.prepareStatement(sql);
-			ptsmt.setString(1, id);
-			rs = ptsmt.executeQuery();
-			if(rs.next()) {
-				BooksandBorrow = rs.getString("Borrowbooks");
-				System.out.println(BooksandBorrow);
-			}
+	//연체 여부 메서드
+	public boolean isDelay(User delayuser){
+		LocalDate date = LocalDate.now();
+		LocalTime time = LocalTime.now();
+		LocalDateTime dt = LocalDateTime.now();
+		for(String localdate :delayuser.getDelayInfo()) {
 			
-		}catch(Exception e) {
-			e.printStackTrace();
-		}finally {
-			JDBBOOK.close();
 		}
-		return BooksandBorrowMap;
+		return false;
 	}
+	//책 빌리는 메서드
+	public void borrowBooks(User nowuser) {
+		if(nowuser.getIsDelay()) {
+			System.out.println("책 연체!!");
+		}
+		else if(nowuser.getBorrowDates().length==3) {
+			System.out.println("빌릴 수 있는 책 초과");
+		}
+		else
+		{
+			//책을 빌릴 수 있게 함
+		}
+	}
+	
 	
 	//유저 추가
 	public void insertUser(User newuser) {
@@ -103,9 +120,15 @@ public HashMap<String,String> getborrowbooksanddata(String id)throws SQLExceptio
 			conn=JDBBOOK.connect();
 			System.out.println("데베 유저 추가");
 			stmt = conn.createStatement();
-			//stmt.executeUpdate("insert into student values('정동주', 202001826, '정동주', '1','정동주','정동주')");
-			//stmt.executeUpdate("insert into student values('김완규', 201901769, '정동주', '1','정동주','정동주')");
-			
+			String hakbun = newuser.getID();
+			String name  = newuser.getName();
+			String password = newuser.getPassword();
+			int isadmin = newuser.getIsAdmin();
+			String sql =  " insert into student(hakbun, name, password, is_admin) VALUES('"+hakbun+"', '"+name+"' ,'"+password+"' ,'"+isadmin+"')";
+			System.out.println(sql);
+			stmt.executeUpdate(sql);
+			sql = "insert into borrowbooksanddates(hakbun) VALUES('"+hakbun+"')";
+			stmt.executeUpdate(sql);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}finally {
@@ -115,13 +138,15 @@ public HashMap<String,String> getborrowbooksanddata(String id)throws SQLExceptio
 }
 	//유저 삭제 메서드
 	public void deleteUser(User deleteuser)  {
+		
 		Connection conn=null;
 		java.sql.Statement stmt;
 		ResultSet result;
 		try {
 		conn=JDBBOOK.connect();
 		stmt = conn.createStatement();
-		stmt.executeUpdate("delete from student where hakbun = 202001826");
+		String delete = "delete from student where hakbun";
+		stmt.executeUpdate(delete);
 		System.out.println("데베 유저 삭제");
 	}catch(Exception e) {
 		e.printStackTrace();
@@ -129,8 +154,31 @@ public HashMap<String,String> getborrowbooksanddata(String id)throws SQLExceptio
 		JDBBOOK.close();
 	}
 	}
-	//책 빌리는 메서드
-	public void borrowBooks() {
-
+	
+	//로그인도와주는 메서드
+	private boolean isuser=false;
+	public boolean Login(String getId, String getPass) {
+		 System.out.println("유저 데베 찾기");
+		for(User isUser : list) {
+			if(getId.equals(isUser.getID())) {
+				if(getPass.equals(isUser.getPassword())) {
+				isuser = true;
+				System.out.println("여기 값있음");
+				break;
+				}
+				else {
+					System.out.println("여기 비밀번호가 없습니다");
+					break;
+				}
+					
+			}	
+			else
+				System.out.println("여기 학번이 없음");
+				isuser = false;
+				break;
+		}
+		return isuser;
+		
+		}
 	}
-}
+

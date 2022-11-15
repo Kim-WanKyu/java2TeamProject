@@ -2,8 +2,12 @@ package GUIPackage;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.SQLException;
+
 import javax.swing.*;
 
+import User.User;
+import User.USERDAO;
 public class StartPage extends Page{	
 
 	JTextField idTextField;			//id입력 텍스트필드
@@ -106,14 +110,20 @@ public class StartPage extends Page{
 		switch(ae.getActionCommand()) {
 		
 		case "로그인":
-<<<<<<< HEAD
 			dispose();		//초기화면 창 끄고
 			new MainPage(); //메인화면 창 생성
-=======
+
 			//로그인 메소드 추가 필요
 			
+			
+			//setuser setting
+			try {
+				USERDAO loguser = USERDAO.getInstance();
+				loguser.setAllUser();
+				System.out.println("유저 세팅 완료");
+				boolean isuser = loguser.Login(idTextField.getText(),pwPasswordField.getText());
 			//임시로 지정
-			if(idTextField.getText() == "123")
+			if(isuser)
 			{
 				//user가 맞는지 확인 if(user's_id&pw isin userDB)
 				dispose();		//초기화면 창 끄고
@@ -125,8 +135,8 @@ public class StartPage extends Page{
 				//메시지창 띄우는 메소드
 				JOptionPane.showMessageDialog(null, "입력한 정보가 없거나, \n비밀번호가 일치하지 않습니다.", "WARNING_MESSAGE", JOptionPane.WARNING_MESSAGE);
 			}
-			
->>>>>>> 6f8831fe2557c556364ca1ae3580deb9d8d68de2
+			}catch(Exception e) {}
+
 			break;
 			
 		case "회원등록":
