@@ -23,6 +23,7 @@ public class StartPage extends Page{
 		//+ 유저 도서 데이터베이스 로딩 메소드 필요
 		
 		setPage();		//페이지 설정
+		
 		packWindow();	//창 크기 및 위치 맟춤
 	}
 	

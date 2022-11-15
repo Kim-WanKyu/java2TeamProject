@@ -24,6 +24,46 @@ public class SignUpPage extends Page implements ItemListener{
 	public SignUpPage(){
 		setTitle(super.getTitle() + "_회원 가입");
 		
+		setPage();
+		
+		packWindow();
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent ae) {
+		switch(ae.getActionCommand()) {
+
+		case "등록하기":
+			//if(DB에 idTextField.getText()없으면)
+			//	DB 등록 메소드 추가
+			break;
+		
+		case "나가기":
+			StartPage.getSignUpButton().setEnabled(true);
+			this.dispose();
+			break;
+			
+		default:
+			break;
+		}
+		
+	}
+
+	@Override
+	public void itemStateChanged(ItemEvent e) {
+		 if(e.getStateChange()==ItemEvent.DESELECTED){
+             return;	//선택된 것이 없는 경우
+         }
+		 else if(userRadioButton.isSelected()){
+        	 idLabel.setText("ID(학번) : ");
+         }
+         else if(adminRadioButton.isSelected()){
+        	 idLabel.setText("ID(교번) : ");
+         }
+	}
+
+	@Override
+	void setPage() {
 		WhitePanel radioButtonPanel = new WhitePanel(new FlowLayout(FlowLayout.RIGHT));
 		{
 			WhitePanel userRadioPanel = new WhitePanel();
@@ -42,17 +82,15 @@ public class SignUpPage extends Page implements ItemListener{
 			//라디오버튼 그룹화 객체
 			ButtonGroup groupRadioButton = new ButtonGroup();
 			{
-				//라디오버튼그룹(user, admin)
+				//라디오버튼그룹(user:사용자, admin:관리자)
 				groupRadioButton.add(userRadioButton);
 				groupRadioButton.add(adminRadioButton);
 				
 				userRadioButton.addItemListener(this);
 				adminRadioButton.addItemListener(this);
-				
-				radioButtonPanel.add(userRadioPanel);
-				radioButtonPanel.add(adminRadioPanel);
-				
 			}
+			radioButtonPanel.add(userRadioPanel);
+			radioButtonPanel.add(adminRadioPanel);
 		}
 		
 		WhitePanel leftPanel = new WhitePanel(new GridLayout(1,1));
@@ -106,49 +144,9 @@ public class SignUpPage extends Page implements ItemListener{
 			rightPanel.add(JDownButtonPanel, BorderLayout.SOUTH);
 		}
 		
-		userRadioButton.setSelected(true);	//기본값 사용자 선택
+		userRadioButton.setSelected(true);	//기본값으로 사용자 선택
 		
 		ct.add(leftPanel);
 		ct.add(rightPanel);		
-		
-		packWindow();
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent ae) {
-		switch(ae.getActionCommand()) {
-
-		case "등록하기":
-			//if(DB에 idTextField.getText()없으면)
-			//	DB 등록 메소드 추가
-			break;
-		
-		case "나가기":
-			StartPage.getSignUpButton().setEnabled(true);
-			this.dispose();
-			break;
-			
-		default:
-			break;
-		}
-		
-	}
-
-	@Override
-	public void itemStateChanged(ItemEvent e) {
-		 if(e.getStateChange()==ItemEvent.DESELECTED){
-             return;	//선택된 것이 없는 경우
-         }
-		 else if(userRadioButton.isSelected()){
-        	 idLabel.setText("ID(학번) : ");
-         }
-         else if(adminRadioButton.isSelected()){
-        	 idLabel.setText("ID(교번) : ");
-         }
-	}
-
-	@Override
-	void setPage() {
-		
 	}
 }

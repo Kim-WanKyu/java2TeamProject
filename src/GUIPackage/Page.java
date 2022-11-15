@@ -13,8 +13,8 @@ public abstract class Page extends JFrame implements ActionListener{
 		super("도서 관리 프로그램");
 
 		setResizable(false);							//창 크기 변경 불가
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);		//끄기 버튼 누른 창만 끄기
 		setVisible(true);								//창 보이게
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);		//끄기 버튼 누른 창만 끄기
 		
 		ct.setBackground(Color.WHITE);	//컨테이너 배경 하얗게 처리
 		ct.setLayout(new FlowLayout());	//Layout은 FlowLayout(기본:가운데 정렬)으로
