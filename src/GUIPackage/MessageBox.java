@@ -9,4 +9,7 @@ public class MessageBox extends JFrame{
 	public static void printWarningMessageBox(String str) {
 		JOptionPane.showMessageDialog(null, str, "WARNING_MESSAGE", JOptionPane.WARNING_MESSAGE);
 	}
+	public static void printInfoMessageBox(String str) {
+		JOptionPane.showMessageDialog(null, str, "INFORMATION_MESSAGE", JOptionPane.INFORMATION_MESSAGE);
+	}
 }

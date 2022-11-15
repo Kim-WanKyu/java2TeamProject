@@ -10,20 +10,23 @@ public class MainPage extends Page{
 	JButton logoutButton;	//로그아웃 버튼
 	JButton borrowButton;	//대여하기 버튼
 	JButton changeButton;	//변경/탈퇴 버튼
-	
-	
-	
+
 	//MainPage 생성자
 	public MainPage(){
 		//창 설정
 		setTitle(super.getTitle() + "_메인 화면");
 		
+		this.addWindowListener(new WindowAdapter() {	//창 끄기 버튼 누를 시 이벤트 처리
+			public void windowClosing(WindowEvent e) {
+				new StartPage();
+			}
+		});
 		
 		setPage();
 		/////////////////////////////////////////////////////
-		logoutButton = new JButton("로그아웃");
-		logoutButton.addActionListener(this);
-		ct.add(logoutButton);
+//		logoutButton = new JButton("로그아웃");
+//		logoutButton.addActionListener(this);
+//		ct.add(logoutButton);
 		setSize(1000,100);
 		////////////////////////////////////////////////////////
 		//packWindow();
@@ -37,14 +40,12 @@ public class MainPage extends Page{
 		WhitePanel leftPanel = new WhitePanel(new BorderLayout());
 		WhitePanel rightPanel = new WhitePanel(new BorderLayout());
 		
-		
 		JTabbedPane tableTabbedPane = new JTabbedPane();	//
 		JTable bookTable = new JTable(1,5);
 		JTable myBookTable = new JTable();
 		
 		tableTabbedPane.addTab("전체목록", bookTable);
 		tableTabbedPane.addTab("내 도서", myBookTable);
-		
 		
 		// userDB의 isAdmin 값을 추출하여 isAdmin에 넣음.
 		if(isAdmin == true) {
@@ -82,7 +83,6 @@ public class MainPage extends Page{
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		switch(ae.getActionCommand()) {
-		
 		case "로그아웃":
 			dispose();		//메인화면 창 끄고
 			new StartPage();//초기화면 창 생성

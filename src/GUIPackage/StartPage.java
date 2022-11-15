@@ -6,8 +6,6 @@ import javax.swing.*;
 
 public class StartPage extends Page{	
 	
-	private static WhitePanel startPagePanel;	 //startPagePanel = 초기화면 패널
-	
 	private JTextField idTextField;			//id입력 텍스트필드
 	private JPasswordField pwPasswordField;	//pw입력 패스워드필드 (JPasswordField = 입력한 값과 관계없이 지정한 문자로 출력)
 	private JButton loginButton;			//로그인 버튼
@@ -100,6 +98,7 @@ public class StartPage extends Page{
 		}
 		
 		//startPagePanel = 초기화면 패널 (leftPanel패널, rightPanel 포함)
+		WhitePanel startPagePanel;	 //startPagePanel = 초기화면 패널
 		startPagePanel = new WhitePanel();
 		startPagePanel.add(leftPanel);
 		startPagePanel.add(rightPanel);
@@ -112,7 +111,6 @@ public class StartPage extends Page{
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		switch(ae.getActionCommand()) {
-		
 		case "로그인":
 			String id = idTextField.getText(); //입력한 id
 			String password = new String(pwPasswordField.getPassword()); //입력한 pw
@@ -122,25 +120,29 @@ public class StartPage extends Page{
 			//if(boolean 로그인 메소드(id, pw) == true) //성공
 			//{
 			//	dispose();		//초기화면 창 끄고
+			//	dispose();		//초기화면 창 끄고
 			//	new MainPage(user);	//메인화면 창 생성 / 추후에 MainPage클래스 생성자에 (user정보) 추가 필요
 			//}
 			//else
 			//{
-			//	//메시지창 띄우는 메소드
-			//	JOptionPane.showMessageDialog(null, "입력한 정보가 없거나, \n비밀번호가 일치하지 않습니다.", "WARNING_MESSAGE", JOptionPane.WARNING_MESSAGE);
+			//	//메시지창(경고) 띄우는 메소드
+			//	MessageBox.printWarningMessageBox("입력한 정보가 없거나, \n비밀번호가 일치하지 않습니다.");
 			//}
 			
 			//임시로 지정
 			if(id.equals("123") && password.equals("123"))
 			{
 				//user가 맞는지 확인 if(user's_id & id's_pw isIn userDB)
-				dispose();		//초기화면 창 끄고
+				
+				//켜져있는 모든 창 끄기
+				for(int i=0; i<getOwnerlessWindows().length;i++)
+					getOwnerlessWindows()[i].dispose();
 				new MainPage();	//메인화면 창 생성 / 추후에 MainPage클래스 생성자에 (user정보) 추가 필요
 			}
 			//else 아니면 에러 메세지
 			else
 			{
-				//메시지창 띄우는 메소드
+				//메시지창(경고) 띄우는 메소드
 				MessageBox.printWarningMessageBox("입력한 정보가 없거나, \n비밀번호가 일치하지 않습니다.");
 			}
 			
