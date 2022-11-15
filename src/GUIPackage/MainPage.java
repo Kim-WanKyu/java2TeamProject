@@ -21,8 +21,10 @@ public class MainPage extends Page{
 		
 		setPage();
 		/////////////////////////////////////////////////////
-		
-		setSize(1000,1000);
+		logoutButton = new JButton("로그아웃");
+		logoutButton.addActionListener(this);
+		ct.add(logoutButton);
+		setSize(1000,100);
 		////////////////////////////////////////////////////////
 		//packWindow();
 	}
