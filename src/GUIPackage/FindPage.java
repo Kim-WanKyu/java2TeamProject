@@ -38,7 +38,7 @@ public class FindPage  extends Page{
 			{
 				WhitePanel findIDPanel = new WhitePanel(new BorderLayout());
 				{
-					findIDPanel.add(new JLabel(" ID는 회원님의 학번 또는 교번입니다."), BorderLayout.CENTER);
+					findIDPanel.add(new JLabel("  ID는 회원님의 학번 또는 교번입니다."), BorderLayout.CENTER);
 					findIDPanel.add(exitButton = new JButton("나가기"), BorderLayout.SOUTH);
 					exitButton.addActionListener(this);
 				}
@@ -103,9 +103,9 @@ public class FindPage  extends Page{
 				//}
 
 				//임시
-//				String findPw = "abc123";
+				String findPw = "abc123";
 //				if( idTextField.getText().equals("유저db") && nameTextField.getText().equals("유저db"))
-//					MessageBox.printInfoMessageBox("회원님의 PW는\n " + findPw + "\n입니다.");
+					MessageBox.printInfoMessageBox("회원님의 PW는\n \"" + findPw + "\"\n입니다.");
 				
 				break;
 				
