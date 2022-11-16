@@ -9,9 +9,11 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.Vector;
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import com.mysql.cj.xdevapi.Statement;
 
+import Book.Book;
 import Book.JDBBOOK;
 public class USERDAO {
 	//USERDAO 데이터 종류
@@ -54,7 +56,7 @@ public class USERDAO {
 				user = new User();
 				user.setName(rs.getString("Name"));
 				user.setID(rs.getString("hakbun"));
-				user.setIsAdmin(rs.getInt("isAdmin"));
+				user.setIsAdmin(rs.getInt("is_admin"));
 				user.setPassword(rs.getString("password"));
 				list.add(user);
 				System.out.println(list);
@@ -70,9 +72,9 @@ public class USERDAO {
 				 user.setBorrowBooks(0,rs.getString("book1"));
 				user.setBorrowBooks(1, rs.getString("book2"));
 				user.setBorrowBooks(2, rs.getString("book3"));
-				user.setBorrowDates(0,rs.getTime("date1"));
-				user.setBorrowDates(1, rs.getTime("date2"));
-				user.setBorrowDates(2, rs.getTime("date3"));
+				user.setBorrowDates(0,rs.getTimestamp("date1"));
+				user.setBorrowDates(1, rs.getTimestamp("date2"));
+				user.setBorrowDates(2, rs.getTimestamp("date3"));
 				list.add(user);
 			}
 			
@@ -95,20 +97,55 @@ public class USERDAO {
 		return false;
 	}
 	//책 빌리는 메서드
-	public void borrowBooks(User nowuser) {
+	public void borrowBooks(int ID ,User nowuser,Book borrowbook) {
+		
+		
 		if(nowuser.getIsDelay()) {
 			System.out.println("책 연체!!");
 		}
-		else if(nowuser.getBorrowDates().length==3) {
-			System.out.println("빌릴 수 있는 책 초과");
-		}
-		else
+		else 
 		{
-			//책을 빌릴 수 있게 함
+			
+			for(int i =0; i<3;i++) 
+			{
+				if(nowuser.getBorrowBooks()[i]!=null)
+				{
+					if(borrowbook.getTotalCount()>=borrowbook.getBorrowCount())
+					{	
+						Connection conn=null;
+						java.sql.Statement stmt;
+						ResultSet result;
+						String sql;
+						System.out.println("책을 빌릴 수 있음");
+						nowuser.setBorrowBooks(i, borrowbook.getName());
+						Timestamp timestamp =new Timestamp(System.currentTimeMillis());
+						nowuser.setBorrowDates(i, timestamp);
+						borrowbook.addCount();
+						try {
+							conn = JDBBOOK.connect();
+							System.out.println("유저 데베 빌리는 품목 갱신");
+							
+							int n = i+1;
+							
+							sql = "update borrowbooksanddates set book"+n+"= ?, "+"date"+n+"= ?"+"where hakbun = ?";
+							
+						}
+					}
+					else
+					{
+						System.out.println("빌릴 수 있는 책 개수 초과");
+					}
+				}
+			}
+		
+			
 		}
 	}
 	
 	
+	
+
+
 	//유저 추가
 	public void insertUser(User newuser) {
 		Connection conn=null;

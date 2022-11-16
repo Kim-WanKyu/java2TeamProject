@@ -24,7 +24,7 @@ public class User {
 
 			//대여한 책(들)
 	private String[] borrowBook = new String[3];
-	private Time[] borrowDates = new Time[3];//대여한 날짜(들)
+	private Timestamp[] borrowDates = new Timestamp[3];//대여한 날짜(들)
 	private String[] delayInfo = new String[3];		//대여한 책의 연체 정보(들)
 
 	
@@ -68,8 +68,8 @@ public class User {
 	public String getPassword() { return this.password; }
 	public int getIsAdmin() { return this.isAdmin; }
 	
-	public Time[] getBorrowDates() { return this.borrowDates; }
-	public String[] getDelayInfo() { return this.delayInfo; }
+	public Timestamp[] getBorrowDates() { return this.borrowDates; }
+	public String[] getBorrowBooks() { return this.borrowBook; }
 	public Boolean getIsDelay() {return this.delay;}
 	//set 메소드들
 	public void setName(String name) { this.name = name; }
@@ -82,8 +82,8 @@ public class User {
 		borrowBook[count] =book;
 		
 	}
-	public void setBorrowDates(int date,Time time) { this.borrowDates[date] = time; }
-	public void setDelayInfo(String[] delayInfo) { this.delayInfo = delayInfo; }
+	public void setBorrowDates(int date,Timestamp timestamp) { this.borrowDates[date] = timestamp; }
+	
 
 
 	

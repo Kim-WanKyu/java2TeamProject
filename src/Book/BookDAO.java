@@ -11,22 +11,24 @@ public class BookDAO {
 	public static BookDAO getInstance() {
 		return instance;
 	}
+	private  static Vector<Book> Booklist;
 	public static void main(String []args) throws SQLException {
 		Book books = new Book();
-		BookDAO.getAllBook();
+		BookDAO.setAllBook();
 		
 	}
 	//모든 책 가져오기
-public Vector<String> getBook() throws SQLException{
-	Vector<Book> dbBooklist = getAllBook();
-	Vector<String> booklist = new Vector<String>();
-	for(Book Book : dbBooklist) {
-		booklist.add(Book.getName());
-	}
-	return booklist;
+public Vector<Book> getBook() throws SQLException{
+	return Booklist;
 }
-//모든 책 품목 가져오기
-public static Vector<Book> getAllBook() throws SQLException{
+
+
+
+
+
+
+//모든 책 품목 설정
+public static Vector<Book> setAllBook() throws SQLException{
 	Vector<Book>list = new Vector<>();
 	Connection conn = null;
 	PreparedStatement pstmt = null;
@@ -46,14 +48,15 @@ public static Vector<Book> getAllBook() throws SQLException{
 			book.setCategory(rs.getString("KDC"));
 			book.setTotalCount(rs.getInt("권"));
 			book.setBorrowCount(rs.getInt("대출건수"));
-			System.out.println(book.getId());
+			Booklist.add(book);
+			
 		}
 	}catch(Exception e) {
 		e.printStackTrace();
 	}finally {
 		JDBBOOK.close();
 	}
-	return list;
+	return Booklist;
 }
 
 //책 품목 추가
