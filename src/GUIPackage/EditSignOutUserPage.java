@@ -29,14 +29,17 @@ public class EditSignOutUserPage  extends Page{
 				}
 			});
 			
-			//setPage();
+			setPage();
 			setSize(500,500);
 			//packWindow();
 		}
 		
 		@Override
 		void setPage() {
-			
+			WhitePanel textPanel = new WhitePanel();
+			{
+				
+			}
 		}
 
 		public void actionPerformed(ActionEvent ae) {
