@@ -4,6 +4,9 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import User.User;
+import User.UserManager;
+
 public class SignoutUserPage  extends Page{
 	
 	JTextField idTextField;			//id 입력 텍스트필드
@@ -80,13 +83,18 @@ public class SignoutUserPage  extends Page{
 				
 			case "회원 탈퇴":
 				try {
+					User deleteuser = new User();
+					
 					boolean isInDB = true;
-					if(isInDB = idTextField.getText().equals("123"/*해당 유저의 DB 정보*/)) {
+					if(isInDB = idTextField.getText().equals(StartPage.getLoginUser().getID()/*해당 유저의 DB 정보*/)) {
 						boolean isCorrect;// = true;
-						if(isCorrect = true/*해당 유저의 DB 정보의 이름과 비말번호가 모두 일치하면*/) {
+						System.out.println(StartPage.getLoginUser().getPassword()+" "+StartPage.getLoginUser().getName());
+							if(isCorrect =(StartPage.getLoginUser().getPassword().equals(PwTextField.getText())&&StartPage.getLoginUser().getName().equals(nameTextField.getText()))/*해당 유저의 DB 정보의 이름과 비말번호가 모두 일치하면*/) {
 							/*새 비밀번호의 텍스트로 비밀번호 변경 메소드 실행*/
 							///*유저의 비밀번호 = */newPwTextField.getText();
-							
+							deleteuser.setID(idTextField.getText());
+							UserManager.getInstance().deleteUser(deleteuser);
+							StartPage.resetLoginUser();
 							/*그 후에 메세지 띄우고 모든 창 나가고, 다시 초기화면 띄움*/
 							MessageBox.printInfoMessageBox("탈퇴 되었습니다.");
 							
@@ -112,6 +120,7 @@ public class SignoutUserPage  extends Page{
 					}
 				}
 				catch(Exception e) {
+					e.printStackTrace();
 					MessageBox.printErrorMessageBox("!오류 발생!");
 					MessageBox.printErrorMessageBox("회원 탈퇴 창을 닫습니다.");
 					MainPage.getEditSignoutUserButton().setEnabled(true);

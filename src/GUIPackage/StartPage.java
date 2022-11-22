@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import javax.swing.*;
 
+import Book.BookManager;
 import User.User;
 import User.UserManager;
 public class StartPage extends Page{	
@@ -14,9 +15,19 @@ public class StartPage extends Page{
 	private JPasswordField pwPasswordField;	//pw입력 패스워드필드 (JPasswordField = 입력한 값과 관계없이 지정한 문자로 출력)
 	private JButton loginButton;			//로그인 버튼
 	
+	
 	private JButton quitButton;				//종료하기 버튼
 	private static JButton signUpButton;	//회원등록 버튼
 	private static JButton findButton;		//ID/PW찾기 버튼
+	
+	private static  User loginUser =new User();     //현재 유저 정보를 담음
+	
+	public static User getLoginUser() {
+		return loginUser;					//현재 유저 정보 객체를 반환
+	}
+	public static void resetLoginUser() {
+		loginUser = null;
+	}
 	
 	//StartPage 생성자
 	public StartPage(){
@@ -146,27 +157,32 @@ public class StartPage extends Page{
 			//TODO 완성하고 정리할 것 괄호 들여쓰기도 할 것.
 			//setuser setting
 			
+			
+			
 			//임시로 지정
-			if(id.equals("123") && password.equals("123"))
-			{
-				//user가 맞는지 확인 if(user's_id & id's_pw isIn userDB)
-				
-				//켜져있는 모든 창 끄기
-				for(int i=0; i<getOwnerlessWindows().length;i++)
-					getOwnerlessWindows()[i].dispose();
-				new MainPage();	//메인화면 창 생성 / 추후에 MainPage클래스 생성자에 (user정보) 추가 필요
+			if(id != null && password != null) {
+				if(UserManager.getInstance().Login(id, password))
+				{	loginUser.setID(id);
+					loginUser.setPassword(password);
+					//켜져있는 모든 창 끄기
+					for(int i=0; i<getOwnerlessWindows().length;i++)
+						getOwnerlessWindows()[i].dispose();
+					new MainPage();	//메인화면 창 생성 / 추후에 MainPage클래스 생성자에 (user정보) 추가 필요
+				}
+				//else 아니면 에러 메세지
+				else
+				{
+					//메시지창(경고) 띄우는 메소드
+					MessageBox.printWarningMessageBox("입력한 정보가 없거나, \n비밀번호가 일치하지 않습니다.");
+				}
 			}
-			//else 아니면 에러 메세지
-			else
-			{
-				//메시지창(경고) 띄우는 메소드
-				MessageBox.printWarningMessageBox("입력한 정보가 없거나, \n비밀번호가 일치하지 않습니다.");
-			}
+			
 			break;
 			
 		case "회원등록":
 			signUpButton.setEnabled(false);
 			new SignUpPage();
+			
 			break;
 			
 		case "ID/PW찾기":

@@ -3,6 +3,10 @@ package GUIPackage;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
+import User.User;
+import User.UserManager;
+
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
@@ -104,7 +108,7 @@ public class SignUpPage extends Page implements ItemListener{
 			}
 			WhitePanel JDownButtonPanel = new WhitePanel(new FlowLayout(FlowLayout.RIGHT));
 			{
-				signUpButton = new JButton("화원등록");
+				signUpButton = new JButton("등록하기");
 				signUpButton.addActionListener(this);
 				
 				exitButton = new JButton("나가기");
@@ -136,6 +140,13 @@ public class SignUpPage extends Page implements ItemListener{
 		case "등록하기":
 			//if(DB에 idTextField.getText()없으면)
 			//	DB 등록 메소드 추가
+			User newUser = new User();
+			newUser.setID(idTextField.getText());
+			newUser.setName(nameTextField.getText());
+			newUser.setPassword( pwPasswordField.getText());
+			if(userRadioButton.isSelected())
+				newUser.setIsAdmin(0);
+				UserManager.getInstance().insertUser(newUser);
 			break;
 		
 		case "나가기":

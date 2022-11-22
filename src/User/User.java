@@ -18,20 +18,15 @@ public class User {
 	private String[] delayInfo = new String[3];		//대여한 책의 연체 정보(들)
 
 	private HashMap<String,String>BooksandBorrowMap = new HashMap<String,String>();
-<<<<<<< HEAD
-	
-
-	public User(){}
-	
-	
 
 	
-=======
+
+
 
 	//User 생성자
 	public User(){}
 	
->>>>>>> b48e70400349cd68ab1786acbbfd38a3458dd0c4
+
 	//get 메소드들
 	public String getName() { return this.name; }
 	public String getID() { return this.id; }
@@ -51,14 +46,13 @@ public class User {
 	{
 		borrowBook[count] =book;
 	}
-	public void setBorrowDates(int date,Timestamp timestamp) { this.borrowDates[date] = timestamp; }
+	public void setBorrowDates(int date,Timestamp timestamp) { this.borrowDates[date] = timestamp; 
+	}
+
 
 	
-<<<<<<< HEAD
+	}
+
 
 	
-	
-=======
-	//빌린 책 그리고 연체 날짜 저장메서드 
->>>>>>> b48e70400349cd68ab1786acbbfd38a3458dd0c4
-}
+

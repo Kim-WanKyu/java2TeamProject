@@ -19,6 +19,7 @@ import com.mysql.cj.xdevapi.Statement;
 import Book.Book;
 import Book.BookManager;
 import DB.DBManager;
+import GUIPackage.StartPage;
 public class UserManager {
 	//UserManager 데이터 종류
 	private static	Vector<User>list;	
@@ -387,7 +388,7 @@ public void returnbook (User returnuser, Book returnbook)
 	public void insertUser(User newuser) {
 		Connection conn=null;
 		java.sql.Statement stmt;
-		ResultSet result;
+		
 		
 		
 		try {
@@ -403,6 +404,7 @@ public void returnbook (User returnuser, Book returnbook)
 			stmt.executeUpdate(sql);
 			 sql =  " insert into borrowbooksanddates(hakbun) VALUES('"+hakbun+"')";
 			 stmt.executeUpdate(sql);
+			 list.add(newuser);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}finally {
@@ -416,18 +418,68 @@ public void returnbook (User returnuser, Book returnbook)
 		Connection conn=null;
 		java.sql.Statement stmt;
 		ResultSet result;
+		
 		try {
+			
 		conn=DBManager.connect();
 		stmt = conn.createStatement();
 		String delete = "delete from student where hakbun = "+deleteuser.getID();
 		stmt.executeUpdate(delete);
 		System.out.println("데베 유저 삭제");
+		for(User isUser : list) {
+			if(deleteuser.getID().equals(isUser.getID())) {
+				
+					System.out.println("여기 값있음");
+					System.out.println("유저 리스트 삭제");
+					list.remove(isUser);
+					break;
+			}
+				
+				
+			else {
+				System.out.println("값을 찾는 중...");
+				
+			}
+		}	
 	}catch(Exception e) {
 		e.printStackTrace();
 	}finally {
 		DBManager.close();
+		
 	}
+		
 	}
+	//유저 정보변경
+	public void changeInform(User userInformation) {
+		for(User changeUser : list) {
+			int count;
+			System.out.println(userInformation.getID());
+			if(userInformation.getID().equals(changeUser.getID()))
+			{
+				count = list.indexOf(changeUser);
+				list.set(count, userInformation);
+				break;
+			}
+			
+		}
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs =null;
+		String sql = "update student set password = ? where(hakbun = ?)";
+		try {
+		conn = DBManager.connect();
+		pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1,userInformation.getPassword());
+		pstmt.setString(2, userInformation.getID());
+		pstmt.executeUpdate();
+			}
+		catch(Exception e) {
+			e.printStackTrace();
+			}
+		finally {
+			DBManager.close();
+		}
+		}
 	
 	//로그인도와주는 메서드
 	
@@ -437,25 +489,25 @@ public void returnbook (User returnuser, Book returnbook)
 		for(User isUser : list) {
 			if(getId.equals(isUser.getID())) {
 				if(getPass.equals(isUser.getPassword())) {
-				
-				System.out.println("여기 값있음");
-				return true;
+					System.out.println("여기 값있음");
+					isuser= true;
+					StartPage.getLoginUser().setName(isUser.getName());
+					break;
 				}
 				else {
 					System.out.println("여기 비밀번호가 없습니다");
-					return false;
+					isuser= false;
 				}
-				
 			}	
 			else {
 				System.out.println("여기 학번이 없음");
-				return false;
-		}
-		
-		
+				isuser= false;
+			}
 		}
 		return isuser;
-	
 	}
+	
+	//유저 정보 변경 메서드
+
 }
 	

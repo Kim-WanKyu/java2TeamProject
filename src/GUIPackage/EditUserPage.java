@@ -4,6 +4,9 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import User.User;
+import User.UserManager;
+
 public class EditUserPage extends Page{
 	
 	JTextField idTextField;		//id 입력 텍스트필드
@@ -88,13 +91,17 @@ public class EditUserPage extends Page{
 				
 			case "비밀번호 변경":
 				try {
+					User changeUser = new User();
 					boolean isInDB = true;
-					if(isInDB = idTextField.getText().equals("123"/*해당 유저의 DB 정보*/)) {
+					System.out.println(idTextField.getText().equals(StartPage.getLoginUser().getID()));
+					if(isInDB = idTextField.getText().equals(StartPage.getLoginUser().getID()/*해당 유저의 DB 정보*/)) {
 						boolean isCorrect;// = true;
-						if(isCorrect = true/*해당 유저의 DB 정보의 이름과 비말번호가 모두 일치하면*/) {
+						if(isCorrect = StartPage.getLoginUser().getName().equals(nameTextField.getText())&& (StartPage.getLoginUser().getPassword().equals(oldPwTextField.getText()))/*해당 유저의 DB 정보의 이름과 비말번호가 모두 일치하면*/) {
 							/*새 비밀번호의 텍스트로 비밀번호 변경 메소드 실행*/
 							///*유저의 비밀번호 = */newPwTextField.getText();
-							
+							changeUser.setID(idTextField.getText());
+							changeUser.setPassword(newPwTextField.getText());
+							UserManager.getInstance().changeInform(changeUser);
 							/*그 후에 메세지 띄우고 창 나감*/
 							MessageBox.printInfoMessageBox("정보가 변경되었습니다.");
 							MessageBox.printInfoMessageBox("회원 정보 변경 창을 닫습니다.");
@@ -120,6 +127,7 @@ public class EditUserPage extends Page{
 					}
 				}
 				catch(Exception e) {
+					e.printStackTrace();
 					MessageBox.printErrorMessageBox("!오류 발생!");
 					MessageBox.printErrorMessageBox("회원 정보 변경 창을 닫습니다.");
 					MainPage.getEditSignoutUserButton().setEnabled(true);
