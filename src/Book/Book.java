@@ -8,6 +8,11 @@ public class Book {
 	private String category;	//분류(KDC기준 간략하게)
 	private int totalCount;		//총 권 수
 	private int borrowCount;	//빌린 권 수
+
+	
+	public Book(){}
+
+
 	
 	//Book 생성자
 	public Book(String name, String author, String publisher, String id
@@ -20,7 +25,6 @@ public class Book {
 		this.totalCount = totalCount;
 		this.borrowCount = borrowCount;
 	}
-	
 	//get 메소드들
 	public String getName() { return this.name; }
 	public String getAuthor() { return this.author; }
@@ -38,4 +42,6 @@ public class Book {
 	public void setCategory(String category) { this.category = category; }
 	public void setTotalCount(int totalCount) { this.totalCount = totalCount; }
 	public void setBorrowCount(int borrowCount) { this.borrowCount = borrowCount; }
+	public void addCount() {this.borrowCount++;}
+
 }
