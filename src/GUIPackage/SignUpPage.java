@@ -8,7 +8,8 @@ import java.awt.event.ItemListener;
 
 public class SignUpPage extends Page implements ItemListener{
 	
-	JLabel idLabel = new JLabel("ID");	//id레이블
+	JLabel idLabel = new JLabel();	//id레이블 ("학번 : "/"교번 : ")
+	
 	JTextField idTextField;			//id 입력 텍스트필드
 	JTextField nameTextField;		//이름 입력 텍스트필드
 	JTextField pwPasswordField;		//pw 입력 텍스트필드
@@ -24,44 +25,18 @@ public class SignUpPage extends Page implements ItemListener{
 	public SignUpPage(){
 		setTitle(super.getTitle() + "_회원 가입");
 		
+		this.addWindowListener(new WindowAdapter() {	//윈도우리스너 어댑터추가
+			//창 끄기 버튼 누를 시 이벤트 처리
+			public void windowClosing(WindowEvent e) {
+				StartPage.getSignUpButton().setEnabled(true);
+				dispose();
+			}
+		});
 		setPage();
 		
 		packWindow();
 	}
-
-	@Override
-	public void actionPerformed(ActionEvent ae) {
-		switch(ae.getActionCommand()) {
-
-		case "등록하기":
-			//if(DB에 idTextField.getText()없으면)
-			//	DB 등록 메소드 추가
-			break;
-		
-		case "나가기":
-			StartPage.getSignUpButton().setEnabled(true);
-			this.dispose();
-			break;
-			
-		default:
-			break;
-		}
-		
-	}
-
-	@Override
-	public void itemStateChanged(ItemEvent e) {
-		 if(e.getStateChange()==ItemEvent.DESELECTED){
-             return;	//선택된 것이 없는 경우
-         }
-		 else if(userRadioButton.isSelected()){
-        	 idLabel.setText("ID(학번) : ");
-         }
-         else if(adminRadioButton.isSelected()){
-        	 idLabel.setText("ID(교번) : ");
-         }
-	}
-
+	
 	@Override
 	void setPage() {
 		WhitePanel radioButtonPanel = new WhitePanel(new FlowLayout(FlowLayout.RIGHT));
@@ -72,7 +47,6 @@ public class SignUpPage extends Page implements ItemListener{
 				userRadioButton.setBackground(Color.WHITE);
 				userRadioPanel.add(userRadioButton);
 			}
-			
 			WhitePanel adminRadioPanel = new WhitePanel();
 			{
 				adminRadioButton = new JRadioButton("관리자");
@@ -146,7 +120,45 @@ public class SignUpPage extends Page implements ItemListener{
 		
 		userRadioButton.setSelected(true);	//기본값으로 사용자 선택
 		
-		ct.add(leftPanel);
-		ct.add(rightPanel);		
+		//signUpPagePanel = ID/PW찾기화면 패널 (leftPanel패널, rightPanel 포함)
+		WhitePanel signUpPagePanel;
+		signUpPagePanel = new WhitePanel();
+		signUpPagePanel.add(leftPanel);
+		signUpPagePanel.add(rightPanel);
+				
+		//컨테이너 ct에 signUpPagePanel 부착
+		ct.add(signUpPagePanel);
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent ae) {
+		switch(ae.getActionCommand()) {
+		case "등록하기":
+			//if(DB에 idTextField.getText()없으면)
+			//	DB 등록 메소드 추가
+			break;
+		
+		case "나가기":
+			StartPage.getSignUpButton().setEnabled(true);
+			this.dispose();
+			break;
+			
+		default:
+			break;
+		}
+		
+	}
+
+	@Override
+	public void itemStateChanged(ItemEvent e) {
+		 if(e.getStateChange()==ItemEvent.DESELECTED){
+             return;	//선택된 것이 없는 경우
+         }
+		 else if(userRadioButton.isSelected()){
+        	 idLabel.setText("ID(학번) : ");
+         }
+         else if(adminRadioButton.isSelected()){
+        	 idLabel.setText("ID(교번) : ");
+         }
 	}
 }
