@@ -11,7 +11,8 @@ public class MainPage extends Page{
 	private JTabbedPane bookTabbedPane;	//탭
 
 	//하단 검색 구역
-	private JComboBox<String> categoryComboBox;	//분류 콤보박스
+	String[] categoryString = {"도서명", "저자명", "출판사", "분류"};
+	private JComboBox<String> categoryComboBox = new JComboBox<String>(categoryString);	//분류 콤보박스
 	private JTextField searchTextField;	//검색 텍스트필드
 	private JButton searchButton;		//검색 버튼
 	
@@ -33,19 +34,21 @@ public class MainPage extends Page{
 	private JTextField delayCheckReturnDateTextField;	//반납일 텍스트필드
 	private JTextField delayUserInfoTextField;			//연체자 텍스트필드
 
-	private JLabel myBookIsDelayLabel;		//연체여부 표시 레이블
+	private JLabel myBookIsDelayLabel;	//연체여부 표시 레이블
+
+	private static JLabel delayNoticeLabel;	//연체 알림 메세지 레이블
 	
 	private JButton quitButton;			//종료하기 버튼
 	private JButton logoutButton;		//로그아웃 버튼
+	
 	private JButton borrowButton;		//대여하기 버튼
-
 	private JButton returnBookButton;	//반납하기 버튼
 	
-	private JButton insertBookButton;	//등룍 버튼
-	private JButton deleteBookButton;	//삭제 버튼
-	private JButton EditBookButton;		//수정 버튼
 	
-	private static JLabel delayNoticeLabel;	//연체 알림 메세지 레이블
+	private static JButton insertBookButton;	//등록 버튼
+	private static JButton editBookButton;		//수정 버튼
+	private JButton deleteBookButton;	//삭제 버튼
+	
 	
 	private JPanel mainPanel;
 	//MainPage 생성자
@@ -64,16 +67,24 @@ public class MainPage extends Page{
 		packWindow();
 	}
 	
-	public static JButton getEditSignoutUserButton() {
-		return editSignoutUserButton;
-	}
-	public static JLabel getDelayNoticeLabel() {
-		return delayNoticeLabel;
-	}
+	public static JButton getEditSignoutUserButton() { return editSignoutUserButton; }
+	public static JButton getInsertBookButton() { return insertBookButton; }
+	public static JButton getEditBookButton() { return editBookButton; }
+	
+	public static JLabel getDelayNoticeLabel() { return delayNoticeLabel; }
+	
+	//우측 정보 필드 구역 입력한 텍스트값 가져오는 메소드
+	public String getBookNameText() { return bookNameTextField.getText(); }
+	public String getBookAuthorTextField() { return bookAuthorTextField.getText(); }
+	public String getBookPublisherTextField() { return bookPublisherTextField.getText(); }
+	public String getBookCategoryTextField() { return bookCategoryTextField.getText(); }
+	public String getBookIdTextField() { return bookIdTextField.getText(); }
+	public String getBookAvailableStockTextField() { return bookAvailableStockTextField.getText(); }
+	
 	//setPage 메소드
 	@Override
 	void setPage() {
-		boolean isAdmin = false;	//사용자 기본
+		boolean isAdmin = true;	//사용자 기본
 		// userDB의 isAdmin 값을 추출하여 isAdmin에 넣음.
 		//TODO JPanel이 제대로 뜰 수 있도록
 	    //TODO 할 수 있으면, 클래스 분할해야 함.
@@ -177,12 +188,12 @@ public class MainPage extends Page{
 					insertBookButton.addActionListener(this);
 					deleteBookButton = new JButton("삭제");
 					deleteBookButton.addActionListener(this);
-					EditBookButton = new JButton("수정");
-					EditBookButton.addActionListener(this);
+					editBookButton = new JButton("수정");
+					editBookButton.addActionListener(this);
 					
 					allBookListOptionButtonPanel.add(insertBookButton);
 					allBookListOptionButtonPanel.add(deleteBookButton);
-					allBookListOptionButtonPanel.add(EditBookButton);
+					allBookListOptionButtonPanel.add(editBookButton);
 				}
 				allBookListRightPanel.add(allBookListInfoPanel, BorderLayout.NORTH);
 				allBookListRightPanel.add(allBookListOptionButtonPanel, BorderLayout.SOUTH);
@@ -298,8 +309,6 @@ public class MainPage extends Page{
 			WhitePanel searchPanel = new WhitePanel(new FlowLayout(FlowLayout.LEFT));
 			{
 				//임시
-				String[] categoryString = {"도서명", "저자명", "출판사", "분류"};
-				categoryComboBox = new JComboBox<String>(categoryString);
 
 				searchTextField = new JTextField(20);
 				
@@ -451,49 +460,6 @@ public class MainPage extends Page{
 //							} );
 //							
 //						}
-						///////////////////////////////////////////////////////////
-						{
-						       String []a = {"a","b","c"};
-						        String [][]b = {{"a1","a2","a3"},
-						                        {"b1","b2","b3"},
-						                        {"c1","c2","c3"}};
-						        
-						        //1. 모델과 데이터를 연결
-						        DefaultTableModel model = new DefaultTableModel(b,a);
-						        
-						        //2. Model을 매개변수로 설정, new JTable(b,a)도 가능하지만 
-						        //삽입 삭제를 하기 위해 해당 방법을 사용합니다
-						        bookTable = new JTable(model); //
-						        
-						        //3. 결과적으로는 JScrollPane를 추가합니다.
-						        JScrollPane sc = new JScrollPane(bookTable);
-						        
-						        //4. 컴포넌트에  Table 추가
-						        //add(sc);
-						        
-						        //테이블에 데이터 추가하기
-						        //원본데이터를 건들지 않고 table의 매개변수인 model에 있는 데이터를 변경합니다
-						        DefaultTableModel m =
-						                (DefaultTableModel)bookTable.getModel();
-						        //모델에 데이터 추가 , 1번째 출에 새로운 데이터를 추가합니다
-						        m.insertRow(b.length, new Object[]{"d1","d2","d3"});
-						        //추가를 마치고 데이터 갱신을 알립니다.
-						        bookTable.updateUI();
-						    
-						        
-						        
-//						        //------- 그 외 메소드들 ---------
-//						        //테이블의 데이터를 가져오는 메소드
-//						        System.out.println(bookTable.getValueAt(1,1));
-//						        //테이블의 데이터를 바꾸는 메소드
-//						        bookTable.setValueAt("picachu",2,2);
-//						        //테이블 row 갯수 가져오기
-//						        System.out.println(bookTable.getRowCount());
-//						        //테이블 colum 갯수 가져오기
-//						        System.out.println(bookTable.getColumnCount());
-//						        //테이블 Colum 이름 가져오기
-//						        System.out.println(bookTable.getColumnName(0));
-						}
 						bookLeftPanel.add(bookScrollPane, BorderLayout.CENTER);
 					}
 
@@ -566,19 +532,16 @@ public class MainPage extends Page{
 					bookPanel.add(bookRightPanel);
 				}
 				
-				bookTabbedPane = new JTabbedPane();	//
-				
-				//
-				
-				bookTabbedPane.addTab("전체목록", bookPanel);
-				bookTabbedPane.addTab("내 도서", myBookPanel);
+				bookTabbedPane = new JTabbedPane();
+				{
+					bookTabbedPane.addTab("전체목록", bookPanel);
+					bookTabbedPane.addTab("내 도서", myBookPanel);
+				}
 				
 				WhitePanel downButtonPanel = new WhitePanel(new BorderLayout());
 				{
 					WhitePanel searchPanel = new WhitePanel(new FlowLayout(FlowLayout.LEFT));
 					{
-						//임시
-						String[] categoryString = {"도서명", "저자명", "출판사", "분류"};
 						categoryComboBox = new JComboBox<String>(categoryString);
 						
 						searchTextField = new JTextField(20);
@@ -670,7 +633,8 @@ public class MainPage extends Page{
 			break;
 			
 		case "등록":
-			MessageBox.printInfoMessageBox("등록");
+			getInsertBookButton().setEnabled(false);
+			new InsertBookPage();
 			//등록
 			/*
 			 * DB에 추가 테이블에서도 추가
@@ -679,6 +643,7 @@ public class MainPage extends Page{
 			
 		case "삭제":
 			MessageBox.printInfoMessageBox("삭제");
+			
 			//삭제
 			/*
 			 * DB에서 삭제 테이블에서도 삭제 

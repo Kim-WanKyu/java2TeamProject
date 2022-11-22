@@ -104,7 +104,7 @@ public class SignUpPage extends Page implements ItemListener{
 			}
 			WhitePanel JDownButtonPanel = new WhitePanel(new FlowLayout(FlowLayout.RIGHT));
 			{
-				signUpButton = new JButton("화원등록");
+				signUpButton = new JButton("등록하기");
 				signUpButton.addActionListener(this);
 				
 				exitButton = new JButton("나가기");
