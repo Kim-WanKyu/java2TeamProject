@@ -28,7 +28,7 @@ public class BookDAO {
 public   LinkedList<Book> findBook(String getClass, String word) {
 	
 	switch (getClass) {
-	case "도서 명":
+	case "도서명":
 		
 		for(Entry<String,Book> entry : Booklist.entrySet())
 		{

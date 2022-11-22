@@ -29,38 +29,12 @@ public class User {
 
 	
 	private HashMap<String,String>BooksandBorrowMap = new HashMap<String,String>();
-	//연체 여부도 트리맵으로 구성!!
-//	private HashMap<String,String> userbook = new HashMap<String,String>();
-	//대여한 책의 연체 정보(들)
-	//user 해쉬 맵써야 함
-	//jsonArrray 사용
-	//User 생성자
+	
 
-//	public User( String name,  String id, String password, boolean isAdmin, String borrowBooksandDates, String borrowDates, String delayInfo) {
-//		this.name = name;
-//		this.id = id;
-//		this.password = password;
-//		this.isAdmin = isAdmin;
-//		this.borrowBooksandDates = borrowBooksandDates;
-//		this.borrowDates = borrowDates;
-//		this.delayInfo = delayInfo;
-//	}
 	public User(){}
 	
 	
-//	public void setUserbook(String book,String bookborrowdates) {userbook.put(book, bookborrowdates);}
-	//userdata 트리맵 구성
 
-//	public User(String name, String id, String password, Boolean isAdmin
-//			, Book[] borrowBooks, LocalDate[] borrowDates, String[] delayInfo) {
-//		this.name = name;
-//		this.id = id;
-//		this.password = password;
-//		this.isAdmin = isAdmin;
-//		this.borrowBooks = borrowBooks;
-//		this.borrowDates = borrowDates;
-//		this.delayInfo = delayInfo;
-//	}
 	
 	//get 메소드들
 	public String getName() { return this.name; }
@@ -88,9 +62,7 @@ public class User {
 
 	
 
-	//user 찾는 메서드
 	
-	//빌린 책 그리고 연체 날짜 저장메서드 
 
 	
 	
