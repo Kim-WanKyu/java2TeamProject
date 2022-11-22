@@ -2,8 +2,12 @@ package GUIPackage;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.SQLException;
+
 import javax.swing.*;
 
+import User.User;
+import User.USERDAO;
 public class StartPage extends Page{	
 	
 	private static WhitePanel startPagePanel;	 //startPagePanel = 초기화면 패널
@@ -114,10 +118,16 @@ public class StartPage extends Page{
 		switch(ae.getActionCommand()) {
 		
 		case "로그인":
+
+			dispose();		//초기화면 창 끄고
+			new MainPage(); //메인화면 창 생성
+
+
 			String id = idTextField.getText(); //입력한 id
 			String password = new String(pwPasswordField.getPassword()); //입력한 pw
 			
 			//로그인 메소드(id, pw)
+
 			//로그인 메소드 추가 필요
 			//if(boolean 로그인 메소드(id, pw) == true) //성공
 			//{
@@ -130,8 +140,19 @@ public class StartPage extends Page{
 			//	JOptionPane.showMessageDialog(null, "입력한 정보가 없거나, \n비밀번호가 일치하지 않습니다.", "WARNING_MESSAGE", JOptionPane.WARNING_MESSAGE);
 			//}
 			
+			
+			//setuser setting
+			try {
+				USERDAO loguser = USERDAO.getInstance();
+				loguser.setAllUser();
+				System.out.println("유저 세팅 완료");
+				boolean isuser = loguser.Login(idTextField.getText(),pwPasswordField.getText());
 			//임시로 지정
+
+			if(isuser)
+
 			if(id.equals("123") && password.equals("123"))
+
 			{
 				//user가 맞는지 확인 if(user's_id & id's_pw isIn userDB)
 				dispose();		//초기화면 창 끄고
@@ -143,7 +164,8 @@ public class StartPage extends Page{
 				//메시지창 띄우는 메소드
 				MessageBox.printWarningMessageBox("입력한 정보가 없거나, \n비밀번호가 일치하지 않습니다.");
 			}
-			
+			}catch(Exception e) {}
+
 			break;
 			
 		case "회원등록":
