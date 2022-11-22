@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import javax.swing.*;
 
 import User.User;
-import User.USERDAO;
+import User.UserManager;
 public class StartPage extends Page{	
 	
 	private JTextField idTextField;			//id입력 텍스트필드
@@ -116,64 +116,55 @@ public class StartPage extends Page{
 	public void actionPerformed(ActionEvent ae) {
 		switch(ae.getActionCommand()) {
 		case "로그인":
-
-			dispose();		//초기화면 창 끄고
-			new MainPage(); //메인화면 창 생성
-
-
-			String id = idTextField.getText(); //입력한 id
-			String password = new String(pwPasswordField.getPassword()); //입력한 pw
-			
-			//로그인 메소드(id, pw)
-
-			//로그인 메소드 추가 필요
-			//if(boolean 로그인 메소드(id, pw) == true) //성공
-			//{
-			//	dispose();		//초기화면 창 끄고
-			//	dispose();		//초기화면 창 끄고
-			//	new MainPage(user);	//메인화면 창 생성 / 추후에 MainPage클래스 생성자에 (user정보) 추가 필요
-			//}
-			//else
-			//{
-			//	//메시지창(경고) 띄우는 메소드
-			//	MessageBox.printWarningMessageBox("입력한 정보가 없거나, \n비밀번호가 일치하지 않습니다.");
-			//}
-			
-			
-			//setuser setting
 			try {
-				USERDAO loguser = USERDAO.getInstance();
+				String id = idTextField.getText(); //입력한 id
+				String password = new String(pwPasswordField.getPassword()); //입력한 pw
+				
+				dispose();		//초기화면 창 끄고
+				new MainPage(); //메인화면 창 생성
+				
+				UserManager loguser = UserManager.getInstance();
 				loguser.setAllUser();
 				System.out.println("유저 세팅 완료");
-				boolean isuser = loguser.Login(idTextField.getText(),pwPasswordField.getText());
-			//임시로 지정
-
-<<<<<<< HEAD
-=======
-			if(isuser)
-
->>>>>>> 86bbdb2815d65e7096feb2a718ce72463aaa8919
-			if(id.equals("123") && password.equals("123"))
-
-			{
-				//user가 맞는지 확인 if(user's_id & id's_pw isIn userDB)
+				boolean isuser = loguser.Login(id, password);
 				
-				//켜져있는 모든 창 끄기
-				for(int i=0; i<getOwnerlessWindows().length;i++)
-					getOwnerlessWindows()[i].dispose();
-				new MainPage();	//메인화면 창 생성 / 추후에 MainPage클래스 생성자에 (user정보) 추가 필요
-			}
-			//else 아니면 에러 메세지
-			else
-			{
-				//메시지창(경고) 띄우는 메소드
-				MessageBox.printWarningMessageBox("입력한 정보가 없거나, \n비밀번호가 일치하지 않습니다.");
-			}
-<<<<<<< HEAD
-=======
-			}catch(Exception e) {}
+				//로그인 메소드 추가 필요
+				//if(boolean 로그인 메소드(id, pw) == true) //성공
+				//{
+				//	dispose();		//초기화면 창 끄고
+				//	dispose();		//초기화면 창 끄고
+				//	new MainPage(user);	//메인화면 창 생성 / 추후에 MainPage클래스 생성자에 (user정보) 추가 필요
+				//}
+				//else
+				//{
+				//	//메시지창(경고) 띄우는 메소드
+				//	MessageBox.printWarningMessageBox("입력한 정보가 없거나, \n비밀번호가 일치하지 않습니다.");
+				//}
+				
+				//TODO 완성하고 정리할 것 괄호 들여쓰기도 할 것.
+				//setuser setting
+				
+				//임시로 지정
+				if(id.equals("123") && password.equals("123"))
 
->>>>>>> 86bbdb2815d65e7096feb2a718ce72463aaa8919
+				{
+					//user가 맞는지 확인 if(user's_id & id's_pw isIn userDB)
+					
+					//켜져있는 모든 창 끄기
+					for(int i=0; i<getOwnerlessWindows().length;i++)
+						getOwnerlessWindows()[i].dispose();
+					new MainPage();	//메인화면 창 생성 / 추후에 MainPage클래스 생성자에 (user정보) 추가 필요
+				}
+				//else 아니면 에러 메세지
+				else
+				{
+					//메시지창(경고) 띄우는 메소드
+					MessageBox.printWarningMessageBox("입력한 정보가 없거나, \n비밀번호가 일치하지 않습니다.");
+				}
+			}catch(Exception e) {
+				
+			}
+			
 			break;
 			
 		case "회원등록":

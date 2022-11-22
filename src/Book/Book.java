@@ -9,22 +9,9 @@ public class Book {
 	private int totalCount;		//총 권 수
 	private int borrowCount;	//빌린 권 수
 
-	
-	public Book(){}
-
-
-	
 	//Book 생성자
-	public Book(String name, String author, String publisher, String id
-			, String category, int totalCount, int borrowCount) {
-		this.name = name;
-		this.author = author;
-		this.publisher = publisher;
-		this.id = id;
-		this.category = category;
-		this.totalCount = totalCount;
-		this.borrowCount = borrowCount;
-	}
+	public Book() {}
+	
 	//get 메소드들
 	public String getName() { return this.name; }
 	public String getAuthor() { return this.author; }
