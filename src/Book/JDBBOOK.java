@@ -24,7 +24,7 @@ public class JDBBOOK {
 
 
 public static Connection connect() {
-	//DB Conncect
+	
 	try {
 		Class.forName(databaseDriver);
 		connection = DriverManager.getConnection(databaseUrl,databaseUser,databasePassword);

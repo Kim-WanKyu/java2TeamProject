@@ -10,7 +10,7 @@ public class Book {
 	private int borrowCount;	//빌린 권 수
 
 	
-	Book(){}
+	public Book(){}
 
 
 	
