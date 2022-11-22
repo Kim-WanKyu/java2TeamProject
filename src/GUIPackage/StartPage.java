@@ -126,6 +126,7 @@ public class StartPage extends Page{
 				UserManager loguser = UserManager.getInstance();
 				loguser.setAllUser();
 				System.out.println("유저 세팅 완료");
+<<<<<<< HEAD
 				boolean isuser = loguser.Login(id, password);
 				
 				//로그인 메소드 추가 필요
@@ -165,6 +166,27 @@ public class StartPage extends Page{
 				
 			}
 			
+=======
+				boolean isuser = loguser.Login(idTextField.getText(),pwPasswordField.getText());
+			//임시로 지정
+			if(id.equals("123") && password.equals("123"))
+
+			{
+				//user가 맞는지 확인 if(user's_id & id's_pw isIn userDB)
+				
+				//켜져있는 모든 창 끄기
+				for(int i=0; i<getOwnerlessWindows().length;i++)
+					getOwnerlessWindows()[i].dispose();
+				new MainPage();	//메인화면 창 생성 / 추후에 MainPage클래스 생성자에 (user정보) 추가 필요
+			}
+			//else 아니면 에러 메세지
+			else
+			{
+				//메시지창(경고) 띄우는 메소드
+				MessageBox.printWarningMessageBox("입력한 정보가 없거나, \n비밀번호가 일치하지 않습니다.");
+			}
+			}catch(Exception e) {}
+>>>>>>> 70d31f37f88f1c102f9930f1e4689eee88039c8b
 			break;
 			
 		case "회원등록":
