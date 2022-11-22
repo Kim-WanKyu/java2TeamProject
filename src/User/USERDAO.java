@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.Vector;
 import java.text.SimpleDateFormat;
@@ -21,7 +22,7 @@ import Book.BookDAO;
 import Book.JDBBOOK;
 public class USERDAO {
 	//USERDAO 데이터 종류
-	private static	Vector<User>list;	
+	private static	HashMap<String,User>list;	
 	
 	
 
@@ -36,7 +37,7 @@ public class USERDAO {
 	//모든 유저 가져와 초기화 메서드
 	//관리지가 사용할 예정
 	public void setAllUser() throws SQLException{
-		list = new Vector<>();
+		list = new HashMap<String,User>();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs =null;
@@ -55,25 +56,14 @@ public class USERDAO {
 				user.setID(rs.getString("hakbun"));
 				user.setIsAdmin(rs.getInt("is_admin"));
 				user.setPassword(rs.getString("password"));
-				list.add(user);
+				list.put(user.getID(), user);
 				System.out.println(list);
 				System.out.println(user.getID()+ " "+user.getName()+" "+user.getPassword()+" "+user.getBorrowDates());
 				//반목문 안의 반복문으로 구현해야함!!
 			}
-			sql = "select *from borrowbooksanddates";
-			pstmt= conn.prepareStatement(sql);
-			rs = pstmt.executeQuery();
 			
-			while(rs.next()) {
-				User user = new User();
-				 user.setBorrowBooks(0,rs.getString("book1"));
-				user.setBorrowBooks(1, rs.getString("book2"));
-				user.setBorrowBooks(2, rs.getString("book3"));
-				user.setBorrowDates(0,rs.getTimestamp("date1"));
-				user.setBorrowDates(1, rs.getTimestamp("date2"));
-				user.setBorrowDates(2, rs.getTimestamp("date3"));
-				list.add(user);
-			}
+			
+			
 			
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -130,22 +120,24 @@ public class USERDAO {
 			java.util.Date set_Date;
 			if(date1!=null) {
 				set_Date = new java.util.Date(date1.getTime());
-				int diffDays = (int) ((dt.getTime()-set_Date.getTime()) / (24*60*60));
-				System.out.println("날짜 차이"+diffDays);
+				int diffDays = (int) ((dt.getTime()-set_Date.getTime()) / (24*60*60*1000));
+				System.out.println("날짜 차이 데이 1 "+diffDays);
+				if(diffDays >7)
+					return;
 			}
 			if(date2!=null) {
-				c.setTime(date2);
-				c.add(Calendar.DATE, 7);
-				date2 = new java.sql.Date(c.getTimeInMillis());
-				if(date2.after(date))
+				set_Date = new java.util.Date(date2.getTime());
+				int diffDays = (int) ((dt.getTime()-set_Date.getTime()) / (24*60*60*1000));
+				System.out.println("날짜 차이 데이 2 "+diffDays);
+				if(diffDays >7)
 					return;
 						
 			}
 			if(date3!=null) {
-				c.setTime(date3);
-				c.add(Calendar.DATE, 7);
-				date3 = new java.sql.Date(c.getTimeInMillis());
-				if(date3.after(date))
+				set_Date = new java.util.Date(date3.getTime());
+				int diffDays = (int) ((dt.getTime()-set_Date.getTime()) / (24*60*60*1000));
+				System.out.println("날짜 차이 데이 3 "+diffDays);
+				if(diffDays >7)
 					return;
 			
 			}
@@ -336,29 +328,44 @@ public void returnbook (User returnuser, Book returnbook)
 			return;
 		}
 		java.util.Date set_Date;
-		if(date1!=null) {
+		if(bookreturn.equals("book1")) {
 			set_Date = new java.util.Date(date1.getTime());
-			int diffDays = (int) ((dt.getTime()-set_Date.getTime()) / (24*60*60));
+			int diffDays = (int) ((dt.getTime()-set_Date.getTime()) / (24*60*60*1000));
+			System.out.println("날짜 차이 데이 1 "+diffDays);
+			if(diffDays >7)
+			{
+			System.out.println(diffDays-7);
 			c1.setTime(date);
-			c1.add(Calendar.DATE, diffDays+7);
+			c1.add(Calendar.DATE, diffDays-7);
 			delay_info = new java.sql.Date(c1.getTimeInMillis());
-			
+			}
 		}	
-		if(date2!=null) {
+		else if(bookreturn.equals("book2")) {
 			set_Date = new java.util.Date(date2.getTime());
-			int diffDays = (int) ((dt.getTime()-set_Date.getTime()) / (24*60*60));
+			int diffDays = (int) ((dt.getTime()-set_Date.getTime()) / (24*60*60*1000));
+			System.out.println("날짜 차이 데이 2 "+diffDays);
+			if(diffDays >7)
+			{
+			
+			
+			System.out.println(diffDays-7);
 			c1.setTime(date);
-			c1.add(Calendar.DATE, diffDays+7);
+			c1.add(Calendar.DATE, diffDays-7);
 			delay_info = new java.sql.Date(c1.getTimeInMillis());
+			}
 		}
-		if(date3!=null) {
-			
+		else if(bookreturn.equals("book3")) {
 			set_Date = new java.util.Date(date3.getTime());
-			int diffDays = (int) ((dt.getTime()-set_Date.getTime()) / (24*60*60));
-			c1.setTime(date);
-			c1.add(Calendar.DATE, diffDays+7);
-			delay_info = new java.sql.Date(c1.getTimeInMillis());
+			int diffDays = (int) ((dt.getTime()-set_Date.getTime()) / (24*60*60*1000));
+			System.out.println("날짜 차이 데이 3 "+diffDays);
+			if(diffDays >7)
+			{
 			
+			System.out.println(diffDays);
+			c1.setTime(date);
+			c1.add(Calendar.DATE, diffDays-7);
+			delay_info = new java.sql.Date(c1.getTimeInMillis());
+			}
 		}
 		
 		
@@ -433,30 +440,29 @@ public void returnbook (User returnuser, Book returnbook)
 	//로그인도와주는 메서드
 	
 	public boolean Login(String getId, String getPass) {
-		boolean isuser= null;
 		System.out.println("유저 데베 찾기");
-		for(User isUser : list) {
-			if(getId.equals(isUser.getID())) {
-				if(getPass.equals(isUser.getPassword())) {
-				
-				System.out.println("여기 값있음");
-				return true;
+		for(Entry<String, User> entry : list.entrySet()) {
+			User loginuser = entry.getValue();
+			if(loginuser.getID().equals(getId)) {
+				if(loginuser.getPassword().equals(getPass))
+				{
+					return true;
 				}
-				else {
-					System.out.println("여기 비밀번호가 없습니다");
+				else
+				{
+					System.out.print("비밀번호 오류");
 					return false;
 				}
-				
-			}	
-			else {
-				System.out.println("여기 학번이 없음");
+			}
+			else
+			{
+				System.out.println("비밀 번호 틀림");
 				return false;
-		}
-		
-		
-		}
-		return isuser;
-	
+			}
 	}
+		return false;
+}
+	
+	
 }
 	

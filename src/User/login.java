@@ -15,7 +15,8 @@ public class login {
 			BOOKDB.setAllBook();
 			Book a = new Book();
 			user.setID("201801826");
-			a.setId("9788901243658");
-			loguser.borrowBooks(user, a);
+			user.setPassword("jdj01@@");
+			loguser.setAllUser();
+			loguser.Login(user.getID(),user.getPassword());
 		}
 }
