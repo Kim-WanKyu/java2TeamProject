@@ -1,13 +1,10 @@
 package GUIPackage;
 
 import java.awt.Color;
-import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.LayoutManager;
 
 import javax.swing.JPanel;
-import javax.swing.LayoutStyle;
 
 //WhitePanel 패널 클래스
 public class WhitePanel extends JPanel{

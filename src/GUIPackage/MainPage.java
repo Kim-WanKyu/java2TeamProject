@@ -3,33 +3,37 @@ package GUIPackage;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 
 public class MainPage extends Page{	
 
+	//
 	private JTabbedPane bookTabbedPane;	//탭
-	
-	private JComboBox categoryComboBox;	//분류 콤보박스
+
+	//하단 검색 구역
+	private JComboBox<String> categoryComboBox;	//분류 콤보박스
 	private JTextField searchTextField;	//검색 텍스트필드
 	private JButton searchButton;		//검색 버튼
+	
+	//상단 변경 구역
+	private static JButton editSignoutUserButton = new JButton("변경/탈퇴");	//변경/탈퇴 버튼
 
-	private static JButton changeButton;	//변경/탈퇴 버튼
-
+	//우측 정보 필드 구역
 	private JTextField bookNameTextField;			//도서명 텍스트필드
 	private JTextField bookAuthorTextField;			//저자 텍스트필드
 	private JTextField bookPublisherTextField;		//출판사 텍스트필드
 	private JTextField bookCategoryTextField;		//분류 텍스트필드
 	private JTextField bookIdTextField;				//id 텍스트필드
 
+	//우측 정보 필드 구역
 	private JTextField bookAvailableStockTextField;	//재고 텍스트필드
 	
-	private JTextField delayUserInfoTextField;		//연체자 텍스트필드
-
+	//우측 정보 필드 구역
 	private JTextField delayCheckBorrowDateTextField;	//대여일 텍스트필드
 	private JTextField delayCheckReturnDateTextField;	//반납일 텍스트필드
+	private JTextField delayUserInfoTextField;			//연체자 텍스트필드
 
-	private JTextField myBookIsDelayTextField;		//연체여부 텍스트필드
+	private JLabel myBookIsDelayLabel;		//연체여부 표시 레이블
 	
 	private JButton quitButton;			//종료하기 버튼
 	private JButton logoutButton;		//로그아웃 버튼
@@ -39,9 +43,11 @@ public class MainPage extends Page{
 	
 	private JButton insertBookButton;	//등룍 버튼
 	private JButton deleteBookButton;	//삭제 버튼
+	private JButton EditBookButton;		//수정 버튼
 	
-	private JLabel delayInfoLabel;		//연체여부
+	private static JLabel delayNoticeLabel;	//연체 알림 메세지 레이블
 	
+	private JPanel mainPanel;
 	//MainPage 생성자
 	public MainPage(){
 		//창 설정
@@ -58,93 +64,55 @@ public class MainPage extends Page{
 		packWindow();
 	}
 	
-	public static JButton getChangeButton() {
-		return changeButton;
+	public static JButton getEditSignoutUserButton() {
+		return editSignoutUserButton;
 	}
-	
+	public static JLabel getDelayNoticeLabel() {
+		return delayNoticeLabel;
+	}
 	//setPage 메소드
 	@Override
 	void setPage() {
-		
-		
-		//boolean isAdmin = false;	//사용자 기본
-		boolean isAdmin = true;	//사용자 기본
+		boolean isAdmin = false;	//사용자 기본
 		// userDB의 isAdmin 값을 추출하여 isAdmin에 넣음.
-		
+		//TODO JPanel이 제대로 뜰 수 있도록
+	    //TODO 할 수 있으면, 클래스 분할해야 함.
 		if(isAdmin == true) {
 			//관리자
-			setAdminPage();
+			setAdminPanel();
 		}
 		else {
 			//사용자
-			setUserPage();
+			setUserPanel();
 		}
-		
-		//////////////////////////////////////////////////////////////////////////
-
 	}
 	
-	//관리자 화면으로 세팅하는 메소드
-	void setAdminPage() {
-		//myBookPanel(myBookLeftPanel 패널, myBookRightPanel 패널 포함)
+	void setAdminPanel() {
+		
+		//전체목록 탭에 들어갈 패널
+		//allBookListPanel 패널(allBookListLeftPanel 패널, allBookListRightPanel 패널 포함)
 		WhitePanel allBookListPanel = new WhitePanel();
 		{
-			//myBookLeftPanel 패널 (bookTable 테이블, searchPanel 패널 포함)
+			/*allBookListPanel의 왼쪽*/
+			//allBookListLeftPanel 패널 (allBookTable 테이블 포함)
 			WhitePanel allBookListLeftPanel = new WhitePanel(new BorderLayout());
 			{
 				JTable allBookTable = new JTable(1,5);
 				JScrollPane allBookScrollPane = new JScrollPane(allBookTable);
-//				{
-//					bookTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-//					bookTable.setModel(new DefaultTableModel (new Object[][][] {}, new String[] { "셀1","셀2","셀3","셀4","셀5" })  {
-//						public boolean isCellEditable(int row, int column) { return false; }
-//					} );
-//				}
 				{
-					String []a = {"a","b","c"};
-					String [][]b = {{"a1","a2","a3"},
-							{"b1","b2","b3"},
-							{"c1","c2","c3"}};
-					
-					//1. 모델과 데이터를 연결
-					DefaultTableModel model = new DefaultTableModel(b,a);
-					
-					//2. Model을 매개변수로 설정, new JTable(b,a)도 가능하지만
-					//삽입 삭제를 하기 위해 해당 방법을 사용합니다
-					allBookTable = new JTable(model); //
-
-					//3. 결과적으로는 JScrollPane를 추가합니다.
-					JScrollPane sc2 = new JScrollPane(allBookTable);
-
-					//4. 컴포넌트에  Table 추가
-					//add(sc2);
-
-					//테이블에 데이터 추가하기
-					//원본데이터를 건들지 않고 table의 매개변수인 model에 있는 데이터를 변경합니다
-					DefaultTableModel m = (DefaultTableModel)allBookTable.getModel();
-					//모델에 데이터 추가 , 1번째 출에 새로운 데이터를 추가합니다
-					m.insertRow(b.length, new Object[]{"d1","d2","d3"});
-					//추가를 마치고 데이터 갱신을 알립니다.
-					allBookTable.updateUI();
-
-					////------- 그 외 메소드들 ---------
-					////테이블의 데이터를 가져오는 메소드
-					//System.out.println(bookTable.getValueAt(1,1));
-					////테이블의 데이터를 바꾸는 메소드
-					//bookTable.setValueAt("picachu",2,2);
-					////테이블 row 갯수 가져오기
-					//System.out.println(bookTable.getRowCount());
-					////테이블 colum 갯수 가져오기
-					//System.out.println(bookTable.getColumnCount());
-					////테이블 Colum 이름 가져오기
-					//System.out.println(bookTable.getColumnName(0));
+					//TODO make Table from DataBase
+					allBookTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+					allBookTable.setModel(new DefaultTableModel (new Object[][][] {}, new String[] { "셀1","셀2","셀3","셀4","셀5" })  {
+						public boolean isCellEditable(int row, int column) { return false; }
+					} );
 				}
 				allBookListLeftPanel.add(allBookScrollPane, BorderLayout.CENTER);
 			}
-			////////////////////////////////////////////수정필요
-			/*오른쪽*/
+			/*allBookListPanel의 오른쪽*/
+			//allBookListRightPanel 패널 (allBookListInfoPanel 패널, allBookListOptionButtonPanel 패널 포함)
 			WhitePanel allBookListRightPanel = new WhitePanel(new BorderLayout());
 			{
+				//allBookListInfoPanel 패널 (allBookListTextPanel 패널 포함)
 				JPanel allBookListInfoPanel = new JPanel(new BorderLayout());
 				{
 					JPanel allBookListTextPanel = new JPanel(new GridLayout(6,1));
@@ -153,6 +121,8 @@ public class MainPage extends Page{
 						{
 							allBookListNamePanel.add(new JLabel("도서명 : "));
 							allBookListNamePanel.add(bookNameTextField = new JTextField(10));
+							allBookListNamePanel.setVisible(true);
+							bookNameTextField.setVisible(true);
 							allBookListNamePanel.setBackground(Color.LIGHT_GRAY);
 						}
 						JPanel allBookListAuthorPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -201,85 +171,52 @@ public class MainPage extends Page{
 					allBookListInfoPanel.add(allBookListTextPanel, BorderLayout.SOUTH);
 					allBookListInfoPanel.setBorder(BorderFactory.createLineBorder(new Color(128, 128, 255), 4));
 				}
-				returnBookButton = new JButton("반납하기");
-				returnBookButton.addActionListener(this);
+				WhitePanel allBookListOptionButtonPanel = new WhitePanel();
+				{
+					insertBookButton = new JButton("등록");
+					insertBookButton.addActionListener(this);
+					deleteBookButton = new JButton("삭제");
+					deleteBookButton.addActionListener(this);
+					EditBookButton = new JButton("수정");
+					EditBookButton.addActionListener(this);
+					
+					allBookListOptionButtonPanel.add(insertBookButton);
+					allBookListOptionButtonPanel.add(deleteBookButton);
+					allBookListOptionButtonPanel.add(EditBookButton);
+				}
 				allBookListRightPanel.add(allBookListInfoPanel, BorderLayout.NORTH);
-				allBookListRightPanel.add(returnBookButton, BorderLayout.SOUTH);
+				allBookListRightPanel.add(allBookListOptionButtonPanel, BorderLayout.SOUTH);
 			}
 			allBookListPanel.add(allBookListLeftPanel);
 			allBookListPanel.add(allBookListRightPanel);
 		}
 		
-		////////////////////////////////////////////////////////////////////////////
-		
-		//수정필요!!!!!!!!!!!!!!!!!! -> delayCheckPanel
-		//delayCheckPanel(bookLeftPanel 패널, bookRightPanel 패널 포함)
+		//연체확인 탭에 들어갈 패널
+		//delayCheckPanel(delayCheckLeftPanel 패널, delayCheckRightPanel 패널 포함)
 		WhitePanel delayCheckPanel = new WhitePanel();
 		{
-			//bookLeftPanel 패널 (bookTable 테이블, searchPanel 패널 포함)
+			//delayCheckLeftPanel 패널 (bookTable 테이블, searchPanel 패널 포함)
 			WhitePanel delayCheckLeftPanel = new WhitePanel(new BorderLayout());
 			{
 				JTable delayCheckTable = new JTable(1,5);
 				JScrollPane delayCheckScrollPane = new JScrollPane(delayCheckTable);
-//				{
-//					bookTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-//					bookTable.setModel(new DefaultTableModel (new Object[][][] {}, new String[] { "셀1","셀2","셀3","셀4","셀5" })  {
-//						public boolean isCellEditable(int row, int column) { return false; }
-//					} );
-//					
-//				}
+//					{
+//						bookTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+//						bookTable.setModel(new DefaultTableModel (new Object[][][] {}, new String[] { "셀1","셀2","셀3","셀4","셀5" })  {
+//							public boolean isCellEditable(int row, int column) { return false; }
+//						} );
+//						
+//					}
 				///////////////////////////////////////////////////////////
-				{
-				       String []a = {"a","b","c"};
-				        String [][]b = {{"a1","a2","a3"},
-				                        {"b1","b2","b3"},
-				                        {"c1","c2","c3"}};
-				        
-				        //1. 모델과 데이터를 연결
-				        DefaultTableModel model = new DefaultTableModel(b,a);
-				        
-				        //2. Model을 매개변수로 설정, new JTable(b,a)도 가능하지만 
-				        //삽입 삭제를 하기 위해 해당 방법을 사용합니다
-				        delayCheckTable = new JTable(model); //
-				        
-				        //3. 결과적으로는 JScrollPane를 추가합니다.
-				        JScrollPane sc = new JScrollPane(delayCheckTable);
-				        
-				        //4. 컴포넌트에  Table 추가
-				        //add(sc);
-				        
-				        //테이블에 데이터 추가하기
-				        //원본데이터를 건들지 않고 table의 매개변수인 model에 있는 데이터를 변경합니다
-				        DefaultTableModel m =
-				                (DefaultTableModel)delayCheckTable.getModel();
-				        //모델에 데이터 추가 , 1번째 출에 새로운 데이터를 추가합니다
-				        m.insertRow(b.length, new Object[]{"d1","d2","d3"});
-				        //추가를 마치고 데이터 갱신을 알립니다.
-				        delayCheckTable.updateUI();
-				    
-				        
-				        
-//				        //------- 그 외 메소드들 ---------
-//				        //테이블의 데이터를 가져오는 메소드
-//				        System.out.println(bookTable.getValueAt(1,1));
-//				        //테이블의 데이터를 바꾸는 메소드
-//				        bookTable.setValueAt("picachu",2,2);
-//				        //테이블 row 갯수 가져오기
-//				        System.out.println(bookTable.getRowCount());
-//				        //테이블 colum 갯수 가져오기
-//				        System.out.println(bookTable.getColumnCount());
-//				        //테이블 Colum 이름 가져오기
-//				        System.out.println(bookTable.getColumnName(0));
-				}
 				delayCheckLeftPanel.add(delayCheckScrollPane, BorderLayout.CENTER);
 			}
-
 			/*오른쪽*/
+			//delayCheckRightPanel 패널
 			WhitePanel delayCheckRightPanel = new WhitePanel(new BorderLayout());
 			{
 				JPanel delayCheckInfoPanel = new JPanel(new BorderLayout());
 				{
-					JPanel delayCheckTextPanel = new JPanel(new GridLayout(6,1));
+					JPanel delayCheckTextPanel = new JPanel(new GridLayout(7,1));
 					{
 						JPanel delayCheckNamePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 						{
@@ -350,12 +287,11 @@ public class MainPage extends Page{
 			delayCheckPanel.add(delayCheckRightPanel);
 		}
 		
-		bookTabbedPane = new JTabbedPane();	//
-		
-		//
-		
-		bookTabbedPane.addTab("연체확인", delayCheckPanel);
-		bookTabbedPane.addTab("전체도서", allBookListPanel);
+		bookTabbedPane = new JTabbedPane();
+		{
+			bookTabbedPane.addTab("전체도서", allBookListPanel);
+			bookTabbedPane.addTab("연체확인", delayCheckPanel);
+		}
 		
 		WhitePanel downButtonPanel = new WhitePanel(new BorderLayout());
 		{
@@ -363,8 +299,8 @@ public class MainPage extends Page{
 			{
 				//임시
 				String[] categoryString = {"도서명", "저자명", "출판사", "분류"};
-				categoryComboBox = new JComboBox(categoryString);
-				
+				categoryComboBox = new JComboBox<String>(categoryString);
+
 				searchTextField = new JTextField(20);
 				
 				searchButton = new JButton("검색");		//검색 버튼
@@ -392,9 +328,8 @@ public class MainPage extends Page{
 		//변경 버튼 패널
 		WhitePanel upButtonPanel = new WhitePanel(new FlowLayout(FlowLayout.RIGHT));
 		{
-			changeButton = new JButton("변경/탈퇴");
-			changeButton.addActionListener(this);
-			upButtonPanel.add(changeButton, BorderLayout.EAST);
+			MainPage.getEditSignoutUserButton().addActionListener(this);
+			upButtonPanel.add(MainPage.getEditSignoutUserButton(), BorderLayout.EAST);
 		}
 		
 		//mainPagePanel = 메인화면 패널 (leftPanel패널, rightPanel 포함)
@@ -402,15 +337,12 @@ public class MainPage extends Page{
 		mainPagePanel.add(upButtonPanel, BorderLayout.NORTH);
 		mainPagePanel.add(bookTabbedPane, BorderLayout.CENTER);
 		mainPagePanel.add(downButtonPanel, BorderLayout.SOUTH);
-
 		
-		//컨테이너 ct에 startPagePanel 부착
 		ct.add(mainPagePanel);
-		
 	}
 	
 	//사용자 화면으로 세팅하는 메소드
-	void setUserPage() {
+	void setUserPanel() {
 		//myBookPanel(myBookLeftPanel 패널, myBookRightPanel 패널 포함)
 				WhitePanel myBookPanel = new WhitePanel();
 				{
@@ -419,52 +351,17 @@ public class MainPage extends Page{
 					{
 						JTable myBookTable = new JTable(1,5);
 						JScrollPane myBookScrollPane = new JScrollPane(myBookTable);
-//						{
-//							bookTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-//							bookTable.setModel(new DefaultTableModel (new Object[][][] {}, new String[] { "셀1","셀2","셀3","셀4","셀5" })  {
-//								public boolean isCellEditable(int row, int column) { return false; }
-//							} );
-//						}
-						{
-							String []a = {"a","b","c"};
-							String [][]b = {{"a1","a2","a3"},
-									{"b1","b2","b3"},
-									{"c1","c2","c3"}};
-							
-							//1. 모델과 데이터를 연결
-							DefaultTableModel model = new DefaultTableModel(b,a);
-							
-							//2. Model을 매개변수로 설정, new JTable(b,a)도 가능하지만
-							//삽입 삭제를 하기 위해 해당 방법을 사용합니다
-							myBookTable = new JTable(model); //
-
-							//3. 결과적으로는 JScrollPane를 추가합니다.
-							JScrollPane sc2 = new JScrollPane(myBookTable);
-
-							//4. 컴포넌트에  Table 추가
-							//add(sc2);
-
-							//테이블에 데이터 추가하기
-							//원본데이터를 건들지 않고 table의 매개변수인 model에 있는 데이터를 변경합니다
-							DefaultTableModel m = (DefaultTableModel)myBookTable.getModel();
-							//모델에 데이터 추가 , 1번째 출에 새로운 데이터를 추가합니다
-							m.insertRow(b.length, new Object[]{"d1","d2","d3"});
-							//추가를 마치고 데이터 갱신을 알립니다.
-							myBookTable.updateUI();
-
-							////------- 그 외 메소드들 ---------
-							////테이블의 데이터를 가져오는 메소드
-							//System.out.println(bookTable.getValueAt(1,1));
-							////테이블의 데이터를 바꾸는 메소드
-							//bookTable.setValueAt("picachu",2,2);
-							////테이블 row 갯수 가져오기
-							//System.out.println(bookTable.getRowCount());
-							////테이블 colum 갯수 가져오기
-							//System.out.println(bookTable.getColumnCount());
-							////테이블 Colum 이름 가져오기
-							//System.out.println(bookTable.getColumnName(0));
-						}
+						//{
+						//	TODO make Table from DataBase
+						//	bookTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+						//	bookTable.setModel(new DefaultTableModel (new Object[][][] {}, new String[] { "셀1","셀2","셀3","셀4","셀5" })  {
+						//		public boolean isCellEditable(int row, int column) { return false; }
+						//	} );
+						//}
 						myBookLeftPanel.add(myBookScrollPane, BorderLayout.CENTER);
+						
+						delayNoticeLabel = new JLabel("123");
+						myBookLeftPanel.add(delayNoticeLabel, BorderLayout.SOUTH);
 					}
 					////////////////////////////////////////////수정필요
 					/*오른쪽*/
@@ -504,10 +401,13 @@ public class MainPage extends Page{
 									myBookIdPanel.add(bookIdTextField = new JTextField(10));
 									myBookIdPanel.setBackground(Color.LIGHT_GRAY);
 								}
-								JPanel myBookIsDelayPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+								JPanel myBookIsDelayPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 								{
+									//TODO do better
 									myBookIsDelayPanel.add(new JLabel("연체여부 : "));
-									myBookIsDelayPanel.add(myBookIsDelayTextField = new JTextField(8));
+									myBookIsDelayPanel.add(myBookIsDelayLabel = new JLabel());
+									myBookIsDelayLabel.setText("V");
+									
 									myBookIsDelayPanel.setBackground(Color.LIGHT_GRAY);
 								}
 								myBookTextPanel.add(myBookNamePanel);
@@ -679,7 +579,7 @@ public class MainPage extends Page{
 					{
 						//임시
 						String[] categoryString = {"도서명", "저자명", "출판사", "분류"};
-						categoryComboBox = new JComboBox(categoryString);
+						categoryComboBox = new JComboBox<String>(categoryString);
 						
 						searchTextField = new JTextField(20);
 						
@@ -708,9 +608,9 @@ public class MainPage extends Page{
 				//변경 버튼 패널
 				WhitePanel upButtonPanel = new WhitePanel(new FlowLayout(FlowLayout.RIGHT));
 				{
-					changeButton = new JButton("변경/탈퇴");
-					changeButton.addActionListener(this);
-					upButtonPanel.add(changeButton, BorderLayout.EAST);
+					editSignoutUserButton = new JButton("변경/탈퇴");
+					editSignoutUserButton.addActionListener(this);
+					upButtonPanel.add(editSignoutUserButton, BorderLayout.EAST);
 				}
 				
 				//mainPagePanel = 메인화면 패널 (leftPanel패널, rightPanel 포함)
@@ -747,8 +647,8 @@ public class MainPage extends Page{
 			
 		case "변경/탈퇴":
 			//변경/탈퇴
-			getChangeButton().setEnabled(false);
-			new EditSignOutUserPage();
+			getEditSignoutUserButton().setEnabled(false);
+			new EditSignoutUserPage();
 			/*
 			 * 창 띄우고  버튼 비활성화
 			 */

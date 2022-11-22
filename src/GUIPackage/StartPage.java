@@ -112,10 +112,16 @@ public class StartPage extends Page{
 	public void actionPerformed(ActionEvent ae) {
 		switch(ae.getActionCommand()) {
 		case "로그인":
+
+			dispose();		//초기화면 창 끄고
+			new MainPage(); //메인화면 창 생성
+
+
 			String id = idTextField.getText(); //입력한 id
 			String password = new String(pwPasswordField.getPassword()); //입력한 pw
 			
 			//로그인 메소드(id, pw)
+
 			//로그인 메소드 추가 필요
 			//if(boolean 로그인 메소드(id, pw) == true) //성공
 			//{
@@ -130,6 +136,7 @@ public class StartPage extends Page{
 			//}
 			
 			//임시로 지정
+
 			if(id.equals("123") && password.equals("123"))
 			{
 				//user가 맞는지 확인 if(user's_id & id's_pw isIn userDB)
@@ -145,7 +152,6 @@ public class StartPage extends Page{
 				//메시지창(경고) 띄우는 메소드
 				MessageBox.printWarningMessageBox("입력한 정보가 없거나, \n비밀번호가 일치하지 않습니다.");
 			}
-			
 			break;
 			
 		case "회원등록":

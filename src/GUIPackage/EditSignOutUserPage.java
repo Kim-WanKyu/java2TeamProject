@@ -5,52 +5,61 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
-public class EditSignOutUserPage  extends Page{
-	
-	JTextField idTextField;				//id 입력 텍스트필드
-	JTextField nameTextField;			//이름 입력 텍스트필드
-	JTextField passwordTextField;		//pw 입력 텍스트필드
-	JTextField newPasswordTextField;	//새pw 입력 텍스트필드
+public class EditSignoutUserPage extends Page{
 
-	JButton editButton;				//비밀번호 변경 버튼
-	JButton exitButton;				//나가기 버튼
-	JButton signOutButton;				//비밀번호 변경 버튼
-	
-	JTabbedPane tableTabbedPane;
-	
-	//FindPage 생성자
-		public EditSignOutUserPage(){
-			setTitle(super.getTitle() + "_정보 변경 및 탈퇴 화면");
+	JButton editButton;		//변경 버튼
+	JButton signOutButton;	//탈퇴 버튼
+	JButton cancelButton;	//취소 버튼
+
+	//EditSignoutUserPage 생성자
+		public EditSignoutUserPage(){
+			setTitle("");
 			
 			this.addWindowListener(new WindowAdapter() {	//창 끄기 버튼 누를 시 이벤트 처리
 				public void windowClosing(WindowEvent e) {
-					//메인화면의 정보변경/탈퇴 버튼 활성화 
+					MainPage.getEditSignoutUserButton().setEnabled(true);
 					dispose();
 				}
 			});
 			
 			setPage();
-			setSize(500,500);
-			//packWindow();
+			
+			packWindow();
 		}
 		
 		@Override
 		void setPage() {
-			WhitePanel textPanel = new WhitePanel();
+			WhitePanel buttonPanel = new WhitePanel(new GridLayout(4,1,100,5));
 			{
+				editButton = new JButton("회원 변경");		//회원 변경 버튼
+				editButton.addActionListener(this);
+				signOutButton = new JButton("회원 탈퇴");	//회원 탈퇴 버튼
+				signOutButton.addActionListener(this);
+				cancelButton = new JButton("취소");	//취소 버튼
+				cancelButton.addActionListener(this);
 				
+				buttonPanel.add(new JLabel(" 원하시는 메뉴를 클릭하세요. "));
+				buttonPanel.add(editButton);
+				buttonPanel.add(signOutButton);
+				buttonPanel.add(cancelButton);
 			}
+			ct.add(buttonPanel);
 		}
 
 		public void actionPerformed(ActionEvent ae) {
 			switch (ae.getActionCommand()) {	
-			case "탈퇴" :
+			case "회원 변경":
+				new EditUserPage();
+				dispose();
 				break;
 				
-			case "변경":				
+			case "회원 탈퇴":
+				new SignoutUserPage();
+				dispose();
 				break;
 				
-			case "나가기":
+			case "취소":
+				MainPage.getEditSignoutUserButton().setEnabled(true);
 				dispose();
 				break;
 				
