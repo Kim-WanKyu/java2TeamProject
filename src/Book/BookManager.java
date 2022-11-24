@@ -136,7 +136,24 @@ public class BookManager {
 	}
 	//책 삭제
 	public void deleteBook(String id ) {
-		
+		if(Booklist.get(id).getBorrowCount()!=0) {
+			System.out.println("책을 모두 회수한 다음 책을 삭제해주세요");
+			return;
+		}
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String sql ="delete from book_list (where id = ?)";
+		try {
+			conn = DBManager.connect();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			pstmt.executeUpdate();
+			Booklist.remove(id);
+		}catch(Exception e) {
+			
+		}finally {
+			DBManager.close();
+		}
 	}
 
 }

@@ -10,12 +10,12 @@ public class User {
 	private String id;				//학번/교번(=ID)
 	private String password;		//비밀번호
 	private int isAdmin;			//관리자여부
-	private Boolean delay;			
+	private Date delay_date;			
 
 	//대여한 책(들)
 	private String[] borrowBook = new String[3];
-	private Timestamp[] borrowDates = new Timestamp[3];//대여한 날짜(들)
-	private String[] delayInfo = new String[3];		//대여한 책의 연체 정보(들)
+	private java.sql.Date[] borrowDates = new java.sql.Date[3];//대여한 날짜(들)
+		//대여한 책의 연체 정보(들)
 
 	private HashMap<String,String>BooksandBorrowMap = new HashMap<String,String>();
 
@@ -33,21 +33,25 @@ public class User {
 	public String getPassword() { return this.password; }
 	public int getIsAdmin() { return this.isAdmin; }
 	
-	public Timestamp[] getBorrowDates() { return this.borrowDates; }
+	public java.sql.Date[] getBorrowDates() { return this.borrowDates; }
 	public String[] getBorrowBooks() { return this.borrowBook; }
-	public Boolean getIsDelay() {return this.delay;}
+	public Date getIsDelay() {return this.delay_date;}
 	//set 메소드들
 	public void setName(String name) { this.name = name; }
 	public void setID(String id) { this.id = id; }
 	public void setPassword(String password) { this.password = password; }
 	public void setIsAdmin(int b) { this.isAdmin = b; }
-	public void setDelay(Boolean Delay) {this.delay = Delay;}
+	public void setDelay(java.sql.Date delay_date) {this.delay_date = delay_date;}
 	public void setBorrowBooks(int count, String book) 
 	{
 		borrowBook[count] =book;
 	}
-	public void setBorrowDates(int date,Timestamp timestamp) { this.borrowDates[date] = timestamp; 
-	}
+	
+	public void setBorrowDates(int date,java.sql.Date date2) { this.borrowDates[date] = date2; 
+}
+
+
+	
 
 
 	
