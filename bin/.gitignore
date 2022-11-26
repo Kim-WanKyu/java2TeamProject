@@ -1,13 +1,12 @@
 /Book/
 <<<<<<< HEAD
 /User/
-/GUIPackage/
-=======
-/User/
-/Book/
->>>>>>> 86bbdb2815d65e7096feb2a718ce72463aaa8919
 /DB/
+<<<<<<< HEAD
 /Main/
 =======
 >>>>>>> 0ea70ddad41ff2bef630f6fbde2b5346281637ad
+=======
+>>>>>>> e6c271c8e82ac61b3fbd26b041e709f62c9cd090
 /logintest/
+/GUIPackage/
