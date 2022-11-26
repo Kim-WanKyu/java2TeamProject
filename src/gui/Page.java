@@ -1,4 +1,8 @@
+<<<<<<<< HEAD:src/gui/Page.java
 package GUIPackage;
+========
+package gui.page;
+>>>>>>>> 511e71a (패키지 분류 및 이름 변경):src/gui/page/Page.java
 
 import java.awt.*;
 import java.awt.event.*;

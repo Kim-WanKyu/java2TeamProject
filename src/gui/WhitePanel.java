@@ -1,4 +1,8 @@
+<<<<<<<< HEAD:src/gui/WhitePanel.java
 package GUIPackage;
+========
+package gui.util;
+>>>>>>>> 511e71a (패키지 분류 및 이름 변경):src/gui/util/WhitePanel.java
 
 import java.awt.Color;
 import java.awt.FlowLayout;
