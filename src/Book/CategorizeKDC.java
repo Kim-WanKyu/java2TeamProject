@@ -1,8 +1,9 @@
 package Book;
 
+//KDC와 분류명 (KDC코드의 100, 10의 자리만 사용함)
 public class CategorizeKDC {
 		 //분류 카테고리명
-	static String[][] categoryName =
+	private final static String[][] categoryName =
 		{
 			{//000 총류
 				"총류",							//000
@@ -125,7 +126,7 @@ public class CategorizeKDC {
 				"역사_전기" }
 				
 		};//String[][] categoryName 끝 지점
-		
+
 	
 	//KDC코드로 분류명 찾아내 리턴
 	public static String getCategoryname(String kdc) {
@@ -141,7 +142,7 @@ public class CategorizeKDC {
 		for(int i=0; i<categoryName.length; i++) {
 			for(int j=0; i<categoryName[i].length; j++) {
 				if(category.equals(categoryName[i][j]) == true) {
-					code = "" + i + j + "0";
+					code = "" + i + j + '0';
 					isFind = true;
 					break;
 				}
