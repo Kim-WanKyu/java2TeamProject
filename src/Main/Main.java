@@ -1,17 +1,13 @@
-package Main;
+package main;
 
-import GUIPackage.StartPage;
-import User.*;
-import Book.BookManager;
-import DB.DBManager;
+import java.sql.SQLException;
+
+import gui.page.startPage.StartPage;
 
 public class Main {
 	
 	//main 메소드
-	public static void main(String args[]) throws Exception {
-		UserManager.getInstance().setAllUser();
-		BookManager.getInstance().setAllBook();
-		
+	public static void main(String args[]) throws SQLException {
 		//초기화면 실행
 		new StartPage();
 	}
