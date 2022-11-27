@@ -1,12 +1,15 @@
 package gui.page.startPage;
 
 import java.awt.*;
+
 import java.sql.SQLException;
+
 
 import javax.swing.*;
 
 import gui.page.Page;
 import gui.util.WhitePanel;
+
 import user.UserManager;
 
 public class StartPage extends Page{
@@ -17,14 +20,24 @@ public class StartPage extends Page{
 	StartPageComponent startPageComponent = new StartPageComponent();
 	
 	//StartPage 생성자
-	public StartPage() throws SQLException{
+
+
+	public StartPage(){
+
 		setTitle(super.getTitle() + "_초기 화면");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);	//x 누를 시 전체 창 끄기
 
 		setPage();		//화면 구성
 		
 		packWindow();	//창 크기 및 위치 맟춤
-		UserManager.getInstance().setAllUser();
+
+		try {
+			UserManager.getInstance().setAllUser();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 	
 	//화면 구성 메소드 setPage 메소드

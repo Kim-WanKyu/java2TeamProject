@@ -4,15 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import db.DBManager;
 
-import java.util.TreeMap;
-import java.util.Vector;
 
 public class BookManager {
 	private static BookManager instance = new BookManager();

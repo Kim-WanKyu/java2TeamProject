@@ -1,7 +1,9 @@
 package gui.page.mainPage;
 
 import java.awt.event.ActionEvent;
+
 import java.sql.SQLException;
+
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -155,7 +157,11 @@ public class MainPageComponent extends PageComponent {
 	
 	//버튼 클릭 시 이벤트 처리
 	@Override
-	public void actionPerformed(ActionEvent ae){
+
+
+
+	public void actionPerformed(ActionEvent ae) {
+
 		switch(ae.getActionCommand()) {
 		case "검색":
 			onClickSearchButton();
@@ -170,6 +176,7 @@ public class MainPageComponent extends PageComponent {
 			break;
 			
 		case "로그아웃":
+
 			
 			try {
 				onClickLogoutButton();
@@ -178,6 +185,9 @@ public class MainPageComponent extends PageComponent {
 				e.printStackTrace();
 			}
 			
+
+			onClickLogoutButton();
+
 			break;
 
 		case "종료하기":
@@ -261,6 +271,7 @@ public class MainPageComponent extends PageComponent {
 	}
 	
 	//로그아웃 버튼 작동 메소드 TODO
+
 	public void onClickLogoutButton()  {
 		//켜져있는 모든 창 끄고
 		try {

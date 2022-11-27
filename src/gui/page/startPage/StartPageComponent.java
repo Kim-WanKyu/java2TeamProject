@@ -11,6 +11,7 @@ import gui.page.mainPage.mainUserPage.MainUserPage;
 import gui.page.optionPage.startOption.findPage.FindPage;
 import gui.page.optionPage.startOption.signupPage.SignupPage;
 import gui.util.MessageBox;
+
 import user.User;
 import user.UserManager;
 
@@ -56,9 +57,6 @@ public class StartPageComponent extends PageComponent {
 		switch(ae.getActionCommand()) {
 		case "로그인":
 			onClickLoginButton();
-		
-				
-		
 			break;
 			
 		case "회원등록":
@@ -80,6 +78,7 @@ public class StartPageComponent extends PageComponent {
 		String id = getIdTextField().getText(); //입력한 id
 		String password = new String(getPwPasswordField().getPassword()); //입력한 pw
 		
+
 		
 		//new MainPage(); //메인화면 창 생성
 		
@@ -88,7 +87,8 @@ public class StartPageComponent extends PageComponent {
 		{	//TODO 임시
 			boolean isAdmin = false;//임시 사용자 기본 //관리자
 			isAdmin = UserManager.getInstance().findUser(id).getIsAdmin();
-			// 로그인 할 때, userDB의 isAdmin 값을 추출하여 isAdmin에 넣음.
+
+		
 			//관리자
 			if(isAdmin == true) {
 				//켜져있는 모든 창 끄기
@@ -106,7 +106,6 @@ public class StartPageComponent extends PageComponent {
 			//user가 맞는지 확인 if(user's_id & id's_pw isIn userDB)
 			
 		}
-	
 		else
 		{	/*입력한 내용을 지우고, 메세지를 띄움*/
 			eraseTextComponent(startTextComponent);
@@ -114,3 +113,4 @@ public class StartPageComponent extends PageComponent {
 		}
 	}
 }
+
