@@ -14,7 +14,7 @@ public class EditUserPage extends Page{
 	//EditUserPage 생성자
 	public EditUserPage(){
 		setTitle(super.getTitle() + "_회원 정보 변경 화면");
-		
+	
 		this.addWindowListener(new WindowAdapter() {	//창 끄기 버튼 누를 시 이벤트 처리
 			public void windowClosing(WindowEvent e) {
 				dispose();

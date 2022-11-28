@@ -1,13 +1,18 @@
 package gui.page.mainPage;
 
 import java.awt.event.ActionEvent;
-
+import java.awt.print.Book;
 import java.sql.SQLException;
-
+import java.util.ArrayList;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+import java.util.Vector;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import book.BookManager;
+import book.CategorizeKDC;
 import gui.page.PageComponent;
 import gui.page.optionPage.mainOption.book.editBookPage.EditBookPage;
 import gui.page.optionPage.mainOption.user.editSignoutUserPage.EditSignoutUserPage;
@@ -20,7 +25,7 @@ public class MainPageComponent extends PageComponent {
 	//컴포넌트들
 	private JTabbedPane tabbedPane = new JTabbedPane();		//탭 그룹홀더
 
-	
+
 	private JTextField searchTextField = new JTextField(20);	//검색 필드	
 	//버튼
 	private JButton searchButton = new JButton("검색");			//검색 버튼
@@ -39,13 +44,38 @@ public class MainPageComponent extends PageComponent {
 	public static String[] getAllBookColumnName() { return allBookColumnName; }
 	
 	//allBookTable의 데이터 //TODO DB에서 가져왔던 전체 도서 벡터로 초기화
-	private static String [][]allBookData = {	{"a1","a2","a3","a4","a5","a6","a7","a8"},
-												{"b1","b2","b3","a4","a5","a6","a7","a8"},
-												{"c1","c2","c3","a4","a5","a6","a7","a8"}	};
-	public static String[][] getAllBookData() { return allBookData; }
+//	private static  ArrayList<ArrayList<String>> allBookDataString;
+	private static String[][] allBookData;
+	
+	public static String[][] setAllBookData() {
+		TreeMap<String,book.Book> bookData = BookManager.getInstance().getlist();
+		int n=0;
+		allBookData = new String[bookData.size()][8];
+		for(Entry<String , book.Book> entry : bookData.entrySet()) {
+		
+			allBookData[n][0] = entry.getValue().getName();
+			allBookData[n][1] = entry.getValue().getAuthor();
+			allBookData[n][2] = entry.getValue().getPublisher();
+			allBookData[n][3] = CategorizeKDC.getCategoryname(entry.getValue().getCategory());
+			allBookData[n][4] = entry.getValue().getCategory();
+			allBookData[n][5] = entry.getValue().getId();
+			allBookData[n][6] = String.valueOf(entry.getValue().getTotalCount());
+			allBookData[n][7] = String.valueOf(entry.getValue().getBorrowCount());
+			
+			n++;
+		}
+		return allBookData;
+	}
+	
+
+	
+	public static String[][] getAllBookData() {
+
+		 	return allBookData; 
+		}
 	
 	//allBookTable의 테이블모델
-	private static DefaultTableModel allBookTableModel = new DefaultTableModel(allBookData,allBookColumnName);
+	private static DefaultTableModel allBookTableModel = new DefaultTableModel(setAllBookData(),allBookColumnName);
 	/*
 	 * //TODO make Table from DataBase 처음 프로그램 시작될 때 설정
 					allBookTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -139,6 +169,8 @@ public class MainPageComponent extends PageComponent {
 		allBookTable.setModel(new DefaultTableModel (allBookData, allBookColumnName)  {
 			public boolean isCellEditable(int row, int column) { return false; }
 		} );
+		
+		
 	}
 	
 	//get 메소드들
@@ -237,7 +269,6 @@ public class MainPageComponent extends PageComponent {
 			break;
 		}
 	}
-
 	//검색 버튼 작동 메소드 TODO
 	public void onClickSearchButton() {
 		String category = this.getSearchCategoryComboBox().getSelectedItem().toString();

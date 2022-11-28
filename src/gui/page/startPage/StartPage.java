@@ -30,14 +30,6 @@ public class StartPage extends Page{
 		setPage();		//화면 구성
 		
 		packWindow();	//창 크기 및 위치 맟춤
-
-		try {
-			UserManager.getInstance().setAllUser();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 	}
 	
 	//화면 구성 메소드 setPage 메소드

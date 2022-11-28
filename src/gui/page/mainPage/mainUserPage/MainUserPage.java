@@ -202,7 +202,6 @@ public class MainUserPage extends MainPage {
 
 
 
-
 /*
 
 case "대여하기":

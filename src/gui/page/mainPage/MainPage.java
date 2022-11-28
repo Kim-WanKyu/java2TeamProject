@@ -27,6 +27,7 @@ public abstract class MainPage extends Page{
 		}
 		return upPanel;
 	}	
+ 	
 	
  	//하단 패널 생성하는 메소드
  	public JPanel makeDownPanel() {

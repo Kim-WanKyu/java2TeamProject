@@ -410,7 +410,7 @@ public void returnbook (User returnuser, Book returnbook)
 }
 	//유저 삭제 메서드
 	public void deleteUser(User deleteuser)  {
-		
+	
 		Connection conn=null;
 		java.sql.Statement stmt;
 		ResultSet result;

@@ -8,9 +8,12 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 
+import book.Book;
 import book.BookManager;
 import gui.page.mainPage.MainPageComponent;
+import gui.page.startPage.StartPageComponent;
 import gui.util.MessageBox;
+import user.UserManager;
 
 import java.time.LocalDate;
 
@@ -23,7 +26,6 @@ public class MainUserPageComponent extends MainPageComponent {
 	private MainPageComponent mainPageComponent = new MainPageComponent(this.frame);
 	
 	private JTabbedPane userTab;
-
 	
 	//myBookTable 전체도서 테이블 static
 	//myBookTable의 컬럼명
@@ -72,6 +74,7 @@ public class MainUserPageComponent extends MainPageComponent {
 
 		InitMyBookTable();
 		InitTextField();
+		setFieldFromAllBookTable();
 		
 		//탭의 상태가 변할 시 이벤트 작동 (탭 이동 시 발동)
 		userTab.addChangeListener(new ChangeListener() {
@@ -163,7 +166,31 @@ public class MainUserPageComponent extends MainPageComponent {
 		isDelayTextField.setEditable(false);
 		bookAvailableStockTextField.setEditable(false);
 	}
-	
+	public void setFieldFromAllBookTable() {
+		//마우스 이벤트 처리 추가
+		getAllBookTable().addMouseListener(new MouseAdapter() {
+			String[] str = new String[getAllBookTable().getColumnCount()];
+			@Override
+			//클릭 시 정보 가져오기
+			public void mousePressed(MouseEvent me) {
+				for(int i=0; i<getAllBookTable().getColumnCount();i++)
+					str[i] = (String) getAllBookTable().getValueAt(getAllBookTable().getSelectedRow(), i);
+				
+				bookNameTextFields[0].setText(str[0]);
+				bookAuthorTextFields[0].setText(str[1]);
+				bookPublisherTextFields[0].setText(str[2]);
+				bookCategoryTextFields[0].setText(str[3]);
+				bookIdTextFields[0].setText(str[5]);
+				try {
+					int stockCount = Integer.parseInt(str[6])-Integer.parseInt(str[7]);
+					bookAvailableStockTextField.setText(""+stockCount);
+				}
+				catch(Exception e) {
+					bookAvailableStockTextField.setText("0");
+				}
+			}
+		});
+	}
 	//get 메소드들
 	public JTabbedPane getUserTab() { return userTab; }
 	
@@ -224,6 +251,11 @@ public class MainUserPageComponent extends MainPageComponent {
 	//대여하기 버튼 작동 메소드 TODO
 	public void onClickBorrowBookButton() {
 		MessageBox.printInfoMessageBox("대여하기");
+		Book borrowBooks = new Book();
+		borrowBooks.setId(bookIdTextFields[0].getText());
+		UserManager.getInstance().borrowBooks(StartPageComponent.getUser(), borrowBooks);
+		
+		
 	}
 	
 	//반납하기 버튼 작동 메소드 TODO
