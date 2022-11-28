@@ -20,6 +20,10 @@ public class UserManager {
 			System.out.print("인스턴스 반환");
 			return userInstance;
 		}
+		public Vector<User> getUserVector(){
+			return list;
+		}
+		
 		//모든 책 가져오기
 	public User findUser(String id){
 		
@@ -126,7 +130,7 @@ public class UserManager {
 				break;
 			}
 			
-			}
+		}
 		nowuser = list.get(count);
 		 borrowDates = nowuser.getBorrowDates();
 		Calendar c = Calendar.getInstance();
@@ -187,79 +191,72 @@ public class UserManager {
 			c.setTime(date);
 			book = nowuser.getBorrowBooks();
 			if(book[0] ==null) {
-			
-			sql +="book1 = ?, date1 = ?, delay_info = ? where(hakbun = ?)";
-			System.out.println(sql);
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, borrowbook.getId());
-			pstmt.setDate(2, date);//날짜 비교 연산 메서드
-			pstmt.setDate(3, null);
-			pstmt.setString(4, nowuser.getID());
-			pstmt.executeUpdate();
-			sql = "update book_list set borrowcount = ? where(id = ?)";
-			pstmt = conn.prepareStatement(sql);
-			borrowbook.addCount();
-			System.out.println(borrowbook.getBorrowCount());
-			pstmt.setInt(1,borrowbook.getBorrowCount());
-			pstmt.setString(2, borrowbook.getId());
-			pstmt.executeUpdate();
-			nowuser.setBorrowBooks(0, borrowbook.getId());
-			nowuser.setBorrowDates(0, date);
-		}
-		else if(book[1] == null) {
-			sql +="book2 = ?, date2 = ?, delay_info = ? where(hakbun = ?)";
-			System.out.println(sql);
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, borrowbook.getId());
-			pstmt.setDate(2, date);
-			pstmt.setDate(3, null);
-			
-			pstmt.setString(4,nowuser.getID());
-			pstmt.executeUpdate();
-			sql = "update book_list set borrowcount = ? where(id = ?)";
-			pstmt = conn.prepareStatement(sql);
-			 borrowbook.addCount();
-			 System.out.println(borrowbook.getBorrowCount());
+				sql +="book1 = ?, date1 = ?, delay_info = ? where(hakbun = ?)";
+				System.out.println(sql);
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, borrowbook.getId());
+				pstmt.setDate(2, date);//날짜 비교 연산 메서드
+				pstmt.setDate(3, null);
+				pstmt.setString(4, nowuser.getID());
+				pstmt.executeUpdate();
+				sql = "update book_list set borrowcount = ? where(id = ?)";
+				pstmt = conn.prepareStatement(sql);
+				borrowbook.addCount();
+				System.out.println(borrowbook.getBorrowCount());
+				pstmt.setInt(1,borrowbook.getBorrowCount());
+				pstmt.setString(2, borrowbook.getId());
+				pstmt.executeUpdate();
+				nowuser.setBorrowBooks(0, borrowbook.getId());
+				nowuser.setBorrowDates(0, date);
+			}
+			else if(book[1] == null) {
+				sql +="book2 = ?, date2 = ?, delay_info = ? where(hakbun = ?)";
+				System.out.println(sql);
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, borrowbook.getId());
+				pstmt.setDate(2, date);
+				pstmt.setDate(3, null);
+				pstmt.setString(4,nowuser.getID());
+				pstmt.executeUpdate();
+				sql = "update book_list set borrowcount = ? where(id = ?)";
+				pstmt = conn.prepareStatement(sql);
+				borrowbook.addCount();
+				System.out.println(borrowbook.getBorrowCount());
 			 
-			pstmt.setInt(1,borrowbook.getBorrowCount());
-			pstmt.setString(2, borrowbook.getId());
-			pstmt.executeUpdate();
-			nowuser.setBorrowBooks(1, borrowbook.getId());
-			nowuser.setBorrowDates(1, date);
-		}
-		
-		else if(book[2] == null) {
-			sql +="book3 = ?, date3 = ?, delay_info = ? where(hakbun = ?)";
-			System.out.println(sql);
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, borrowbook.getId());
-			pstmt.setDate(2, date);
-			pstmt.setDate(3, null);
-			pstmt.setString(4,nowuser.getID());
-			pstmt.executeUpdate();
-			sql = "update book_list set borrowcount = ? where(id = ?)";
-			pstmt = conn.prepareStatement(sql);
-			 borrowbook.addCount();
+				pstmt.setInt(1,borrowbook.getBorrowCount());
+				pstmt.setString(2, borrowbook.getId());
+				pstmt.executeUpdate();
+				nowuser.setBorrowBooks(1, borrowbook.getId());
+				nowuser.setBorrowDates(1, date);
+			}
+			else if(book[2] == null) {
+				sql +="book3 = ?, date3 = ?, delay_info = ? where(hakbun = ?)";
+				System.out.println(sql);
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, borrowbook.getId());
+				pstmt.setDate(2, date);
+				pstmt.setDate(3, null);
+				pstmt.setString(4,nowuser.getID());
+				pstmt.executeUpdate();
+				sql = "update book_list set borrowcount = ? where(id = ?)";
+				pstmt = conn.prepareStatement(sql);
+				borrowbook.addCount();
 			 
-			pstmt.setInt(1,borrowbook.getBorrowCount());
-			pstmt.setString(2, borrowbook.getId());
-			pstmt.executeUpdate();
-			nowuser.setBorrowBooks(2, borrowbook.getId());
-			nowuser.setBorrowDates(2, date);
-		}
-		
-		else
+				pstmt.setInt(1,borrowbook.getBorrowCount());
+				pstmt.setString(2, borrowbook.getId());
+				pstmt.executeUpdate();
+				nowuser.setBorrowBooks(2, borrowbook.getId());
+				nowuser.setBorrowDates(2, date);
+			}
+			else
 			{
 				System.out.println("책 빌리기 불가");
 				System.out.println("책 수량 없음");
 				return;
 			}
-		}catch(Exception e)
-		{
+		} catch(Exception e) {
 			e.printStackTrace();
-		}finally {
-		
-			
+		} finally {
 			DBManager.close();
 		}
 

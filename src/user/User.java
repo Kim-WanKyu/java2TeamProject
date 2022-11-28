@@ -22,7 +22,6 @@ public class User {
 	
 
 
-
 	//User 생성자
 	public User(){}
 	

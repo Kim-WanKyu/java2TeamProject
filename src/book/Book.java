@@ -20,7 +20,7 @@ public class Book {
 	public String getCategory() { return this.category; }
 	public int getTotalCount() { return this.totalCount; }
 	public int getBorrowCount() { return this.borrowCount; }
-
+	
 	//set 메소드들
 	public void setName(String name) { this.name = name; }
 	public void setAuthor(String author) { this.author = author; }

@@ -81,7 +81,7 @@ public class StartPageComponent extends PageComponent {
 		String id = getIdTextField().getText(); //입력한 id
 		String password = new String(getPwPasswordField().getPassword()); //입력한 pw
 		loginUser.setID(id);
-
+		
 		
 		//new MainPage(); //메인화면 창 생성
 		
