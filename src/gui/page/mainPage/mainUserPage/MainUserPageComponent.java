@@ -3,6 +3,9 @@ package gui.page.mainPage.mainUserPage;
 import java.awt.event.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Vector;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -32,12 +35,13 @@ public class MainUserPageComponent extends MainPageComponent {
 	//myBookTable의 컬럼명
 	private final String[] myBookColumnName = {"도서명","저자명","출판사","분류","KDC","BookID","대여일자","반납기한"};
 	//allBookTable의 데이터 //TODO DB에서 가져왔던 내 도서 벡터로 초기화
-	private String[][] myBookData = setMyBookData();
+	private Vector<String> myBookData ;
 	//allBookTable의 테이블모델
-	private DefaultTableModel myBookTableModel = new DefaultTableModel(myBookData, myBookColumnName);
-	
+	private DefaultTableModel myBookTableModel ;
+	//title 벡터
+	private Vector<String> titleVetor;
 	//allBookTable테이블
-	private JTable myBookTable = new JTable(myBookTableModel); //
+	private JTable myBookTable ; //
 
 	//allBookTable테이블 리턴하는 메소드
 	public JTable getMyBookTable() { return myBookTable; }
@@ -70,13 +74,20 @@ public class MainUserPageComponent extends MainPageComponent {
 		super(frame);
 		
 		userTab = mainPageComponent.getTabbedPane();		
-		
 		borrowBookButton.addActionListener(this);
 		returnBookButton.addActionListener(this);
-
+		//타이틀 만들기
+		myBookTableModel= new DefaultTableModel() {
+			public boolean isCellEditable(int i, int c) {
+				return false;
+			}
+				
+		};
+		
 		InitMyBookTable();
 		InitTextField();
 		setFieldFromAllBookTable();
+		
 		
 		//탭의 상태가 변할 시 이벤트 작동 (탭 이동 시 발동)
 		userTab.addChangeListener(new ChangeListener() {
@@ -104,38 +115,51 @@ public class MainUserPageComponent extends MainPageComponent {
 		mainUserTextComponents.add(bookAvailableStockTextField);
 	}
 	
-	public String[][] setMyBookData(){
-		User myUser = new User(); 
-		Book myBook = new Book();
-		myUser = UserManager.getInstance().findUser(StartPageComponent.getUser().getID());
-		String[][] bookData = new String[3][8];
-		for(int i=0;i<3;i++) {
-			if(myUser.getBorrowBooks()[i]!=null) { 
-				myBook = BookManager.getInstance().getlist().get(myUser.getBorrowBooks()[i]);
-				bookData[i][0] =  myBook.getName();
-				bookData[i][1] =  myBook.getAuthor();
-				bookData[i][2] =  myBook.getPublisher();
-				myBookData[i][3] =  myBook.getCategory();
-				myBookData[i][4] =  myBook.getCategory();
-			    myBookData[i][5] =  myBook.getId();
-			    myBookData[i][6] = 	myUser.getBorrowDates()[i].toString();
-			    myBookData[i][7] =  myUser.getBorrowBooks()[i];
-			}
-		
-		}
-		return myBookData;
-	}
+	
 	
 	public void InitMyBookTable() {
 		//TODO make myBookTable은 로그인 성공 시 마다 설정
+		myBookTable =  new JTable(myBookTableModel);
 		myBookTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		//myBookData 초기화
+		myBookTableModel.addColumn("도서명");
+		myBookTableModel.addColumn("저자명");
+		myBookTableModel.addColumn("출판사");
+		myBookTableModel.addColumn("분류");
+		myBookTableModel.addColumn("kdc");
+		myBookTableModel.addColumn("BookID");
+		myBookTableModel.addColumn("대여일자");
+		myBookTableModel.addColumn("반납일자");
+		User myUser = new User(); 
+		Book myBook = new Book();
+		myUser = UserManager.getInstance().findUser(StartPageComponent.getUser().getID());
+		Calendar c = Calendar.getInstance();
+		java.util.Date afterDate;
+		myBookData = new Vector<String>();
+		for(int i=0;i<3;i++) {
+			if(myUser.getBorrowBooks()[i]!=null) {
+				myBook = BookManager.getInstance().getlist().get(myUser.getBorrowBooks()[i]);
+				myBookData.add(myBook.getName());
+				myBookData.add(myBook.getAuthor());
+				myBookData.add(myBook.getPublisher());
+				myBookData.add(myBook.getCategory());
+				myBookData.add(myBook.getCategory());
+				myBookData.add(myBook.getId());
+				myBookData.add(myUser.getBorrowDates()[i].toString());
+				myBookData.add(myUser.getBorrowDates()[i].toString());
+				myBookTableModel.addRow(myBookData);
+			}
+		
+		
+		
+		
 		//테이블 열 위치 변경 불가
 		myBookTable.getTableHeader().setReorderingAllowed(false);
 		//테이블 내용 수정 불가 처리
-		myBookTable.setModel(new DefaultTableModel(myBookData, myBookColumnName) {
-			public boolean isCellEditable(int row, int column) { return false; }
-		} );
-		
+//		myBookTable.setModel(new DefaultTableModel(myBookData, titleVetor) {
+//			public boolean isCellEditable(int row, int column) { return false; }
+//		} );
+//		
 		//마우스 이벤트 처리 추가
 		myBookTable.addMouseListener(new MouseAdapter() {
 			String[] str = new String[myBookTable.getColumnCount()];
@@ -143,7 +167,8 @@ public class MainUserPageComponent extends MainPageComponent {
 			//클릭 시 정보 가져오기
 			public void mousePressed(MouseEvent me) {
 				for(int i=0; i<myBookTable.getColumnCount();i++)
-				{
+				{	
+					System.out.println("mybookRow"+myBookTable.getSelectedRow());
 					str[i] = (String) myBookTable.getValueAt(myBookTable.getSelectedRow(), i);
 				}
 				try {
@@ -166,6 +191,7 @@ public class MainUserPageComponent extends MainPageComponent {
 			}
 		});
 	}
+}
 	
 	public void InitTextField(){
 		//각 텍스트 배열의 할당 및 초기화
@@ -290,10 +316,10 @@ public class MainUserPageComponent extends MainPageComponent {
 		Book returnBooks = new Book();
 		returnBooks = BookManager.getInstance().getlist().get(bookIdTextFields[1].getText());
 		UserManager.getInstance().returnbook(StartPageComponent.getUser(), returnBooks);
-		DefaultTableModel tm =  (DefaultTableModel) getMyBookTable().getModel();
-		tm.removeRow(getMyBookTable().getSelectedRow());
-	
-		getMyBookTable().updateUI();
+		
+		System.out.println(getMyBookTable().getSelectedRow());
+		JTable toremove =getMyBookTable().getSelectedRow();
+		getMyBookTable().getSelectedRow();
 		
 	}
 }
