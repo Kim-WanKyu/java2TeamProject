@@ -32,7 +32,7 @@ public class MainUserPageComponent extends MainPageComponent {
 	//myBookTable의 컬럼명
 	private final String[] myBookColumnName = {"도서명","저자명","출판사","분류","KDC","BookID","대여일자","반납기한"};
 	//allBookTable의 데이터 //TODO DB에서 가져왔던 내 도서 벡터로 초기화
-	private String[][] myBookData =new String[3][8];
+	private String[][] myBookData = setMyBookData();
 	//allBookTable의 테이블모델
 	private DefaultTableModel myBookTableModel = new DefaultTableModel(myBookData, myBookColumnName);
 	
@@ -63,29 +63,6 @@ public class MainUserPageComponent extends MainPageComponent {
 	private JButton returnBookButton = new JButton("반납하기");	//반납하기 버튼
 	
 	private JLabel delayNoticeLabel = new JLabel("");	//연체 알림 메세지 레이블
-	
-	
-	
-	public  String[][] setMyBookData(){
-		User myUser = new User(); 
-		Book myBook = new Book();
-	
-				myUser = UserManager.getInstance().findUser(StartPageComponent.getUser().getID());
-		for(int i=0;i<myBookData.length;i++) {
-			 myBook = BookManager.getInstance().getlist().get(myUser.getBorrowBooks()[i]);
-			myBookData[i][0] =  myBook.getName();
-			myBookData[i][1] =  myBook.getAuthor();
-			myBookData[i][2] =  myBook.getPublisher();
-			myBookData[i][3] =  myBook.getCategory();
-			myBookData[i][4] =  myBook.getCategory();
-			myBookData[i][5] =  myBook.getId();
-			myBookData[i][6] = 	myUser.getBorrowDates()[i].toString();
-			myBookData[i][7] =  myUser.getBorrowBooks()[i];
-		}
-		
-		return myBookData;
-
-	}
 	
 	
 	//MainAdminPageComponent생성자
@@ -127,13 +104,35 @@ public class MainUserPageComponent extends MainPageComponent {
 		mainUserTextComponents.add(bookAvailableStockTextField);
 	}
 	
+	public String[][] setMyBookData(){
+		User myUser = new User(); 
+		Book myBook = new Book();
+		myUser = UserManager.getInstance().findUser(StartPageComponent.getUser().getID());
+		String[][] bookData = new String[3][8];
+		for(int i=0;i<3;i++) {
+			if(myUser.getBorrowBooks()[i]!=null) { 
+				myBook = BookManager.getInstance().getlist().get(myUser.getBorrowBooks()[i]);
+				bookData[i][0] =  myBook.getName();
+				bookData[i][1] =  myBook.getAuthor();
+				bookData[i][2] =  myBook.getPublisher();
+				myBookData[i][3] =  myBook.getCategory();
+				myBookData[i][4] =  myBook.getCategory();
+			    myBookData[i][5] =  myBook.getId();
+			    myBookData[i][6] = 	myUser.getBorrowDates()[i].toString();
+			    myBookData[i][7] =  myUser.getBorrowBooks()[i];
+			}
+		
+		}
+		return myBookData;
+	}
+	
 	public void InitMyBookTable() {
 		//TODO make myBookTable은 로그인 성공 시 마다 설정
 		myBookTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		//테이블 열 위치 변경 불가
 		myBookTable.getTableHeader().setReorderingAllowed(false);
 		//테이블 내용 수정 불가 처리
-		myBookTable.setModel(new DefaultTableModel (setMyBookData(), myBookColumnName) {
+		myBookTable.setModel(new DefaultTableModel(myBookData, myBookColumnName) {
 			public boolean isCellEditable(int row, int column) { return false; }
 		} );
 		
@@ -277,20 +276,25 @@ public class MainUserPageComponent extends MainPageComponent {
 	public void onClickBorrowBookButton() {
 		MessageBox.printInfoMessageBox("대여하기");
 		Book borrowBooks = new Book();
-		
-			borrowBooks = BookManager.getInstance().getlist().get(bookIdTextFields[0].getText());
+		borrowBooks = BookManager.getInstance().getlist().get(bookIdTextFields[0].getText());
 		UserManager.getInstance().borrowBooks(StartPageComponent.getUser(), borrowBooks);
 		getAllBookTable().setValueAt(Integer.toString(borrowBooks.getBorrowCount()), getAllBookTable().getSelectedRow(),7 );
 		getAllBookTable().updateUI();
 		
-		
-	}
+				
+		}
 	
 	//반납하기 버튼 작동 메소드 TODO
 	public void onClickReturnBookButton() {
 		MessageBox.printInfoMessageBox("반납하기");
 		Book returnBooks = new Book();
-		returnBooks = BookManager.getInstance().getlist().get(bookIdTextFields);
+		returnBooks = BookManager.getInstance().getlist().get(bookIdTextFields[1].getText());
+		UserManager.getInstance().returnbook(StartPageComponent.getUser(), returnBooks);
+		DefaultTableModel tm =  (DefaultTableModel) getMyBookTable().getModel();
+		tm.removeRow(getMyBookTable().getSelectedRow());
+	
+		getMyBookTable().updateUI();
+		
 	}
 }
 
