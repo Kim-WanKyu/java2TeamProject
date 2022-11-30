@@ -1,6 +1,6 @@
-package Main;
+package main;
 
-import GUIPackage.StartPage;
+import gui.page.startPage.StartPage;
 
 public class Main {
 	

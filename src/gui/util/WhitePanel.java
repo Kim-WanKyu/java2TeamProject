@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:src/gui/WhitePanel.java
-package GUIPackage;
-========
 package gui.util;
->>>>>>>> 511e71a (패키지 분류 및 이름 변경):src/gui/util/WhitePanel.java
 
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -14,12 +10,12 @@ import javax.swing.JPanel;
 public class WhitePanel extends JPanel{
 	
 	//WhitePanel생성자
-	WhitePanel() {
+	public WhitePanel() {
 		this(new FlowLayout());
 	}
 	
 	//WhitePanel생성자(레이아웃)
-	WhitePanel(LayoutManager manager) {
+	public WhitePanel(LayoutManager manager) {
 		setLayout(manager);
 		setBackground(Color.WHITE);
 	}

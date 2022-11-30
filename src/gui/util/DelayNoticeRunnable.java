@@ -1,10 +1,6 @@
-<<<<<<<< HEAD:src/gui/DelayNoticeRunnable.java
-package GUIPackage;
-========
+
 package gui.util;
->>>>>>>> 511e71a (패키지 분류 및 이름 변경):src/gui/util/DelayNoticeRunnable.java
-//package GUIPackage;
-//
+
 //import java.time.LocalDate;
 //
 //public class delayNoticeRunnable implements Runnable{

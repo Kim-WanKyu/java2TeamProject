@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:src/gui/MessageBox.java
-package GUIPackage;
-========
 package gui.util;
->>>>>>>> 511e71a (패키지 분류 및 이름 변경):src/gui/util/MessageBox.java
 
 import javax.swing.*;
 

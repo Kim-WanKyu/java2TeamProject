@@ -1,4 +1,4 @@
-package Book;
+package book;
 
 public class Book {
 	private String name;		//도서 이름
