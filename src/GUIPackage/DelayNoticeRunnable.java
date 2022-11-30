@@ -1,4 +1,4 @@
-package GUIPackage.MainPage.mainUserPackage;
+package GUIPackage;
 //package GUIPackage;
 //
 //import java.time.LocalDate;

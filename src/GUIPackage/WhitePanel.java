@@ -1,4 +1,4 @@
-package GUIPackage.util;
+package GUIPackage;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -10,13 +10,14 @@ import javax.swing.JPanel;
 public class WhitePanel extends JPanel{
 	
 	//WhitePanel생성자
-	public WhitePanel() {
+	WhitePanel() {
 		this(new FlowLayout());
 	}
 	
 	//WhitePanel생성자(레이아웃)
-	public WhitePanel(LayoutManager manager) {
+	WhitePanel(LayoutManager manager) {
 		setLayout(manager);
 		setBackground(Color.WHITE);
 	}
+	
 }

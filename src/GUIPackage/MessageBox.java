@@ -1,4 +1,4 @@
-package GUIPackage.util;
+package GUIPackage;
 
 import javax.swing.*;
 
