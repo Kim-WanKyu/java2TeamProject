@@ -15,6 +15,8 @@ import javax.swing.table.DefaultTableModel;
 import book.BookManager;
 import book.CategorizeKDC;
 import gui.page.PageComponent;
+import gui.page.mainPage.mainAdminPage.MainAdminPage;
+import gui.page.mainPage.mainAdminPage.MainAdminPageComponent;
 import gui.page.optionPage.mainOption.book.editBookPage.EditBookPage;
 import gui.page.optionPage.mainOption.user.editSignoutUserPage.EditSignoutUserPage;
 import gui.page.startPage.StartPage;
@@ -109,10 +111,11 @@ public class MainPageComponent extends PageComponent {
 
 	//userTable테이블 리턴하는 메소드
 	public static JTable getAllUserTable() { return userTable; }
-
+	//검색 테이블 생성
+	private static DefaultTableModel searchModel;
 	//변경사항있으면 업데이트해주는 메소드
 	//allBookTable.updateUI();
-	
+	private static Object[][] defaultSearchData ;
 	//MainPageComponent생성자
 	public MainPageComponent(JFrame frame)
 	{
@@ -235,26 +238,50 @@ public class MainPageComponent extends PageComponent {
 			break;
 		}
 	}
+	public static void initSearchData(String category, String str) {
+		LinkedList<book.Book> bookList = BookManager.getInstance().findBook(category, str);
+		Vector<Object> insertBook = new Vector<Object>(); 
+		for(int i = 0; i<bookList.size();i++) {
+			
+			insertBook.add(bookList.get(i).getName());
+			insertBook.add(bookList.get(i).getAuthor());
+			insertBook.add(bookList.get(i).getCategory());
+			insertBook.add(bookList.get(i).getCategory());
+			insertBook.add(bookList.get(i).getId());
+			insertBook.add(bookList.get(i).getTotalCount());
+			insertBook.add(bookList.get(i).getBorrowCount());
+			searchModel.addRow(insertBook);
+			
+			
+		}
+	}
 	//검색 버튼 작동 메소드 TODO
 	public void onClickSearchButton() {
 		String category = this.getSearchCategoryComboBox().getSelectedItem().toString();
 		String str = getSearchTextField().getText();
+		
+		
+		
+		searchModel = new DefaultTableModel(defaultSearchData, allBookColumnName);
 		MessageBox.printInfoMessageBox("검색");
 		//2자 이상 입력 시 검색 가능
 		if(str.length() >= 2) {
 			MessageBox.printInfoMessageBox(category + '\n' +str);
 			//검색메서드 실행
+			initSearchData(category, str);
+			allBookTable = new JTable(searchModel);
+			allBookTable.updateUI();
+			
+			searchModel.
 		}
 		else {
 			MessageBox.printWarningMessageBox("검색어가 너무 짧습니다.");
 		}
-		//검색 메소드 실행
-		if (tabbedPane.getSelectedIndex() == 0) {
-			//탭이 전체목록 일 때
-		}
-		else {
+		
+		MainAdminPage.updateTable();
+		
 			//탭이 내 책 목록일 때
-		}
+		
 		//검색
 //		allBookTableModel = new DefaultTableModel(defaultSerachBookData,allBookColumnName);
 //		allBookTable = new JTable(searchBookTableModel);
@@ -274,7 +301,7 @@ public class MainPageComponent extends PageComponent {
 //			 allBookTable.updateUI();
 //		}
 		
-		DefaultTableModel searchModel;
+		
 		LinkedList<book.Book> searchBookDataList = new LinkedList<>();
 		Object [][] searchBookData = new String[searchBookDataList.size()][7];
 		

@@ -336,6 +336,8 @@ public class MainUserPageComponent extends MainPageComponent {
 		Book returnBooks = new Book();
 		returnBooks = BookManager.getInstance().getlist().get(bookIdTextFields[1].getText());
 		UserManager.getInstance().returnbook(StartPageComponent.getUser(), returnBooks);
+		getAllBookTable().setValueAt(Integer.toString(returnBooks.getBorrowCount()), getAllBookTable().getSelectedRow(),7 );
+		getAllBookTable().updateUI();
 		myBookTableModel.removeRow(getMyBookTable().getSelectedRow());
 	}
 }

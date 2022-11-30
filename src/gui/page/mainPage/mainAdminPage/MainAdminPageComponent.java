@@ -91,6 +91,8 @@ public class MainAdminPageComponent extends MainPageComponent {
 			@Override
 			//클릭 시 정보 가져오기
 			public void mousePressed(MouseEvent me) {
+				if(getAllBookTable().getSelectedRow() == -1)
+					return;
 				for(int i=0; i<getAllBookTable().getColumnCount();i++)
 					str[i] =  getAllBookTable().getValueAt(getAllBookTable().getSelectedRow(), i);
 				

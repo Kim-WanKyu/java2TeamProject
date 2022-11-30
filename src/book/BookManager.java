@@ -54,17 +54,16 @@ public class BookManager {
 		case "도서명":
 			for(Entry<String,Book> entry : Booklist.entrySet())
 			{
-				System.out.println("여기 실행");
 				Book getBook = entry.getValue();
 				if(getBook.getName().contains(word))
-					bookqueue.offer(getBook);
+						bookqueue.offer(getBook);
 			}
 			break;
 			
 		case "저자명":
 			for(Entry<String,Book> entry : Booklist.entrySet())
 			{
-				System.out.println("여기 실행");
+				System.out.println("여기 저자 실행");
 				Book getBook = entry.getValue();
 				if(getBook.getAuthor().contains(word))
 					bookqueue.offer(getBook);

@@ -219,5 +219,10 @@ public class MainAdminPage extends MainPage {
 		}
 		ct.add(mainAdminPanel);		
 	}
+
+	public static void updateTable() {
+		MainPageComponent.getAllBookTableModel().fireTableDataChanged();
+		MainPageComponent.getAllBookTable().updateUI();
+	}
 }
 
