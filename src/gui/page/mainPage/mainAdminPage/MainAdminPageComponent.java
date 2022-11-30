@@ -95,13 +95,16 @@ public class MainAdminPageComponent extends MainPageComponent {
 				bookNameTextFields[3].setText(str[0].toString());
 				bookAuthorTextFields[3].setText(str[1].toString());
 				bookPublisherTextFields[3].setText(str[2].toString());
-				bookCategoryTextFields[3].setText(str[3].toString());
+				try {
+					bookCategoryTextFields[3].setText(str[3].toString());
+				} catch(Exception e) {
+					bookCategoryTextFields[3].setText("");
+				}
 				bookIdTextFields[3].setText(str[5].toString());
 				try {
 					int stockCount = Integer.parseInt(str[6].toString())-Integer.parseInt(str[7].toString());
 					bookAvailableStockTextField.setText(""+stockCount);
-				}
-				catch(Exception e) {
+				} catch(Exception e) {
 					bookAvailableStockTextField.setText("0");
 				}
 			}

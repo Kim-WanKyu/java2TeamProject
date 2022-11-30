@@ -20,7 +20,6 @@ import user.User;
 import user.UserManager;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class MainUserPageComponent extends MainPageComponent {
 
@@ -130,7 +129,10 @@ public class MainUserPageComponent extends MainPageComponent {
 				myBookData[4] = myBook.getCategory();
 				myBookData[5] = myBook.getId();
 				myBookData[6] = myUser.getBorrowDates()[i];
-				myBookData[7] = myUser.getBorrowDates()[i];
+				c.setTime(myUser.getBorrowDates()[i]);
+				c.add(Calendar.DATE, 7);
+				afterDate =new java.sql.Date(c.getTimeInMillis());
+				myBookData[7] = afterDate;
 				myBookTableModel.addRow(myBookData);
 			}	
 		}
@@ -159,13 +161,17 @@ public class MainUserPageComponent extends MainPageComponent {
 					bookNameTextFields[1].setText(str[0].toString());
 					bookAuthorTextFields[1].setText(str[1].toString());
 					bookPublisherTextFields[1].setText(str[2].toString());
-					bookCategoryTextFields[1].setText(str[3].toString());
-					//KDC나 분류둥 하나 없음.
+					if(str[3].toString()!=null) {
+						bookCategoryTextFields[1].setText(str[3].toString());
+					}//KDC나 분류둥 하나 없음.
+					else {
+						bookCategoryTextFields[1].setText("");
+					}
 					bookIdTextFields[1].setText(str[5].toString());
 					borrowDateTextField.setText(str[6].toString());
 					returnDateTextField.setText(str[7].toString());
 					
-					boolean isDelay = LocalDate.now().isAfter(LocalDate.parse[7]);
+					boolean isDelay = LocalDate.now().isAfter((LocalDate)str[7]);
 					String isDelayString = isDelay ? "True":"False";
 					isDelayTextField.setText(isDelayString);
 				}catch(Exception e) {
@@ -215,7 +221,13 @@ public class MainUserPageComponent extends MainPageComponent {
 					bookNameTextFields[0].setText(str[0].toString());
 					bookAuthorTextFields[0].setText(str[1].toString());
 					bookPublisherTextFields[0].setText(str[2].toString());
-					bookCategoryTextFields[0].setText(str[3].toString());
+					if(str[3]!=null) {
+						bookCategoryTextFields[0].setText(str[3].toString());
+					}
+					else {
+						bookIdTextFields[0].setText("");
+						bookIdTextFields[0].setText("");
+					}
 					bookIdTextFields[0].setText(str[5].toString());
 				try {
 					int stockCount = Integer.parseInt(str[6].toString())-Integer.parseInt(str[7].toString());
@@ -289,23 +301,35 @@ public class MainUserPageComponent extends MainPageComponent {
 		MessageBox.printInfoMessageBox("대여하기");
 		Book borrowBooks = new Book();
 		borrowBooks = BookManager.getInstance().getlist().get(bookIdTextFields[0].getText());
-		UserManager.getInstance().borrowBooks(StartPageComponent.getUser(), borrowBooks);
-		getAllBookTable().setValueAt(Integer.toString(borrowBooks.getBorrowCount()), getAllBookTable().getSelectedRow(),7 );
-		getAllBookTable().updateUI();
-		 LocalDateTime dateAndtime = LocalDateTime.now();
-		String inputStr[] = new String[8];
-		inputStr[0] = borrowBooks.getName();
-		inputStr[1] = borrowBooks.getAuthor();
-		inputStr[2] = borrowBooks.getPublisher();
-		inputStr[3] = borrowBooks.getCategory();//TODO
-		inputStr[4] = borrowBooks.getCategory();
-		inputStr[5] = borrowBooks.getId();
-		inputStr[6] = dateAndtime.toString();
-		inputStr[7] = (dateAndtime.plusDays(7).toString());
-		myBookTableModel.addRow(inputStr);
-				
+		 
+		String getMessage = UserManager.getInstance().borrowBooks(StartPageComponent.getUser(), borrowBooks);
+		
+		switch(getMessage) {
+			case "Success":
+				getAllBookTable().setValueAt(Integer.toString(borrowBooks.getBorrowCount()), getAllBookTable().getSelectedRow(),7 );
+				getAllBookTable().updateUI();
+				LocalDate dateAndtime = LocalDate.now();
+				String inputStr[] = new String[8];
+				inputStr[0] = borrowBooks.getName();
+				inputStr[1] = borrowBooks.getAuthor();
+				inputStr[2] = borrowBooks.getPublisher();
+				inputStr[3] = borrowBooks.getCategory();//TODO
+				inputStr[4] = borrowBooks.getCategory();
+				inputStr[5] = borrowBooks.getId();
+				inputStr[6] = dateAndtime.toString();
+				inputStr[7] = (dateAndtime.plusDays(7).toString());
+				myBookTableModel.addRow(inputStr);
+				break;
+			case "bookOver":
+			    MessageBox.printWarningMessageBox("빌릴 수 있는 책 개수 초과");
+			    break;
+			case "bookStockOver":
+				MessageBox.printWarningMessageBox("책 수량 없음!!");
+				 break;
+			case "delay":
+				MessageBox.printWarningMessageBox("책 빌리기 불가!! 책 연체 됨!!");
 		}
-	
+	}
 	//반납하기 버튼 작동 메소드 TODO
 	public void onClickReturnBookButton() {
 		MessageBox.printInfoMessageBox("반납하기");
