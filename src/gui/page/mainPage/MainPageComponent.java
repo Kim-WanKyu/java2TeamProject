@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.print.Book;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -45,9 +46,11 @@ public class MainPageComponent extends PageComponent {
 	
 	//allBookTable의 데이터 //TODO DB에서 가져왔던 전체 도서 벡터로 초기화
 //	private static  ArrayList<ArrayList<String>> allBookDataString;
-	private static String[][] allBookData;
-	
-	public static String[][] setAllBookData() {
+	private static Object[][] allBookData;
+	private static Object [][] defaultBookData;
+	public static Object[][] getAllBookData() { return allBookData; }
+
+	public static Object[] setAllBookData() {
 		TreeMap<String,book.Book> bookData = BookManager.getInstance().getlist();
 		int n=0;
 		allBookData = new String[bookData.size()][8];
@@ -69,13 +72,9 @@ public class MainPageComponent extends PageComponent {
 	
 
 	
-	public static String[][] getAllBookData() {
-
-		 	return allBookData; 
-		}
 	
 	//allBookTable의 테이블모델
-	private static DefaultTableModel allBookTableModel = new DefaultTableModel(setAllBookData(),allBookColumnName);
+	private static DefaultTableModel allBookTableModel = new DefaultTableModel(defaultBookData,allBookColumnName);
 	/*
 	 * //TODO make Table from DataBase 처음 프로그램 시작될 때 설정
 					allBookTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -83,13 +82,13 @@ public class MainPageComponent extends PageComponent {
 						public boolean isCellEditable(int row, int column) { return false; }
 					} );
 	 */
+	public static DefaultTableModel getAllBookTableModel() { return allBookTableModel; }
+	
 	//allBookTable테이블
 	private static JTable allBookTable = new JTable(allBookTableModel); //
-
+	
 	//allBookTable테이블 리턴하는 메소드
 	public static JTable getAllBookTable() { return allBookTable; }
-	
-	
 	/////
 	//userTable 전체도서 테이블 static
 	//userTable의 컬럼명
@@ -97,7 +96,7 @@ public class MainPageComponent extends PageComponent {
 	public static String[] getAllUserColumnName() { return userColumnName; }
 	
 	//userTable의 데이터 //TODO DB에서 가져왔던 전체 유저 벡터로 초기화
-	private static String [][]userData = {	{"a1","a2"},	//내용 //TODO 이거는 전체 유저 벡터로 초기화
+	private static String [][]defaultUserData = {	{"a1","a2"},	//내용 //TODO 이거는 전체 유저 벡터로 초기화
 											{"b1","b2"},
 											{"c1","c2"},
 											{"c1","c2"},
@@ -133,10 +132,11 @@ public class MainPageComponent extends PageComponent {
 											{"c1","c2"},
 											{"c1","c2"},
 											{"c1","c2"}	};
-	public static String[][] getAllUserData() { return userData; }
+	
+	public static String[][] getAllUserData() { return defaultUserData; }
 	
 	//userTable의 테이블모델
-	private static DefaultTableModel userTableModel = new DefaultTableModel(userData,userColumnName);
+	private static DefaultTableModel userTableModel = new DefaultTableModel(defaultUserData,userColumnName);
 
 	//userTable테이블
 	private static JTable userTable = new JTable(userTableModel); //
@@ -161,14 +161,29 @@ public class MainPageComponent extends PageComponent {
 	}
 	
 	public static void InitAllBookTable() {
+		allBookTableModel = new DefaultTableModel(defaultBookData,allBookColumnName);
+		allBookTable = new JTable(allBookTableModel);
 		//TODO make Table from DataBase 처음 프로그램 시작될 때 설정
 		allBookTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		//테이블 열 위치 변경 불가
 		allBookTable.getTableHeader().setReorderingAllowed(false);
+		TreeMap<String,book.Book> bookData = BookManager.getInstance().getlist();
+		Object BookTableInform[] = new Object[8];
+		for(Entry<String , book.Book> entry : bookData.entrySet()) {
+			BookTableInform[0] = entry.getValue().getName();
+			BookTableInform[1] = entry.getValue().getAuthor();
+			BookTableInform[2] = entry.getValue().getPublisher();
+			BookTableInform[3] = entry.getValue().getCategory();
+			BookTableInform[4] = entry.getValue().getCategory();
+			BookTableInform[5] = entry.getValue().getId();
+			BookTableInform[6] = entry.getValue().getTotalCount();
+			BookTableInform[7] = entry.getValue().getBorrowCount();
+			allBookTableModel.addRow(BookTableInform);
+		}
 		//테이블 내용 수정 불가 처리
-		allBookTable.setModel(new DefaultTableModel (allBookData, allBookColumnName)  {
-			public boolean isCellEditable(int row, int column) { return false; }
-		} );
+//		allBookTable.setModel(new DefaultTableModel (allBookData, allBookColumnName)  {
+//			public boolean isCellEditable(int row, int column) { return false; }
+//		} );
 		
 		
 	}
@@ -225,21 +240,6 @@ public class MainPageComponent extends PageComponent {
 		case "종료하기":
 			onClickExitButton();
 			break;
-		
-			//사용자
-		case "대여하기":
-			//대여
-			/*if(유저가 대출가능한지 && 재고가 남았는지)
-			 * 해당 도서 정보 유저에 저장하고 도서 재고-1
-			 * else
-			 * 	경고메세지 (대출 불가)
-			 */
-			break;
-
-			//사용자
-		case "반납하기":	//TODO 버튼 아예 없음
-			//반납
-			break;
 			
 			//관리자
 		case "등록":
@@ -277,6 +277,7 @@ public class MainPageComponent extends PageComponent {
 		//2자 이상 입력 시 검색 가능
 		if(str.length() >= 2) {
 			MessageBox.printInfoMessageBox(category + '\n' +str);
+			//검색메서드 실행
 		}
 		else {
 			MessageBox.printWarningMessageBox("검색어가 너무 짧습니다.");
@@ -289,6 +290,38 @@ public class MainPageComponent extends PageComponent {
 			//탭이 내 책 목록일 때
 		}
 		//검색
+//		allBookTableModel = new DefaultTableModel(defaultSerachBookData,allBookColumnName);
+//		allBookTable = new JTable(searchBookTableModel);
+//		allBookTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+//		LinkedList<book.Book> searchList = BookManager.getInstance().findBook(category, str);
+//		System.out.println(category);
+//		String[] searchBookArrangement = new String[8]; 
+//		for(book.Book searchBook :searchList) {
+//			 searchBookArrangement[0] = searchBook.getName();
+//			 searchBookArrangement[1] = searchBook.getAuthor();
+//			 searchBookArrangement[2] = searchBook.getPublisher();
+//			 searchBookArrangement[3] = searchBook.getCategory();
+//			 searchBookArrangement[4] = searchBook.getCategory();
+//			 searchBookArrangement[5] = Integer.toString(searchBook.getTotalCount());
+//			 searchBookArrangement[6] = Integer.toString(searchBook.getBorrowCount());
+//			 allBookTableModel.addRow(searchBookArrangement);
+//			 allBookTable.updateUI();
+//		}
+		
+		DefaultTableModel searchModel;
+		LinkedList<book.Book> searchBookDataList = new LinkedList<>();
+		Object [][] searchBookData = new String[searchBookDataList.size()][7];
+		
+		allBookTable.setEnabled(false);
+		
+		for(book.Book searchBook : BookManager.getInstance().findBook(category, str)) {
+			//allBookTable.setEnabled(false);
+		}
+		
+		allBookTable.setModel(new DefaultTableModel (searchBookData, allBookColumnName)  {
+			public boolean isCellEditable(int row, int column) { return false; }
+		} );
+				
 		/* if(일치)
 		 * 	텍스트필드에서 추출해서 전체 책과 비교해서 일치하는 것 들만 테이블에 출력
 		 * elseq

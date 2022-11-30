@@ -7,6 +7,8 @@ import javax.swing.*;
 
 import gui.page.PageComponent;
 import gui.util.MessageBox;
+import user.User;
+import user.UserManager;
 //FindPage의 컴포넌트를 위한 클래스
 public class FindPageComponent extends PageComponent {
 
@@ -55,6 +57,9 @@ public class FindPageComponent extends PageComponent {
 	
 	//비밀번호 찾기 작동 메소드
 	public void onClickFindPwButton() {
+		
+		User findUser = UserManager.getInstance().findUser(getIdTextField().getText());
+		
 		MessageBox.printInfoMessageBox("비밀번호 찾기");
 	}
 	

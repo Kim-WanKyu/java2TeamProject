@@ -334,7 +334,7 @@ public void returnbook (User returnuser, Book returnbook)
 				 
 			 
 			 returnuser.setBorrowDates(countfind,null);
-			 returnuser.setBorrowDates(countfind, null);
+			 returnuser.setBorrowBooks(countfind, null);
 			
 			String sql = "update borrowbooksanddates set ";
 			sql += "book"+(countfind +1)+ " = ?,";

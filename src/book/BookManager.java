@@ -25,29 +25,29 @@ public class BookManager {
 		return Booklist;
 	}
 
-	public String[][] returnBookData(){
-	ArrayList<ArrayList<String>> allBookDataString = null;
-	String allBookData[][];
-		for(Entry<String, book.Book> entry : Booklist.entrySet()) {
-			System.out.println("52번째 줄 실행");
-			ArrayList<String> a1 = new ArrayList<String>();
-			book.Book  getValue= entry.getValue();
-			a1.add(getValue.getName());
-			a1.add(getValue.getAuthor());
-			a1.add(getValue.getPublisher());
-			a1.add(getValue.getCategory());
-			a1.add(getValue.getCategory());
-			a1.add(String.valueOf(getValue.getTotalCount()));
-			a1.add(String.valueOf(getValue.getBorrowCount()));
-			allBookDataString.add(a1);
-		}
-			System.out.println(allBookDataString.get(0));
-			allBookData = allBookDataString.toArray(new String[allBookDataString.size()][7]);
-		for(int i=0;i<allBookData.length;i++) {
-				System.out.println(allBookData[i][0]);
-			System.out.println("출력 실행");			}
-			return allBookData;
-	} 
+//	public String[][] returnBookData(){
+//	ArrayList<ArrayList<String>> allBookDataString = new ArrayList<ArrayList<String>>();
+//	String allBookData[][];
+//		for(Entry<String, book.Book> entry : Booklist.entrySet()) {
+//			System.out.println("52번째 줄 실행");
+//			ArrayList<String> a1 = new ArrayList<String>();
+//			book.Book  getValue= entry.getValue();
+//			a1.add(getValue.getName());
+//			a1.add(getValue.getAuthor());
+//			a1.add(getValue.getPublisher());
+//			a1.add(getValue.getCategory());
+//			a1.add(getValue.getCategory());
+//			a1.add(String.valueOf(getValue.getTotalCount()));
+//			a1.add(String.valueOf(getValue.getBorrowCount()));
+//			allBookDataString.add(a1);
+//		}
+//			System.out.println(allBookDataString.get(0));
+//			allBookData = allBookDataString.toArray(new String[allBookDataString.size()][7]);
+//		for(int i=0;i<allBookData.length;i++) {
+//				System.out.println(allBookData[i][0]);
+//			System.out.println("출력 실행");			}
+//			return allBookData;
+//	} 
 	public LinkedList<Book> findBook(String getClass, String word) {
 		
 		switch (getClass) {
@@ -155,7 +155,7 @@ public class BookManager {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		//데베에 책을 추가
-		String sql = "insert into booklist ('ID','서명','저자','출판사','KDC','권','대출건수') VALUES(?,?,?,?,?,?,?)";
+		String sql = "insert into book_list (id, name, author, publisher, kdc, totalcount, borrowcount) VALUES(?,?,?,?,?,?,?)";
 		
 		try {
 			conn = DBManager.connect();

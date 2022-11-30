@@ -9,8 +9,12 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.table.DefaultTableModel;
 
+import book.Book;
+import book.BookManager;
 import gui.page.PageComponent;
+import gui.page.mainPage.MainPageComponent;
 
 public class InsertBookPageComponent extends PageComponent{
 	//InsertBookPage의 모든 텍스트필드를 담는 ArrayList변수
@@ -64,8 +68,33 @@ public class InsertBookPageComponent extends PageComponent{
 		
 		//TODO
 		public void onClickInsertButton() {
+			Book newBook = new Book();
+			newBook.setName(getBookNameTextField().getText());
+			newBook.setAuthor(getBookAuthorTextField().getText());
+			newBook.setPublisher(getBookPublisherTextField().getText());
+			newBook.setCategory(getBookCategoryTextField().getText());
+			newBook.setId(getBookIdTextField().getText());
+			newBook.setTotalCount(Integer.parseInt(getBookTotalCountSpinner().getValue().toString()));
+			newBook.setBorrowCount(0);
+			
+			BookManager.getInstance().insertBook(newBook);
+			
+			Object [] newBookData = new Object[8];
+			newBookData[0] = newBook.getName();
+			newBookData[1] = newBook.getAuthor();
+			newBookData[2] = newBook.getPublisher();
+			newBookData[3] = newBook.getCategory();
+			newBookData[4] = book.CategorizeKDC.getCategoryname(newBook.getCategory());
+			newBookData[5] = newBook.getId();
+			newBookData[6] = newBook.getTotalCount();
+			newBookData[7] = newBook.getBorrowCount();
+			
+//			MainPageComponent.getAllBookTable().setModel(new DefaultTableModel(MainPageComponent.setAllBookData(),MainPageComponent.getAllBookColumnName()));
+			MainPageComponent.getAllBookTableModel().addRow(newBookData);
+			MainPageComponent.getAllBookTable().updateUI();
+			
+
 			frame.dispose();
-			//책 정보 수정 DB도 추가 테이블이나, 벡터도 추가
 		}
 		
 		//TODO

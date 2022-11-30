@@ -121,7 +121,7 @@ public class SignupPageComponent extends PageComponent implements ItemListener {
 		newuser.setPassword(userPassword);
 		newuser.setIsAdmin(isAdmin);
 		UserManager.getInstance().insertUser(newuser);
-
+		
 		//if(id가 중복되지 않으면,)
 		//	프로그램 내의 유저정보를 담는 벡터(나 배열)에도 추가하고, DB에도 추가한다.
 	}

@@ -36,12 +36,12 @@ public class MainUserPageComponent extends MainPageComponent {
 	//myBookTable의 컬럼명
 	private final String[] myBookColumnName = {"도서명","저자명","출판사","분류","KDC","BookID","대여일자","반납기한"};
 	//allBookTable의 데이터 //TODO DB에서 가져왔던 내 도서 벡터로 초기화
-	private String myBookData[];
-	private String defaultMyBookData[][];
+	private Object myBookData[];
+	private Object defaultMyBookData[][];
 	//allBookTable의 테이블모델
 	private DefaultTableModel myBookTableModel ;
 	//allBookTable테이블
-	private JTable myBookTable = new JTable(myBookTableModel); //
+	private JTable myBookTable; //
 
 	//allBookTable테이블 리턴하는 메소드
 	public JTable getMyBookTable() { return myBookTable; }
@@ -119,7 +119,7 @@ public class MainUserPageComponent extends MainPageComponent {
 		myUser = UserManager.getInstance().findUser(StartPageComponent.getUser().getID());
 		Calendar c = Calendar.getInstance();
 		java.util.Date afterDate;
-		myBookData = new String[8];
+		myBookData = new Object[8];
 		for(int i=0;i<3;i++) {
 			if(myUser.getBorrowBooks()[i]!=null) {
 				myBook = BookManager.getInstance().getlist().get(myUser.getBorrowBooks()[i]);
@@ -129,8 +129,8 @@ public class MainUserPageComponent extends MainPageComponent {
 				myBookData[3] = myBook.getCategory();
 				myBookData[4] = myBook.getCategory();
 				myBookData[5] = myBook.getId();
-				myBookData[6] = myUser.getBorrowDates()[i].toString();
-				myBookData[7] = myUser.getBorrowDates()[i].toString();
+				myBookData[6] = myUser.getBorrowDates()[i];
+				myBookData[7] = myUser.getBorrowDates()[i];
 				myBookTableModel.addRow(myBookData);
 			}	
 		}
@@ -146,26 +146,26 @@ public class MainUserPageComponent extends MainPageComponent {
 		
 		//마우스 이벤트 처리 추가
 		myBookTable.addMouseListener(new MouseAdapter() {
-			String[] str = new String[myBookTable.getColumnCount()];
+			Object[] str = new Object[myBookTable.getColumnCount()];
 			@Override
 			//클릭 시 정보 가져오기
 			public void mousePressed(MouseEvent me) {
 				for(int i=0; i<myBookTable.getColumnCount();i++)
 				{	
 					
-					str[i] = (String) myBookTable.getValueAt(myBookTable.getSelectedRow(), i);
+					str[i] = myBookTable.getValueAt(myBookTable.getSelectedRow(), i);
 				}
 				try {
-					bookNameTextFields[1].setText(str[0]);
-					bookAuthorTextFields[1].setText(str[1]);
-					bookPublisherTextFields[1].setText(str[2]);
-					bookCategoryTextFields[1].setText(str[3]);
+					bookNameTextFields[1].setText(str[0].toString());
+					bookAuthorTextFields[1].setText(str[1].toString());
+					bookPublisherTextFields[1].setText(str[2].toString());
+					bookCategoryTextFields[1].setText(str[3].toString());
 					//KDC나 분류둥 하나 없음.
-					bookIdTextFields[1].setText(str[5]);
-					borrowDateTextField.setText(str[6]);
-					returnDateTextField.setText(str[7]);
+					bookIdTextFields[1].setText(str[5].toString());
+					borrowDateTextField.setText(str[6].toString());
+					returnDateTextField.setText(str[7].toString());
 					
-					boolean isDelay = LocalDate.now().isAfter(LocalDate.parse(str[7]));
+					boolean isDelay = LocalDate.now().isAfter(LocalDate.parse[7]);
 					String isDelayString = isDelay ? "True":"False";
 					isDelayTextField.setText(isDelayString);
 				}catch(Exception e) {
@@ -204,20 +204,21 @@ public class MainUserPageComponent extends MainPageComponent {
 	public void setFieldFromAllBookTable() {
 		//마우스 이벤트 처리 추가
 		getAllBookTable().addMouseListener(new MouseAdapter() {
-			String[] str = new String[getAllBookTable().getColumnCount()];
+			Object[] str = new Object[getAllBookTable().getColumnCount()];
 			@Override
 			//클릭 시 정보 가져오기
 			public void mousePressed(MouseEvent me) {
+//				if(me.getClickCount()==2)
+//					return;
 				for(int i=0; i<getAllBookTable().getColumnCount();i++)
-					str[i] = (String) getAllBookTable().getValueAt(getAllBookTable().getSelectedRow(), i);
-				
-				bookNameTextFields[0].setText(str[0]);
-				bookAuthorTextFields[0].setText(str[1]);
-				bookPublisherTextFields[0].setText(str[2]);
-				bookCategoryTextFields[0].setText(str[3]);
-				bookIdTextFields[0].setText(str[5]);
+					str[i] = getAllBookTable().getValueAt(getAllBookTable().getSelectedRow(), i);				
+					bookNameTextFields[0].setText(str[0].toString());
+					bookAuthorTextFields[0].setText(str[1].toString());
+					bookPublisherTextFields[0].setText(str[2].toString());
+					bookCategoryTextFields[0].setText(str[3].toString());
+					bookIdTextFields[0].setText(str[5].toString());
 				try {
-					int stockCount = Integer.parseInt(str[6])-Integer.parseInt(str[7]);
+					int stockCount = Integer.parseInt(str[6].toString())-Integer.parseInt(str[7].toString());
 					bookAvailableStockTextField.setText(""+stockCount);
 				}
 				catch(Exception e) {
@@ -296,7 +297,7 @@ public class MainUserPageComponent extends MainPageComponent {
 		inputStr[0] = borrowBooks.getName();
 		inputStr[1] = borrowBooks.getAuthor();
 		inputStr[2] = borrowBooks.getPublisher();
-		inputStr[3] = borrowBooks.getCategory();
+		inputStr[3] = borrowBooks.getCategory();//TODO
 		inputStr[4] = borrowBooks.getCategory();
 		inputStr[5] = borrowBooks.getId();
 		inputStr[6] = dateAndtime.toString();

@@ -7,8 +7,12 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 
+import db.DBManager;
 import gui.page.PageComponent;
+import gui.page.startPage.StartPageComponent;
 import gui.util.MessageBox;
+import user.User;
+import user.UserManager;
 
 public class EditUserPageComponent extends PageComponent {
 
@@ -63,13 +67,17 @@ public class EditUserPageComponent extends PageComponent {
 	//비밀번호 변경 메소드
 	public void onChangePwButton() {
 		try {
+			User editUser = UserManager.getInstance().findUser(StartPageComponent.getUser().getID());
 			boolean isInDB = true;
-			if(isInDB = idTextField.getText().equals("123"/*해당 유저의 DB 정보*/)) {
+			if(isInDB = idTextField.getText().equals(editUser.getID()/*해당 유저의 DB 정보*/)) {
 				boolean isCorrect;// = true;
+				if(editUser.getName().equals(nameTextField)&&editUser.getPassword().equals(oldPwTextField)) 
+					isCorrect = true;
 				if(isCorrect = true/*해당 유저의 DB 정보의 이름과 비말번호가 모두 일치하면*/) {
 					/*새 비밀번호의 텍스트로 비밀번호 변경 메소드 실행*/
 					///*유저의 비밀번호 = */newPwTextField.getText();
-					
+					editUser.setPassword(newPwTextField.getText());
+					UserManager.getInstance().changeInform(editUser);
 					/*그 후에 메세지 띄우고 창 나감*/
 					MessageBox.printInfoMessageBox("정보가 변경되었습니다.");
 					MessageBox.printInfoMessageBox("회원 정보 변경 창을 닫습니다.");
