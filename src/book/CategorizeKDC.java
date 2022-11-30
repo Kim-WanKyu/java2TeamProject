@@ -1,4 +1,4 @@
-package tmp;
+package book;
 
 public class CategorizeKDC {
 		 //분류 카테고리명

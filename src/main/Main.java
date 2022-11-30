@@ -1,4 +1,4 @@
-package tmp;
+package main;
 
 public class Main {
 	
