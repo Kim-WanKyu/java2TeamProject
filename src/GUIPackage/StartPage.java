@@ -119,9 +119,6 @@ public class StartPage extends Page{
 			String id = idTextField.getText(); //입력한 id
 			String password = new String(pwPasswordField.getPassword()); //입력한 pw
 			
-			dispose();		//초기화면 창 끄고
-			//new MainPage(); //메인화면 창 생성
-			
 			//TODO
 			//UserManager loguser = UserManager.getInstance();
 			//loguser.setAllUser();
