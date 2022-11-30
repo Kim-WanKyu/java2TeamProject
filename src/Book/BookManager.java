@@ -131,12 +131,12 @@ public class BookManager {
 			e.printStackTrace();
 		}finally {
 			DBManager.close();
-		}
+		} 
 		
 	}
 	//책 삭제
 	public void deleteBook(String id ) {
 		
 	}
-
+ 
 }
