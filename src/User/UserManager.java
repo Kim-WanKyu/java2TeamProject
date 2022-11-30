@@ -16,8 +16,8 @@ import java.util.Date;
 import com.mysql.cj.protocol.Resultset;
 import com.mysql.cj.xdevapi.Statement;
 
-import Book.Book;
-import Book.BookManager;
+import book.Book;
+import book.BookManager;
 import DB.DBManager;
 public class UserManager {
 	//UserManager 데이터 종류
