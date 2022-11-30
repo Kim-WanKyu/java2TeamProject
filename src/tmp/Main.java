@@ -1,6 +1,4 @@
-package Main;
-
-import GUIPackage.StartPage;
+package tmp;
 
 public class Main {
 	
@@ -8,6 +6,6 @@ public class Main {
 	public static void main(String args[]) {
 
 		//초기화면 실행
-		new StartPage();
+		new gui.page.startPage.StartPage();
 	}
 }
