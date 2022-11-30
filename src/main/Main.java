@@ -1,4 +1,4 @@
-package tmp;
+package main;
 
 import gui.page.startPage.StartPage;
 
