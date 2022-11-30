@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 /Book/
-/User/
-/GUIPackage/
-=======
-/User/
-/Book/
->>>>>>> 86bbdb2815d65e7096feb2a718ce72463aaa8919
 /DB/
+/GUIPackage/
+/Main/
+/User/
