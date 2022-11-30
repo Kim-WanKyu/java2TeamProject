@@ -85,20 +85,20 @@ public class MainAdminPageComponent extends MainPageComponent {
 	public void setFieldFromAllBookTable() {
 		//마우스 이벤트 처리 추가
 		getAllBookTable().addMouseListener(new MouseAdapter() {
-			String[] str = new String[getAllBookTable().getColumnCount()];
+			Object[] str = new Object[getAllBookTable().getColumnCount()];
 			@Override
 			//클릭 시 정보 가져오기
 			public void mousePressed(MouseEvent me) {
 				for(int i=0; i<getAllBookTable().getColumnCount();i++)
-					str[i] = (String) getAllBookTable().getValueAt(getAllBookTable().getSelectedRow(), i);
+					str[i] =  getAllBookTable().getValueAt(getAllBookTable().getSelectedRow(), i);
 				
-				bookNameTextFields[3].setText(str[0]);
-				bookAuthorTextFields[3].setText(str[1]);
-				bookPublisherTextFields[3].setText(str[2]);
-				bookCategoryTextFields[3].setText(str[3]);
-				bookIdTextFields[3].setText(str[5]);
+				bookNameTextFields[3].setText(str[0].toString());
+				bookAuthorTextFields[3].setText(str[1].toString());
+				bookPublisherTextFields[3].setText(str[2].toString());
+				bookCategoryTextFields[3].setText(str[3].toString());
+				bookIdTextFields[3].setText(str[5].toString());
 				try {
-					int stockCount = Integer.parseInt(str[6])-Integer.parseInt(str[7]);
+					int stockCount = Integer.parseInt(str[6].toString())-Integer.parseInt(str[7].toString());
 					bookAvailableStockTextField.setText(""+stockCount);
 				}
 				catch(Exception e) {
