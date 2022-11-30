@@ -103,7 +103,7 @@ public class UserManager {
 	//연체 여부 메서드
 	
 	//책 빌리는 메서드
-	public void borrowBooks(User nowuser,Book borrowbook) {
+	public String borrowBooks(User nowuser,Book borrowbook) {
 		BookManager BOOKDB = new BookManager().getInstance();
 		borrowbook =  BOOKDB.getlist().get(borrowbook.getId());
 		System.out.println(borrowbook.getTotalCount());
@@ -137,7 +137,7 @@ public class UserManager {
 		System.out.println("130번째 실행");
 		if(nowuser.getIsDelay()!=null&&nowuser.getIsDelay().before(date)) {
 			System.out.println("135번째 줄!! 책 연체됨 빌리기 불가!! 함수 종료");
-			return;
+			return "delay";
 		}
 		
 		System.out.println("136번째 실행");
@@ -148,7 +148,7 @@ public class UserManager {
 					date1 = new java.sql.Date(c.getTimeInMillis());
 					if(date1.before(date)) {
 						System.out.println("140번째 줄!!! 연체됨 빌리기 불가!!");
-						return;
+						return "delay";
 					}
 				}
 		}
@@ -163,12 +163,12 @@ public class UserManager {
 					
 					System.out.println("책빌리기 불가 책 수량 없음!!");
 					
-					return;
+					return "bookStockOver";
 				
 			}
 		else if(book[0]!=null&&book[1]!=null&&book[2]!=null) {
 			System.out.println("빌릴 수 있는 책 개수 초과");
-			return;
+			return "bookOver";
 		}
 			
 		}catch(Exception e) {
@@ -248,17 +248,13 @@ public class UserManager {
 				nowuser.setBorrowBooks(2, borrowbook.getId());
 				nowuser.setBorrowDates(2, date);
 			}
-			else
-			{
-				System.out.println("책 빌리기 불가");
-				System.out.println("책 수량 없음");
-				return;
-			}
+			return "Success";
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
 			DBManager.close();
 		}
+		return null;
 
 	}
 	//책 반납 메서드

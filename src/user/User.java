@@ -2,6 +2,7 @@ package user;
 
 import java.util.HashMap;
 import java.sql.*;
+import java.time.LocalDate;
 public class User {
 
 	//아이디와 비밀번호를 트리맵에 넣음 로그인과 정보갱신등에 사용할 거임
@@ -14,7 +15,7 @@ public class User {
 
 	//대여한 책(들)
 	private String[] borrowBook = new String[3];
-	private java.sql.Date[] borrowDates = new java.sql.Date[3];//대여한 날짜(들)
+	private Date[] borrowDates = new java.sql.Date[3];//대여한 날짜(들)
 		//대여한 책의 연체 정보(들)
 
 	private HashMap<String,String>BooksandBorrowMap = new HashMap<String,String>();
@@ -32,7 +33,7 @@ public class User {
 	public String getPassword() { return this.password; }
 	public boolean getIsAdmin() { return this.isAdmin; }
 	
-	public java.sql.Date[] getBorrowDates() { return this.borrowDates; }
+	public Date[] getBorrowDates() { return this.borrowDates; }
 	public String[] getBorrowBooks() { return this.borrowBook; }
 	public Date getIsDelay() {return this.delay_date;}
 	//set 메소드들
@@ -46,7 +47,7 @@ public class User {
 		borrowBook[count] =book;
 	}
 	
-	public void setBorrowDates(int date,java.sql.Date date2) { this.borrowDates[date] = date2; 
+	public void setBorrowDates(int date,Date date2) { this.borrowDates[date] = date2; 
 }
 
 

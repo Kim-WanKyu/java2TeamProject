@@ -170,7 +170,7 @@ public class MainUserPageComponent extends MainPageComponent {
 					bookIdTextFields[1].setText(str[5].toString());
 					borrowDateTextField.setText(str[6].toString());
 					returnDateTextField.setText(str[7].toString());
-					
+					java.util.Date now = new java.util.Date();
 					boolean isDelay = LocalDate.now().isAfter((LocalDate)str[7]);
 					String isDelayString = isDelay ? "True":"False";
 					isDelayTextField.setText(isDelayString);
