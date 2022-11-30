@@ -337,7 +337,6 @@ public class MainUserPageComponent extends MainPageComponent {
 		returnBooks = BookManager.getInstance().getlist().get(bookIdTextFields[1].getText());
 		UserManager.getInstance().returnbook(StartPageComponent.getUser(), returnBooks);
 		myBookTableModel.removeRow(getMyBookTable().getSelectedRow());
-		
 	}
 }
 

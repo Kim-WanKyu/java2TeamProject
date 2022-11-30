@@ -24,20 +24,45 @@ public class UserManager {
 			return list;
 		}
 		
-		//모든 책 가져오기
+		//유저 정보찾기
 	public User findUser(String id){
 		
-		for( User findUser : list) {
+		for( User findUser : list) {	
 			
-			
-			if(findUser.getID().equals(id))
-			{
+			if(id.equals(findUser.getID())) {
 				return findUser;
-				
+			}	
+			else {
+				System.out.println("여기 학번이 없음");
 			}
-	}
+		}
 		return null;
 	}
+	
+	public String findPassword(String id, String name) {
+		System.out.println("유저 비밀번호 찾기");
+		String password = "";
+		for(User isUser : list) {
+			if(id.equals(isUser.getID())) {
+				System.out.println("아이디 일치");
+				if(name.equals(isUser.getName())) {
+					System.out.println("이름 일치");
+					password = isUser.getPassword();
+					break;
+				}
+				else {
+					System.out.println("이름 불일치");
+					break;
+				}
+			}	
+			else {
+				System.out.println("아이디 없음");
+				break;
+			}
+		}
+		return password;
+	}
+	
 	//모든 유저 가져와 초기화 메서드
 	//관리지가 사용할 예정
 	public void setAllUser() throws SQLException{
