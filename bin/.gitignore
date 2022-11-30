@@ -1,9 +1,11 @@
-<<<<<<< HEAD
 /Book/
-/User/
-/GUIPackage/
-=======
-/User/
-/Book/
->>>>>>> 86bbdb2815d65e7096feb2a718ce72463aaa8919
 /DB/
+<<<<<<< HEAD
+=======
+/GUIPackage/
+/Main/
+/User/
+/book/
+/main/
+/gui/
+>>>>>>> 511e71a (패키지 분류 및 이름 변경)
