@@ -1,4 +1,4 @@
-package User;
+package user;
 import java.sql.Connection;
 import java.time.*;
 import java.sql.DriverManager;
@@ -18,7 +18,7 @@ import com.mysql.cj.xdevapi.Statement;
 
 import book.Book;
 import book.BookManager;
-import DB.DBManager;
+import db.DBManager;
 public class UserManager {
 	//UserManager 데이터 종류
 	private static	Vector<User>list;	

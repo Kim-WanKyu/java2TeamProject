@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map.Entry;
 
-import DB.DBManager;
+import db.DBManager;
 
 import java.util.TreeMap;
 import java.util.Vector;
