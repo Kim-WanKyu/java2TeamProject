@@ -12,6 +12,8 @@ import gui.page.mainPage.MainPageComponent;
 import gui.page.optionPage.mainOption.book.editBookPage.EditBookPage;
 import gui.page.optionPage.mainOption.book.insertBookPage.InsertBookPage;
 import gui.util.MessageBox;
+import user.User;
+import user.UserManager;
 
 public class MainAdminPageComponent extends MainPageComponent {
 
@@ -110,16 +112,27 @@ public class MainAdminPageComponent extends MainPageComponent {
 			}
 		});
 	}
-	
+	private static Object[] setAllUserData;
 	public void InitAllUserTable() {
 		//TODO make Table from DataBase 처음 프로그램 시작될 때 설정
 		MainPageComponent.getAllUserTable().setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		setAllUserData = new Object[2];
+		for(User setUser: UserManager.getInstance().getUserVector()) {
+			if(setUser.getIsAdmin()==false) {
+				setAllUserData[0]=setUser.getID();
+				setAllUserData[1]=setUser.getName();
+				MainPageComponent.returnUserTableModel().addRow(setAllUserData);
+				
+			}
+		}
+		
 		//테이블 열 위치 변경 불가
 		MainPageComponent.getAllUserTable().getTableHeader().setReorderingAllowed(false);
+		
 		//테이블 내용 수정 불가 처리
-		MainPageComponent.getAllUserTable().setModel(new DefaultTableModel (MainPageComponent.getAllUserData(), MainPageComponent.getAllUserColumnName()) {
-			public boolean isCellEditable(int row, int column) { return false; }
-		} );
+		//MainPageComponent.getAllUserTable().setModel(new DefaultTableModel (MainPageComponent.getAllUserData(), MainPageComponent.getAllUserColumnName()) {
+			//public boolean isCellEditable(int row, int column) { return false; }
+		//} );
 	}
 	
 	public void InitTextField() {

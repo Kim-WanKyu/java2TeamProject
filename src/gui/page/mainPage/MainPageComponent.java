@@ -96,48 +96,14 @@ public class MainPageComponent extends PageComponent {
 	public static String[] getAllUserColumnName() { return userColumnName; }
 	
 	//userTable의 데이터 //TODO DB에서 가져왔던 전체 유저 벡터로 초기화
-	private static String [][]defaultUserData = {	{"a1","a2"},	//내용 //TODO 이거는 전체 유저 벡터로 초기화
-											{"b1","b2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"},
-											{"c1","c2"}	};
+	private static String [][]defaultUserData ;
 	
 	public static String[][] getAllUserData() { return defaultUserData; }
 	
 	//userTable의 테이블모델
 	private static DefaultTableModel userTableModel = new DefaultTableModel(defaultUserData,userColumnName);
-
+	
+	public static DefaultTableModel returnUserTableModel() {return userTableModel;};
 	//userTable테이블
 	private static JTable userTable = new JTable(userTableModel); //
 
