@@ -30,5 +30,4 @@ public class Book {
 	public void setTotalCount(int totalCount) { this.totalCount = totalCount; }
 	public void setBorrowCount(int borrowCount) { this.borrowCount = borrowCount; }
 	public void addCount() {this.borrowCount++;}
- 
 }
