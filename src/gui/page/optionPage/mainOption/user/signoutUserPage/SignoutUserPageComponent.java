@@ -10,6 +10,7 @@ import javax.swing.JTextField;
 import gui.page.PageComponent;
 import gui.page.startPage.StartPage;
 import gui.util.MessageBox;
+import user.UserManager;
 
 public class SignoutUserPageComponent extends PageComponent {
 
@@ -60,7 +61,9 @@ public class SignoutUserPageComponent extends PageComponent {
 	//로그인 버튼 작동 메소드
 	public void onClickSignoutButton() {
 		try {
+			String caseString;
 			boolean isInDB = true;
+			
 			if(isInDB = idTextField.getText().equals("123"/*해당 유저의 DB 정보*/)) {
 				boolean isCorrect;// = true;
 				if(isCorrect = true/*해당 유저의 DB 정보의 이름과 비말번호가 모두 일치하면*/) {

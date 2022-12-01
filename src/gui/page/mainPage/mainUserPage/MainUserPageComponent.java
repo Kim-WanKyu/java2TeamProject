@@ -154,7 +154,7 @@ public class MainUserPageComponent extends MainPageComponent {
 			public void mousePressed(MouseEvent me) {
 				for(int i=0; i<myBookTable.getColumnCount();i++)
 				{	
-					
+					System.out.println(myBookTable.getSelectedRow());
 					str[i] = myBookTable.getValueAt(myBookTable.getSelectedRow(), i);
 				}
 				try {
@@ -214,18 +214,17 @@ public class MainUserPageComponent extends MainPageComponent {
 			@Override
 			//클릭 시 정보 가져오기
 			public void mousePressed(MouseEvent me) {
-//				if(me.getClickCount()==2)
-//					return;
+				if(getAllBookTable().getSelectedRow() == -1)
+					return;
+				System.out.println("선택된 행"+getAllBookTable().getSelectedRow());
 				for(int i=0; i<getAllBookTable().getColumnCount();i++)
-					str[i] = getAllBookTable().getValueAt(getAllBookTable().getSelectedRow(), i);				
+						str[i] = getAllBookTable().getValueAt(getAllBookTable().getSelectedRow(), i);				
 					bookNameTextFields[0].setText(str[0].toString());
 					bookAuthorTextFields[0].setText(str[1].toString());
 					bookPublisherTextFields[0].setText(str[2].toString());
-					if(str[3]!=null) {
+					try {
 						bookCategoryTextFields[0].setText(str[3].toString());
-					}
-					else {
-						bookIdTextFields[0].setText("");
+					}catch(Exception e){
 						bookIdTextFields[0].setText("");
 					}
 					bookIdTextFields[0].setText(str[5].toString());

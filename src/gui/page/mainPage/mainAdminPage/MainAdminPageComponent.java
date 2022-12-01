@@ -87,10 +87,12 @@ public class MainAdminPageComponent extends MainPageComponent {
 	public void setFieldFromAllBookTable() {
 		//마우스 이벤트 처리 추가
 		getAllBookTable().addMouseListener(new MouseAdapter() {
+			
 			Object[] str = new Object[getAllBookTable().getColumnCount()];
 			@Override
 			//클릭 시 정보 가져오기
 			public void mousePressed(MouseEvent me) {
+				System.out.println("선택된 행"+getAllBookTable().getSelectedRow());
 				if(getAllBookTable().getSelectedRow() == -1)
 					return;
 				for(int i=0; i<getAllBookTable().getColumnCount();i++)
@@ -260,6 +262,7 @@ public class MainAdminPageComponent extends MainPageComponent {
 	
 	//삭제 버튼 작동 메소드 TODO
 	public void onClickDeleteBookButton() {
+		
 		MessageBox.printInfoMessageBox("삭제");
 	}
 	

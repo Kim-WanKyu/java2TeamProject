@@ -428,7 +428,7 @@ public void returnbook (User returnuser, Book returnbook)
 }
 	//유저 삭제 메서드
 	public void deleteUser(User deleteuser)  {
-	
+		String isSuccess;
 		Connection conn=null;
 		java.sql.Statement stmt;
 		ResultSet result;
@@ -440,11 +440,12 @@ public void returnbook (User returnuser, Book returnbook)
 					{
 						if(deleteuser.getBorrowBooks()[i]!=null) {
 							System.out.println("책 반납후 회원탈퇴 바람!!");
-							return;
+							isSuccess = "bookStockOver";
 					}
 						}
 					System.out.println("유저 리스트 삭제");
 					list.remove(isUser);
+					isSuccess = "Success";
 					break;
 			
 			}
