@@ -123,12 +123,13 @@ public class MainAdminPageComponent extends MainPageComponent {
 		setAllUserData = new Object[2];
 		for(User setUser: UserManager.getInstance().getUserVector()) {
 			if(setUser.getIsAdmin()==false) {
-				setAllUserData[0]=setUser.getID();
-				setAllUserData[1]=setUser.getName();
-				MainPageComponent.returnUserTableModel().addRow(setAllUserData);
-				
+						setAllUserData[0]=setUser.getID();
+						setAllUserData[1]=setUser.getName();
+						MainPageComponent.returnUserTableModel().addRow(setAllUserData);
+						//borrowDateTextFields[]
+					
+				}
 			}
-		}
 		
 		//테이블 열 위치 변경 불가
 		MainPageComponent.getAllUserTable().getTableHeader().setReorderingAllowed(false);

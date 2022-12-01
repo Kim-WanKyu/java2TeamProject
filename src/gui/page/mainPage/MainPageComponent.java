@@ -246,9 +246,11 @@ public class MainPageComponent extends PageComponent {
 			//검색메서드 실행
 			LinkedList<book.Book> bookList = BookManager.getInstance().findBook(category, str);
 			Object[] insertBook = new Object[8]; 
-		
+			allBookTableModel.setNumRows(0);
+			
+			
 			for(book.Book searchBook :bookList) {
-				
+				System.out.println(searchBook.getName());
 				insertBook[0] = (searchBook.getName());
 				insertBook[1] = (searchBook.getAuthor());
 				insertBook[2] = (searchBook.getPublisher());
@@ -257,13 +259,13 @@ public class MainPageComponent extends PageComponent {
 				insertBook[5] = (searchBook.getId());
 				insertBook[6] = (searchBook.getTotalCount());
 				insertBook[7] = (searchBook.getBorrowCount());
+				allBookTableModel.addRow(insertBook);
 				System.out.println(allBookTableModel.getRowCount());
-				allBookTableModel.addColumn(insertBook);
+				
 				
 			}
-			
+			allBookTable.updateUI();
 			//테이블 열 위치 변경 불가
-			System.out.println("선택 된 row" +allBookTable.getSelectedRow());
 		}
 		else {
 			MessageBox.printWarningMessageBox("검색어가 너무 짧습니다.");

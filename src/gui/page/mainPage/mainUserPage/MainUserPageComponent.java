@@ -4,6 +4,7 @@ import java.awt.event.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.*;
@@ -20,6 +21,7 @@ import user.User;
 import user.UserManager;
 
 import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 
 public class MainUserPageComponent extends MainPageComponent {
 
@@ -171,7 +173,7 @@ public class MainUserPageComponent extends MainPageComponent {
 					borrowDateTextField.setText(str[6].toString());
 					returnDateTextField.setText(str[7].toString());
 					java.util.Date now = new java.util.Date();
-					boolean isDelay = LocalDate.now().isAfter((LocalDate)str[7]);
+					boolean isDelay =now.after((Date) str[7]);
 					String isDelayString = isDelay ? "True":"False";
 					isDelayTextField.setText(isDelayString);
 				}catch(Exception e) {

@@ -9,7 +9,9 @@ import javax.swing.JTextField;
 
 import gui.page.PageComponent;
 import gui.page.startPage.StartPage;
+import gui.page.startPage.StartPageComponent;
 import gui.util.MessageBox;
+import user.User;
 import user.UserManager;
 
 public class SignoutUserPageComponent extends PageComponent {
@@ -63,13 +65,17 @@ public class SignoutUserPageComponent extends PageComponent {
 		try {
 			String caseString;
 			boolean isInDB = true;
-			
-			if(isInDB = idTextField.getText().equals("123"/*해당 유저의 DB 정보*/)) {
+			User deleteUser = new User();
+			deleteUser.setID(StartPageComponent.getUser().getID());
+			deleteUser = UserManager.getInstance().findUser(deleteUser.getID());
+			if(isInDB = idTextField.getText().equals(deleteUser.getID()/*해당 유저의 DB 정보*/)) {
 				boolean isCorrect;// = true;
+				if(deleteUser.getName().equals(nameTextField.getText())&&deleteUser.getPassword().equals(pwTextField.getText()))
+					isCorrect = true;
 				if(isCorrect = true/*해당 유저의 DB 정보의 이름과 비말번호가 모두 일치하면*/) {
 					/*새 비밀번호의 텍스트로 비밀번호 변경 메소드 실행*/
 					///*유저의 비밀번호 = */newPwTextField.getText();
-					
+					UserManager.getInstance().deleteUser(deleteUser);
 					/*그 후에 메세지 띄우고 모든 창 나가고, 다시 초기화면 띄움*/
 					MessageBox.printInfoMessageBox("탈퇴 되었습니다.");
 					
