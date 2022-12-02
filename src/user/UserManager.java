@@ -1,33 +1,39 @@
 package user;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import java.util.Vector;
-import java.util.Calendar;
 
 import book.Book;
 import book.BookManager;
+
+import java.util.Calendar;
+
 import db.DBManager;
+import gui.util.MessageBox;
 
 
 public class UserManager {
 	//UserManager 데이터 종류
-	private static	Vector<User>list;
+	private static	Vector<User> userList;
+	
 	private static UserManager userInstance = new UserManager();
-		public static UserManager getInstance() {
-			System.out.print("인스턴스 반환");
-			return userInstance;
-		}
-		public Vector<User> getUserVector(){
-			return list;
-		}
-		
-		//유저 정보찾기
+	public static UserManager getInstance() {
+		System.out.print("인스턴스 반환");
+		return userInstance;
+	}
+	public Vector<User> getUserVector(){
+		return userList;
+	}
+	
+	//특정 유저 
+	//유저 정보찾기
 	public User findUser(String id){
 		
-		for( User findUser : list) {	
+		for( User findUser : userList) {	
 			
 			if(id.equals(findUser.getID())) {
 				return findUser;
@@ -39,10 +45,37 @@ public class UserManager {
 		return null;
 	}
 	
+	//검색한 유저들 찾기 메소드
+	public Vector<User> searchUser(String category, String word){
+		Vector<User> searchedUsersVector = new Vector<User>();		
+		switch(category) {
+		case "ID(학번)":
+			for(User user : userList)
+			{
+				if (user.getID().contains(word))
+					searchedUsersVector.add(user);
+			}
+			break;
+			
+		case "이름":
+			for(User user : userList)
+			{
+				if (user.getName().contains(word))
+					searchedUsersVector.add(user);
+			}
+			break;
+			
+		default:
+			MessageBox.printWarningMessageBox("검색분류가 올바르지 않습니다.");
+		}
+		return searchedUsersVector;
+	}
+	
+	//비밀번호 찾기 메소드
 	public String findPassword(String id, String name) {
 		System.out.println("유저 비밀번호 찾기");
 		String password = "";
-		for(User isUser : list) {
+		for(User isUser : userList) {
 			if(id.equals(isUser.getID())) {
 				System.out.println("아이디 일치");
 				if(name.equals(isUser.getName())) {
@@ -66,7 +99,7 @@ public class UserManager {
 	//모든 유저 가져와 초기화 메서드
 	//관리지가 사용할 예정
 	public void setAllUser() throws SQLException{
-		list = new Vector<>();
+		userList = new Vector<>();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs =null;
@@ -84,7 +117,7 @@ public class UserManager {
 				user.setID(rs.getString("hakbun"));
 				user.setIsAdmin(rs.getBoolean("is_admin"));
 				user.setPassword(rs.getString("password"));
-				list.add(user);
+				userList.add(user);
 				
 				System.out.println("유저 정보 리스트 출력(유저 매니저 setAllUser) : "+user.getID()+ " "+user.getName()+" "+user.getPassword());
 			}	
@@ -94,21 +127,21 @@ public class UserManager {
 				int n=0;
 				while(rs.next()) {
 					System.out.println(n);
-					System.out.println(list.get(n).getID());
-					list.get(n).setBorrowBooks(0, rs.getString("book1"));
-					list.get(n).setBorrowDates(0, rs.getDate("date1"));
-					list.get(n).setBorrowBooks(1, rs.getString("book2"));
-					list.get(n).setBorrowDates(1, rs.getDate("date2"));
-					list.get(n).setBorrowBooks(2, rs.getString("book3"));
-					list.get(n).setBorrowDates(2, rs.getDate("date3"));
-					list.get(n).setDelay(rs.getDate("delay_info"));
+					System.out.println(userList.get(n).getID());
+					userList.get(n).setBorrowBooks(0, rs.getString("book1"));
+					userList.get(n).setBorrowDates(0, rs.getDate("date1"));
+					userList.get(n).setBorrowBooks(1, rs.getString("book2"));
+					userList.get(n).setBorrowDates(1, rs.getDate("date2"));
+					userList.get(n).setBorrowBooks(2, rs.getString("book3"));
+					userList.get(n).setBorrowDates(2, rs.getDate("date3"));
+					userList.get(n).setDelay(rs.getDate("delay_info"));
 					n++;
 				}
 			
-			for(int i =0; i<list.size();  i++) {
-				String[] book =  list.get(i).getBorrowBooks();
-				java.sql.Date[] date = list.get(i).getBorrowDates();
-				System.out.println(list.get(i).getID()+" "+list.get(i).getName());
+			for(int i =0; i<userList.size();  i++) {
+				String[] book =  userList.get(i).getBorrowBooks();
+				java.sql.Date[] date = userList.get(i).getBorrowDates();
+				System.out.println(userList.get(i).getID()+" "+userList.get(i).getName());
 				System.out.println(book[0]+": "+date[0]);
 				System.out.println(book[1]+": "+date[1]);
 				System.out.println(book[2]+": "+date[2]);
@@ -146,17 +179,17 @@ public class UserManager {
 		java.util.Date dt = new java.util.Date();
 		java.sql.Date date = new java.sql.Date(dt.getTime());
 		int count = 0;
-		for(User findUser : list) {
+		for(User findUser : userList) {
 			
 			System.out.println(findUser.getID());
 			if(findUser.getID().equals(nowuser.getID()))
 			{
-				count = list.indexOf(findUser);
+				count = userList.indexOf(findUser);
 				break;
 			}
 			
 		}
-		nowuser = list.get(count);
+		nowuser = userList.get(count);
 		 borrowDates = nowuser.getBorrowDates();
 		Calendar c = Calendar.getInstance();
 		System.out.println("130번째 실행");
@@ -290,17 +323,17 @@ public void returnbook (User returnuser, Book returnbook)
 	int count = 0;
 	
 	
-	for(User findUser : list) {
+	for(User findUser : userList) {
 		
 		System.out.println(findUser.getID());
 		if(findUser.getID().equals(returnuser.getID()))
 		{
-			count = list.indexOf(findUser);
+			count = userList.indexOf(findUser);
 			break;
 		}
 		
 		}
-	returnuser = list.get(count);
+	returnuser = userList.get(count);
 	System.out.println("282줄 : 유저 id : "+returnuser.getID());
 	Connection conn = null;
 	String[] borrowbookslist = returnuser.getBorrowBooks();
@@ -374,7 +407,7 @@ public void returnbook (User returnuser, Book returnbook)
 			pstmt.setInt(1,returnbook.getBorrowCount());
 			pstmt.setString(2,returnbook.getId());
 			pstmt.executeUpdate();
-			
+			returnuser.setDelay(delay_info);
 		}catch(Exception e)
 		{
 			e.printStackTrace();
@@ -418,7 +451,7 @@ public void returnbook (User returnuser, Book returnbook)
 			stmt.executeUpdate(sql);
 			 sql =  " insert into borrowbooksanddates(hakbun) VALUES('"+hakbun+"')";
 			 stmt.executeUpdate(sql);
-			 list.add(newuser);
+			 userList.add(newuser);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}finally {
@@ -432,7 +465,7 @@ public void returnbook (User returnuser, Book returnbook)
 		Connection conn=null;
 		java.sql.Statement stmt;
 		ResultSet result;
-		for(User isUser : list) {
+		for(User isUser : userList) {
 			if(deleteuser.getID().equals(isUser.getID())) {
 				deleteuser = isUser;
 					System.out.println("여기 값있음....");
@@ -444,7 +477,7 @@ public void returnbook (User returnuser, Book returnbook)
 					}
 						}
 					System.out.println("유저 리스트 삭제");
-					list.remove(isUser);
+					userList.remove(isUser);
 					isSuccess = "Success";
 					break;
 			
@@ -473,13 +506,13 @@ public void returnbook (User returnuser, Book returnbook)
 	}
 	//유저 정보변경
 	public void changeInform(User userInformation) {
-		for(User changeUser : list) {
+		for(User changeUser : userList) {
 			int count;
 			System.out.println(userInformation.getID());
 			if(userInformation.getID().equals(changeUser.getID()))
 			{
-				count = list.indexOf(changeUser);
-				list.set(count, userInformation);
+				count = userList.indexOf(changeUser);
+				userList.set(count, userInformation);
 				break;
 			}
 			
@@ -508,7 +541,7 @@ public void returnbook (User returnuser, Book returnbook)
 	public boolean Login(String getId, String getPass) {
 		boolean isuser = false;
 		System.out.println("유저 데베 찾기");
-		for(User isUser : list) {
+		for(User isUser : userList) {
 			if(getId.equals(isUser.getID())) {
 				if(getPass.equals(isUser.getPassword())) {
 					System.out.println("여기 값있음");

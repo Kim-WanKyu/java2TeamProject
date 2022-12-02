@@ -11,6 +11,7 @@ import java.util.Vector;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import book.BookManager;
 import book.CategorizeKDC;
@@ -20,7 +21,13 @@ import gui.page.mainPage.mainAdminPage.MainAdminPageComponent;
 import gui.page.optionPage.mainOption.book.editBookPage.EditBookPage;
 import gui.page.optionPage.mainOption.user.editSignoutUserPage.EditSignoutUserPage;
 import gui.page.startPage.StartPage;
+import gui.page.startPage.StartPageComponent;
+import gui.table.AllBookTable;
+import gui.table.AllUserTable;
+import gui.table.SearchTable;
 import gui.util.MessageBox;
+import user.User;
+import user.UserManager;
 
 //MainPage의 컴포넌트를 위한 클래스
 public class MainPageComponent extends PageComponent {
@@ -36,121 +43,28 @@ public class MainPageComponent extends PageComponent {
 	private JButton logoutButton = new JButton("로그아웃");		//로그아웃 버튼
 	private JButton quitButton = new JButton("종료하기");			//종료하기 버튼
 	
+	private static int tabIndex = 0;
+	public static void setTabIndex(int n) { tabIndex = n; }
+	
 	//검색 카테고리 콤보박스 내용에 들어갈 배열
 	private final String[] searchCategoryString = {"도서명", "저자명", "출판사", "분류", "ID(학번)", "이름"};
 	private JComboBox<String> searchCategoryComboBox = new JComboBox<String>(searchCategoryString);
 	
-	private static final String[] allBookColumnName = {"도서명","저자명","출판사","분류","kdc","bookID","총수량","빌린횟수"} ;
-	public static Object[] getAllBookColumnName() { return allBookColumnName; }
-	
-	//allBookTable의 데이터 //TODO DB에서 가져왔던 전체 도서 벡터로 초기화
-//	private static  ArrayList<ArrayList<String>> allBookDataString;
-	private static Object[][] allBookData;
-	private static Object [][] defaultBookData;
-	
-	
-	private static Vector<String> defaultVector = new Vector<String>();
-	
-	public static void setdefaultVector(){
-		String[] DataVectorRow = new String[8];
-		TreeMap<String,book.Book> bookData = BookManager.getInstance().getlist();
-		for(Entry<String , book.Book> entry : bookData.entrySet()) {
-			DataVectorRow[0] = (entry.getValue().getName());
-			DataVectorRow[1] = (entry.getValue().getAuthor());
-			DataVectorRow[2] = (entry.getValue().getPublisher());
-			DataVectorRow[3] = (CategorizeKDC.getCategoryname(entry.getValue().getCategory()));
-			DataVectorRow[4] = (entry.getValue().getCategory());
-			DataVectorRow[5] = (entry.getValue().getId());
-			DataVectorRow[6] = (String.valueOf(entry.getValue().getTotalCount()));
-			DataVectorRow[7] = (String.valueOf(entry.getValue().getBorrowCount()));
-			allBookTableModel.addRow(DataVectorRow);
-		}
-	}
-	
-	
-	public static Object[][] getAllBookData() { return allBookData; }
-
-
-	
-
-	
-	
-	//allBookTable의 테이블모델
-	private static DefaultTableModel allBookTableModel;
-	/*
-	 * //TODO make Table from DataBase 처음 프로그램 시작될 때 설정
-					allBookTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-					allBookTable.setModel(new DefaultTableModel (new Object[][][] {}, new String[] { "셀1","셀2","셀3","셀4","셀5" })  {
-						public boolean isCellEditable(int row, int column) { return false; }
-					} );
-	 */
-	public static DefaultTableModel getAllBookTableModel() { return allBookTableModel; }
-	
-	//allBookTable테이블
-	private static JTable allBookTable = new JTable(allBookTableModel); //
-	
-	//allBookTable테이블 리턴하는 메소드
-	public static JTable getAllBookTable() { return allBookTable; }
-	/////
-	//userTable 전체도서 테이블 static
-	//userTable의 컬럼명
-	private final static String[] userColumnName = {"ID","이름"};
-	public static String[] getAllUserColumnName() { return userColumnName; }
-	
-	//userTable의 데이터 //TODO DB에서 가져왔던 전체 유저 벡터로 초기화
-	private static String [][]defaultUserData ;
-	
-	public static String[][] getAllUserData() { return defaultUserData; }
-	
-	//userTable의 테이블모델
-	private static DefaultTableModel userTableModel = new DefaultTableModel(defaultUserData,userColumnName);
-	
-	public static DefaultTableModel returnUserTableModel() {return userTableModel;};
-	//userTable테이블
-	private static JTable userTable = new JTable(userTableModel); //
-
-	//userTable테이블 리턴하는 메소드
-	public static JTable getAllUserTable() { return userTable; }
-	//검색 테이블 생성
-	private static Object[][] defaultSearchData ;
-	private static DefaultTableModel searchModel = new DefaultTableModel(defaultSearchData,userColumnName);
-	public static DefaultTableModel getSearchBookTableModel() {return searchModel;}
-	//변경사항있으면 업데이트해주는 메소드
-	//allBookTable.updateUI();
 	
 	//MainPageComponent생성자
 	public MainPageComponent(JFrame frame)
 	{
 		super.frame= frame;
-
+		
 		searchButton.addActionListener(this);
 		editSignoutButton.addActionListener(this);
 		quitButton.addActionListener(this);
 		logoutButton.addActionListener(this);
 		
-		InitAllBookTable();
+		AllBookTable.InitAllBookTable();
 	}
 	
-	public static void InitAllBookTable() {
-//		setdefaultVector();
-		
-		
-		allBookTable = new JTable(allBookTableModel);
-		//TODO make Table from DataBase 처음 프로그램 시작될 때 설정
-		allBookTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		//테이블 열 위치 변경 불가
-		allBookTable.getTableHeader().setReorderingAllowed(false);
-		allBookTableModel = new DefaultTableModel(allBookColumnName,0 );
-		setdefaultVector();
-		
-		
-		//테이블 내용 수정 불가 처리
-//		allBookTable.setModel(new DefaultTableModel (allBookData, allBookColumnName)  {
-//			public boolean isCellEditable(int row, int column) { return false; }
-//		} );
-		
-		
-	}
+	
 	
 	//get 메소드들
 	public JComboBox<String> getSearchCategoryComboBox() { return searchCategoryComboBox; }
@@ -168,9 +82,6 @@ public class MainPageComponent extends PageComponent {
 	
 	//버튼 클릭 시 이벤트 처리
 	@Override
-
-
-
 	public void actionPerformed(ActionEvent ae) {
 
 		switch(ae.getActionCommand()) {
@@ -187,8 +98,6 @@ public class MainPageComponent extends PageComponent {
 			break;
 			
 		case "로그아웃":
-
-			
 			try {
 				onClickLogoutButton();
 			} catch (Exception e) {
@@ -242,79 +151,67 @@ public class MainPageComponent extends PageComponent {
 		//2자 이상 입력 시 검색 가능
 		if(str.length() >= 2) {
 			
-			MessageBox.printInfoMessageBox(category + '\n' +str);
-			//검색메서드 실행
-			LinkedList<book.Book> bookList = BookManager.getInstance().findBook(category, str);
-			Object[] insertBook = new Object[8]; 
-			allBookTableModel.setNumRows(0);
+			MessageBox.printInfoMessageBox("검색분류:"+category + "\n검색어:" +str);
 			
+			String userId = StartPageComponent.getUser().getID();
+			boolean userIsAdmin = UserManager.getInstance().findUser(userId).getIsAdmin();
+			System.out.println("loginUser"+userId+":"+userIsAdmin);
 			
-			for(book.Book searchBook :bookList) {
-				System.out.println(searchBook.getName());
-				insertBook[0] = (searchBook.getName());
-				insertBook[1] = (searchBook.getAuthor());
-				insertBook[2] = (searchBook.getPublisher());
-				insertBook[3] = (searchBook.getCategory());
-				insertBook[4] = (searchBook.getCategory());
-				insertBook[5] = (searchBook.getId());
-				insertBook[6] = (searchBook.getTotalCount());
-				insertBook[7] = (searchBook.getBorrowCount());
-				allBookTableModel.addRow(insertBook);
-				System.out.println(allBookTableModel.getRowCount());
-				
-				
+			if(userIsAdmin == true) {	//관리자이면(0.전체도서/1.전체유저)
+				if(tabIndex == 0)	//전체 도서
+				{
+					//도서 검색메서드 실행
+					DefaultTableModel searchBookModel = new DefaultTableModel(null, AllBookTable.getAllBookColumnName());
+					AllBookTable.getAllBookTable().setModel(searchBookModel);
+					
+					Vector<book.Book> bookList = BookManager.getInstance().findBook(category, str);					
+					for(int i=0; i<bookList.size(); i++) {
+						Vector<Object> vector = new Vector<Object>();
+						vector.add(bookList.get(i).getName());
+						vector.add(bookList.get(i).getAuthor());
+						vector.add(bookList.get(i).getPublisher());
+						vector.add(CategorizeKDC.getCategoryname(bookList.get(i).getCategory()));
+						vector.add(bookList.get(i).getCategory());
+						vector.add(bookList.get(i).getId());
+						vector.add(bookList.get(i).getTotalCount());
+						vector.add(bookList.get(i).getBorrowCount());
+						
+						searchBookModel.addRow(vector);
+					}
+					searchBookModel.fireTableRowsUpdated(0, searchBookModel.getRowCount() -1);
+					AllBookTable.getAllBookTable().updateUI();				
+				}
+				else if(tabIndex == 1) {
+					//유저 검색 메서드 실행
+					DefaultTableModel searchUserModel = new DefaultTableModel(null, AllUserTable.getAllUserColumnName());
+					AllUserTable.getAllUserTable().setModel(searchUserModel);
+					
+					Vector<user.User> userList = UserManager.getInstance().searchUser(category, str);					
+					for(User setUser : userList ) {
+						Vector<Object> vector = new Vector<Object>();
+						
+						if(setUser.getID().contains(str)) {
+							
+							if(setUser.getIsAdmin()==false) {								
+								vector.add(setUser.getID());
+								vector.add(setUser.getName());
+								System.out.println(setUser.getID());
+								
+								searchUserModel.addRow(vector);
+							}
+						}						
+					}					
+					searchUserModel.fireTableRowsUpdated(0, searchUserModel.getRowCount() -1);
+					AllUserTable.getAllUserTable().updateUI();				
+				}
 			}
-			allBookTable.updateUI();
-			//테이블 열 위치 변경 불가
+
 		}
 		else {
 			MessageBox.printWarningMessageBox("검색어가 너무 짧습니다.");
 		}
-		
-		MainAdminPage.updateTable();
-		
-			//탭이 내 책 목록일 때
-		
-		//검색
-//		allBookTableModel = new DefaultTableModel(defaultSerachBookData,allBookColumnName);
-//		allBookTable = new JTable(searchBookTableModel);
-//		allBookTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-//		LinkedList<book.Book> searchList = BookManager.getInstance().findBook(category, str);
-//		System.out.println(category);
-//		String[] searchBookArrangement = new String[8]; 
-//		for(book.Book searchBook :searchList) {
-//			 searchBookArrangement[0] = searchBook.getName();
-//			 searchBookArrangement[1] = searchBook.getAuthor();
-//			 searchBookArrangement[2] = searchBook.getPublisher();
-//			 searchBookArrangement[3] = searchBook.getCategory();
-//			 searchBookArrangement[4] = searchBook.getCategory();
-//			 searchBookArrangement[5] = Integer.toString(searchBook.getTotalCount());
-//			 searchBookArrangement[6] = Integer.toString(searchBook.getBorrowCount());
-//			 allBookTableModel.addRow(searchBookArrangement);
-//			 allBookTable.updateUI();
-//		}
-		
-		
-//		LinkedList<book.Book> searchBookDataList = new LinkedList<>();
-//		Object [][] searchBookData = new String[searchBookDataList.size()][7];
-		
-		allBookTable.setEnabled(false);
-		
-//		for(book.Book searchBook : BookManager.getInstance().findBook(category, str)) {
-//			//allBookTable.setEnabled(false);
-//		}
-		
-//		allBookTable.setModel(new DefaultTableModel (searchBookData, allBookColumnName)  {
-//			public boolean isCellEditable(int row, int column) { return false; }
-//		} );
-				
-		/* if(일치)
-		 * 	텍스트필드에서 추출해서 전체 책과 비교해서 일치하는 것 들만 테이블에 출력
-		 * elseq
-		 * 	경고 메세지 (일치하는 책이 없습니다.)
-		 */
 	}
-	
+		
 	//변경/탈퇴 버튼 작동 메소드 TODO
 	public void onClickEditSignoutButton() {
 		new EditSignoutUserPage();

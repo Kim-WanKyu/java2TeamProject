@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+import java.util.Vector;
 
 import db.DBManager;
+import gui.util.MessageBox;
 
 
 public class BookManager {
@@ -18,7 +20,6 @@ public class BookManager {
 		return instance;
 	}
 	private  static TreeMap<String,Book> Booklist ; //전체 책 빌리고 책 목록 출력할때
-	private LinkedList <Book> bookqueue = new LinkedList<Book>();
 	
 	//모든 책 가져오기
 	public TreeMap<String,Book> getlist(){
@@ -48,15 +49,16 @@ public class BookManager {
 //			System.out.println("출력 실행");			}
 //			return allBookData;
 //	} 
-	public LinkedList<Book> findBook(String getClass, String word) {
+	public Vector<Book> findBook(String getCategory, String word) {
+		Vector <Book> searchedBooksVector = new Vector<Book>();		
 		
-		switch (getClass) {
+		switch (getCategory) {
 		case "도서명":
 			for(Entry<String,Book> entry : Booklist.entrySet())
 			{
 				Book getBook = entry.getValue();
 				if(getBook.getName().contains(word))
-						bookqueue.offer(getBook);
+					searchedBooksVector.add(getBook);
 			}
 			break;
 			
@@ -66,7 +68,7 @@ public class BookManager {
 				System.out.println("여기 저자 실행");
 				Book getBook = entry.getValue();
 				if(getBook.getAuthor().contains(word))
-					bookqueue.offer(getBook);
+					searchedBooksVector.add(getBook);
 			}
 			break;
 			
@@ -75,34 +77,29 @@ public class BookManager {
 			{
 				Book getBook = entry.getValue();
 				if(getBook.getPublisher().contains(word))
-					bookqueue.offer(getBook);
+					searchedBooksVector.add(getBook);
 			}
 			break;
 			
 		case "분류":
-			
-		
-		String category =CategorizeKDC.getKDCCode(word);
-		System.out.println(category);
-		String categoryDiff;	
-		for(Entry<String,Book> entry : Booklist.entrySet())
+			String categoryName;	
+			for(Entry<String,Book> entry : Booklist.entrySet())
 			{	
 				Book getBook = entry.getValue();
-				if(getBook.getCategory()!=null&&getBook.getCategory().length()!=0) {
-				
-					categoryDiff =getBook.getCategory().substring(0, 2)+'0';
-				System.out.println("if 문 실행"+" 첫 번째 카테고리 숫자");
-				if(categoryDiff.equals(category)) {
-					System.out.println("여기 있어용 값이");
-					bookqueue.offer(getBook);
-					}
+				if(getBook.getCategory()!=null && getBook.getCategory().length()!=0) {
+					categoryName = CategorizeKDC.getCategoryname(getBook.getCategory());
+					if(categoryName.contains(word))
+						searchedBooksVector.add(getBook);	
 				}
-				
 			}
 			break;
+
+		default:
+			MessageBox.printWarningMessageBox("검색분류가 올바르지 않습니다.");
 		}
+		
 		System.out.println("여긴 실행");
-		return bookqueue;
+		return searchedBooksVector;
 	}
 	
 	

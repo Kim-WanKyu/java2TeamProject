@@ -143,9 +143,9 @@ public class CategorizeKDC {
 		String code = null;		//리턴할 KDC코드 문자열
 		boolean isFind = false;	//찾았는지 체크하는 boolean변수
 		
-		for(int i=0; i<categoryName.length; i++) {
-			for(int j=0; i<categoryName[i].length; j++) {
-				if(category.equals(categoryName[i][j]) == true) {
+		for(int i=0; i<10; i++) {
+			for(int j=0; j<10; j++) {
+				if(category.equals(categoryName[i][j])==true) {
 					code = "" + i + j + '0';
 					isFind = true;
 					break;

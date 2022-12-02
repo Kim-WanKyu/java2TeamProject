@@ -15,11 +15,14 @@ import book.Book;
 import book.BookManager;
 import gui.page.PageComponent;
 import gui.page.mainPage.MainPageComponent;
+import gui.table.AllBookTable;
 
 public class InsertBookPageComponent extends PageComponent{
-	//InsertBookPage의 모든 텍스트필드를 담는 ArrayList변수
+		//InsertBookPage의 모든 텍스트필드를 담는 ArrayList변수
 		private ArrayList<JTextField> insertBookTextComponent;
 
+		private AllBookTable allBookTable = new AllBookTable();
+		
 		private JTextField bookNameTextField = new JTextField(15);		//도서명 텍스트필드
 		private JTextField bookAuthorTextField = new JTextField(15);	//저자명 텍스트필드
 		private JTextField bookPublisherTextField = new JTextField(15);	//출판사 텍스트필드
@@ -90,8 +93,8 @@ public class InsertBookPageComponent extends PageComponent{
 			newBookData[7] = newBook.getBorrowCount();
 			
 //			MainPageComponent.getAllBookTable().setModel(new DefaultTableModel(MainPageComponent.setAllBookData(),MainPageComponent.getAllBookColumnName()));
-			MainPageComponent.getAllBookTableModel().addRow(newBookData);
-			MainPageComponent.getAllBookTable().updateUI();
+			AllBookTable.getAllBookTableModel().addRow(newBookData);
+			AllBookTable.getAllBookTable().updateUI();
 			
 
 			frame.dispose();

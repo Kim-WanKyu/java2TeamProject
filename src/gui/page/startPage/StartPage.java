@@ -9,7 +9,6 @@ import javax.swing.*;
 
 import gui.page.Page;
 import gui.util.WhitePanel;
-
 import user.UserManager;
 
 public class StartPage extends Page{

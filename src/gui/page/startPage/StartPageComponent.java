@@ -11,7 +11,6 @@ import gui.page.mainPage.mainUserPage.MainUserPage;
 import gui.page.optionPage.startOption.findPage.FindPage;
 import gui.page.optionPage.startOption.signupPage.SignupPage;
 import gui.util.MessageBox;
-
 import user.User;
 import user.UserManager;
 
@@ -90,8 +89,6 @@ public class StartPageComponent extends PageComponent {
 		{	//TODO 임시
 			boolean isAdmin = false;//임시 사용자 기본 //관리자
 			isAdmin = UserManager.getInstance().findUser(id).getIsAdmin();
-			
-		
 			
 			//관리자
 			if(isAdmin == true) {

@@ -6,10 +6,8 @@ import javax.swing.*;
 
 import gui.page.PageComponent;
 import gui.util.MessageBox;
-
 import user.User;
 import user.UserManager;
-
 
 import java.util.ArrayList;
 

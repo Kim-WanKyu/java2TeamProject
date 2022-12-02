@@ -5,11 +5,14 @@ import javax.swing.*;
 
 import gui.page.mainPage.MainPage;
 import gui.page.mainPage.MainPageComponent;
+import gui.table.AllBookTable;
+import gui.table.AllUserTable;
 import gui.util.WhitePanel;
 
 public class MainAdminPage extends MainPage {
 	
 	MainAdminPageComponent mainAdminPageComponent = new MainAdminPageComponent(this);
+	private AllBookTable allBookTable = new AllBookTable();
 	
 	//MainAdminPage 생성자
 	public MainAdminPage(){
@@ -105,7 +108,7 @@ public class MainAdminPage extends MainPage {
 						rightPanel.add(optionButtonPanel, BorderLayout.SOUTH);
 					}
 					//전체도서 테이블 (왼쪽)
-					JScrollPane allBookScrollPane = new JScrollPane(MainPageComponent.getAllBookTable());
+					JScrollPane allBookScrollPane = new JScrollPane(allBookTable.getAllBookTable());
 					
 					allBookPanel.add(allBookScrollPane);
 					allBookPanel.add(rightPanel);
@@ -116,7 +119,7 @@ public class MainAdminPage extends MainPage {
 					//allUserLeftPanel 패널 (bookTable 테이블, searchPanel 패널 포함)
 					WhitePanel allUserLeftPanel = new WhitePanel(new BorderLayout());
 					{
-						JScrollPane allUserScrollPane = new JScrollPane(MainPageComponent.getAllUserTable());
+						JScrollPane allUserScrollPane = new JScrollPane(AllUserTable.getAllUserTable());
 						allUserLeftPanel.add(allUserScrollPane, BorderLayout.CENTER);
 						allUserScrollPane.setPreferredSize(
 								new Dimension(	allUserScrollPane.getPreferredSize().width/2,
@@ -218,11 +221,6 @@ public class MainAdminPage extends MainPage {
 			mainAdminPanel.add(super.makeDownPanel(), BorderLayout.SOUTH);	//하단 패널
 		}
 		ct.add(mainAdminPanel);		
-	}
-
-	public static void updateTable() {
-		MainPageComponent.getAllBookTableModel().fireTableDataChanged();
-		MainPageComponent.getAllBookTable().updateUI();
 	}
 }
 
