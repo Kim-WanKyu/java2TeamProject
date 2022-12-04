@@ -1,5 +1,6 @@
 package gui.page.mainPage.mainUserPage;
 
+import java.awt.Component;
 import java.awt.event.*;
 import java.util.ArrayList;
 import javax.swing.*;
@@ -9,6 +10,8 @@ import javax.swing.table.DefaultTableModel;
 
 import gui.page.mainPage.MainPageComponent;
 import gui.util.MessageBox;
+import util.DelayNoticeRunnable;
+import util.Receipt;
 
 import java.time.LocalDate;
 
@@ -21,13 +24,12 @@ public class MainUserPageComponent extends MainPageComponent {
 	private MainPageComponent mainPageComponent = new MainPageComponent(this.frame);
 	
 	private JTabbedPane userTab;
-
 	
 	//myBookTable 전체도서 테이블 static
 	//myBookTable의 컬럼명
 	private final String[] myBookColumnName = {"도서명","저자명","출판사","분류","KDC","BookID","대여일자","반납기한"};
 	//allBookTable의 데이터 //TODO DB에서 가져왔던 내 도서 벡터로 초기화
-	private String[][] myBookData = {	{"a1","a2","a3","a4"}	};
+	private String[][] myBookData = {	{"a1","a2","a3","a4"},{"b1","b2","b3","b4"},{"c1","c2","c3","c4"}	};
 	//allBookTable의 테이블모델
 	private DefaultTableModel myBookTableModel = new DefaultTableModel(myBookData, myBookColumnName);
 	
@@ -57,9 +59,10 @@ public class MainUserPageComponent extends MainPageComponent {
 	private JButton borrowBookButton = new JButton("대여하기");	//대여하기 버튼
 	private JButton returnBookButton = new JButton("반납하기");	//반납하기 버튼
 	
-	private JLabel delayNoticeLabel = new JLabel("");	//연체 알림 메세지 레이블
+	private static JLabel delayNoticeLabel1 = new JLabel(" ");	//연체 알림 메세지 레이블
+	private static JLabel delayNoticeLabel2 = new JLabel(" ");	//연체 알림 메세지 레이블
 	
-	//MainAdminPageComponent생성자
+	//MainUserPageComponent 생성자
 	public MainUserPageComponent(JFrame frame) {
 		super(frame);
 		
@@ -71,7 +74,12 @@ public class MainUserPageComponent extends MainPageComponent {
 		InitMyBookTable();
 		InitTextField();
 		
-		//탭의 상태가 변할 시 이벤트 작동 (탭 이동 시 발동)
+		//연체 알림을 위한 runnable객체 생성 및 스레드 실행
+		DelayNoticeRunnable runnableDelayNotice = new DelayNoticeRunnable();
+		Thread thread = new Thread(runnableDelayNotice);
+		thread.start();
+		
+		//탭의 상태가 변할 시 이벤트 작동 (탭 이동 시 텍스트 지움)
 		userTab.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
@@ -179,8 +187,8 @@ public class MainUserPageComponent extends MainPageComponent {
 	public JTextField getBookAvailableStockTextField() { return bookAvailableStockTextField; }
 
 	//get메소드
-	public JLabel getDelayNoticeLabel() { return delayNoticeLabel; }
-	
+	public static JLabel getDelayNoticeLabel1() { return delayNoticeLabel1; }
+	public static JLabel getDelayNoticeLabel2() { return delayNoticeLabel2; }
 	//버튼 클릭 시 이벤트 처리
 	@Override
 	public void actionPerformed(ActionEvent ae) {
@@ -216,6 +224,14 @@ public class MainUserPageComponent extends MainPageComponent {
 	//대여하기 버튼 작동 메소드 TODO
 	public void onClickBorrowBookButton() {
 		MessageBox.printInfoMessageBox("대여하기");
+		
+		//임시
+		user.User tmpUser = new user.User();
+		book.Book tmpBook = new book.Book();
+		
+		//영수증 출력
+		Receipt receipt = new Receipt(tmpUser, tmpBook /*user 대여자, book 대여책*/);
+		receipt.printReceipt();
 	}
 	
 	//반납하기 버튼 작동 메소드 TODO
@@ -223,12 +239,3 @@ public class MainUserPageComponent extends MainPageComponent {
 		MessageBox.printInfoMessageBox("반납하기");
 	}
 }
-
-/*
- * addMouseListener(new MouseAdapter() {
-		@Override
-		public void mousePressed(MouseEvent e){
-			System.out.println("aaa" + e.getSource());
-		}
-	}
- */
