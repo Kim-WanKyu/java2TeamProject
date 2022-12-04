@@ -1,14 +1,16 @@
 package user;
 
+import java.io.FileWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import java.time.LocalDate;
 import java.util.Vector;
 
 import book.Book;
 import book.BookManager;
+import book.CategorizeKDC;
 
 import java.util.Calendar;
 
@@ -248,6 +250,8 @@ public class UserManager {
 			Calendar c = Calendar.getInstance();
 			c.setTime(date);
 			book = nowuser.getBorrowBooks();
+			if(book[0]==book[1]||book[1]==book[2]||book[2]==book[0])
+				return "bookoverlap";
 			if(book[0] ==null) {
 				sql +="book1 = ?, date1 = ?, delay_info = ? where(hakbun = ?)";
 				System.out.println(sql);
@@ -562,7 +566,26 @@ public void returnbook (User returnuser, Book returnbook)
 		return isuser;
 	}
 	
-	//관리자 정보 출력 메서드
+	//책을 빌리면 출력해주는 메서드
+	public void printRecipt(User reciptUser, Book reciptBook) throws Exception{
+		String title;
+		String mainText;
+		LocalDate currentDate = LocalDate.now();
+		LocalDate returnDate = currentDate.plusDays(7);
+		title = reciptUser.getID()+"_"+reciptBook.getName()+"_"+currentDate.toString();
+		FileWriter fw = new FileWriter(title);
+		mainText ="학번(ID) : "+reciptUser.getID()+"\n";
+		mainText = "이름 : " +reciptUser.getName()+"\n";
+		mainText = "도서명 : "+reciptBook.getName()+"\n";
+		mainText = "저자 : "+reciptBook.getAuthor()+"\n";
+		mainText = "출판사 : "+reciptBook.getPublisher()+"\n";
+		mainText = "분류 : "+CategorizeKDC.getCategoryname(reciptBook.getCategory())+"\n";
+		mainText = "ISBN: "+reciptBook.getId()+"\n";
+		mainText = "대여일자: "+currentDate.toString()+"\n";
+		mainText = "반납예정일자 : "+returnDate.toString()+"\n";
+		fw.write(mainText);
+		fw.close();
+	}
 	
 
 }
