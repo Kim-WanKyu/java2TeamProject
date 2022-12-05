@@ -190,16 +190,10 @@ public class MainPageComponent extends PageComponent {
 					for(User setUser : userList ) {
 						Vector<Object> vector = new Vector<Object>();
 						
-						if(setUser.getID().contains(str)) {
-							
-							if(setUser.getIsAdmin()==false) {								
-								vector.add(setUser.getID());
-								vector.add(setUser.getName());
-								System.out.println(setUser.getID());
-								
-								searchUserModel.addRow(vector);
-							}
-						}						
+						vector.add(setUser.getID());
+						vector.add(setUser.getName());
+						
+						searchUserModel.addRow(vector);
 					}					
 					searchUserModel.fireTableRowsUpdated(0, searchUserModel.getRowCount() -1);
 					AllUserTable.getAllUserTable().updateUI();				

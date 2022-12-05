@@ -20,6 +20,7 @@ public class AllBookTable {
 
 	//allBookTable의 테이블모델
 	private static DefaultTableModel allBookTableModel;
+	public static DefaultTableModel getAllBookTableModel() { return allBookTableModel; }
 	/*
 	 * //TODO make Table from DataBase 처음 프로그램 시작될 때 설정
 					allBookTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -27,24 +28,22 @@ public class AllBookTable {
 						public boolean isCellEditable(int row, int column) { return false; }
 					} );
 	 */
-	public static DefaultTableModel getAllBookTableModel() { return allBookTableModel; }
 	
 	//allBookTable테이블
 	private static JTable allBookTable = new JTable(allBookTableModel); //
-	
-	//allBookTable테이블 리턴하는 메소드
 	public static JTable getAllBookTable() { return allBookTable; }
-	/////
 	
+	//allBookTable 초기화 메소드
 	public static void InitAllBookTable() {
-//		setdefaultVector();
 		allBookTable = new JTable(allBookTableModel);
-		//TODO make Table from DataBase 처음 프로그램 시작될 때 설정
+		allBookTableModel = new DefaultTableModel(allBookColumnName,0 );
+		
+		//필드 너비 제한 해제
 		allBookTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		//테이블 열 위치 변경 불가
 		allBookTable.getTableHeader().setReorderingAllowed(false);
-		allBookTableModel = new DefaultTableModel(allBookColumnName,0 );
-		setdefaultVector();
+		
+		setDefaultVector();
 		
 		//테이블 내용 수정 불가 처리
 //		allBookTable.setModel(new DefaultTableModel (allBookData, allBookColumnName)  {
@@ -53,7 +52,7 @@ public class AllBookTable {
 		
 		
 	}
-	public static void setdefaultVector(){
+	public static void setDefaultVector(){
 		String[] DataVectorRow = new String[8];
 		TreeMap<String,book.Book> bookData = BookManager.getInstance().getlist();
 		for(Entry<String , book.Book> entry : bookData.entrySet()) {
@@ -68,17 +67,4 @@ public class AllBookTable {
 			allBookTableModel.addRow(DataVectorRow);
 		}
 	}
-	
-	
-	
-	
-	
-	//검색 테이블 생성
-//	private static Object[][] defaultSearchData ;
-//	private static DefaultTableModel searchModel = new DefaultTableModel(defaultSearchData,userColumnName);
-//	public static DefaultTableModel getSearchBookTableModel() {return searchModel;}
-	//변경사항있으면 업데이트해주는 메소드
-	//allBookTable.updateUI();
-	
-	
 }

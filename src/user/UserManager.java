@@ -35,15 +35,13 @@ public class UserManager {
 	//유저 정보찾기
 	public User findUser(String id){
 		
-		for( User findUser : userList) {	
-			
+		for( User findUser : userList) {
 			if(id.equals(findUser.getID())) {
+				System.out.println("여기 학번 찾음");
 				return findUser;
-			}	
-			else {
-				System.out.println("여기 학번이 없음");
 			}
 		}
+		System.out.println("여기 학번이 없음");
 		return null;
 	}
 	
@@ -54,16 +52,20 @@ public class UserManager {
 		case "ID(학번)":
 			for(User user : userList)
 			{
-				if (user.getID().contains(word))
-					searchedUsersVector.add(user);
+				if(user.getIsAdmin()==false) {
+					if (user.getID().contains(word))
+						searchedUsersVector.add(user);
+				}
 			}
 			break;
 			
 		case "이름":
 			for(User user : userList)
 			{
-				if (user.getName().contains(word))
-					searchedUsersVector.add(user);
+				if(user.getIsAdmin()==false) {
+					if (user.getName().contains(word))
+						searchedUsersVector.add(user);
+				}
 			}
 			break;
 			
@@ -250,9 +252,10 @@ public class UserManager {
 			Calendar c = Calendar.getInstance();
 			c.setTime(date);
 			book = nowuser.getBorrowBooks();
-			if(book[0]==book[1]||book[1]==book[2]||book[2]==book[0])
+			//동일 도서 중복 대여 방지
+			if((book[0]==book[1]||book[1]==book[2]||book[2]==book[0])&&(book[0]!=null||book[1]!=null||book[2]!=null))
 				return "bookoverlap";
-			if(book[0] ==null) {
+			if(book[0] == null) {
 				sql +="book1 = ?, date1 = ?, delay_info = ? where(hakbun = ?)";
 				System.out.println(sql);
 				pstmt = conn.prepareStatement(sql);
@@ -320,79 +323,72 @@ public class UserManager {
 
 	}
 	//책 반납 메서드
-public void returnbook (User returnuser, Book returnbook) 
-	{
-	
-	returnbook =  BookManager.getInstance().getlist().get(returnbook.getId());
-	int count = 0;
-	
-	
-	for(User findUser : userList) {
+	public void returnBook (User user, Book book) {
+		book =  BookManager.getInstance().getlist().get(book.getId());
+		int count = 0;
 		
-		System.out.println(findUser.getID());
-		if(findUser.getID().equals(returnuser.getID()))
-		{
-			count = userList.indexOf(findUser);
-			break;
+		for(User findUser : userList) {
+			System.out.println(findUser.getID());
+			if(findUser.getID().equals(user.getID()))
+			{
+				count = userList.indexOf(findUser);
+				break;
+			}
 		}
 		
+		user = userList.get(count);
+		System.out.println("282줄 : 유저 id : "+user.getID());
+		Connection conn = null;
+		String[] borrowbookslist = user.getBorrowBooks();
+		System.out.println(borrowbookslist[0]);
+		
+		int countfind ;
+		for(countfind=0 ; countfind < user.getBorrowBooks().length; countfind++) {
+			if(borrowbookslist[countfind]!=null && borrowbookslist[countfind].equals(book.getId())) {
+				System.out.println("인덱스 발견"+countfind);
+				break;
+			}
 		}
-	returnuser = userList.get(count);
-	System.out.println("282줄 : 유저 id : "+returnuser.getID());
-	Connection conn = null;
-	String[] borrowbookslist = returnuser.getBorrowBooks();
-	System.out.println(borrowbookslist[0]);
-	
-	int countfind ;
-	for(countfind=0 ; countfind < returnuser.getBorrowBooks().length; countfind++) {
-		 if(borrowbookslist[countfind]!=null && borrowbookslist[countfind].equals(returnbook.getId())) {
-			 System.out.println("인덱스 발견"+countfind);
-			 break;
-		 }
-		 
-		}
-	
-	
-	java.sql.Date delay_info = null;
-	
-	java.util.Date dt = new java.util.Date();
-	java.sql.Date date = new java.sql.Date(dt.getTime());
-	Calendar c1 = Calendar.getInstance();
-	PreparedStatement pstmt = null;
-	try {
+		
+		java.sql.Date delay_info = null;
+		
+		java.util.Date dt = new java.util.Date();
+		java.sql.Date date = new java.sql.Date(dt.getTime());
+		Calendar c1 = Calendar.getInstance();
+		PreparedStatement pstmt = null;
+		try {
 			System.out.println("책 반납 실행!!");
-			System.out.println(returnbook.getName());
+			System.out.println(book.getName());
 			java.sql.Statement stmt;
 			
 			java.util.Date set_Date;
 			int diffDays;
-			set_Date = returnuser.getBorrowDates()[countfind];
+			set_Date = user.getBorrowDates()[countfind];
 			diffDays = (int) ((dt.getTime()-set_Date.getTime()) / (24*60*60*1000));
-			 System.out.println(returnuser.getIsDelay());
-			 
-				 if(diffDays<7 && returnuser.getIsDelay()==null) {
+			System.out.println(user.getIsDelay());
+			
+			if(diffDays<7 && user.getIsDelay()==null)
+			{
 				delay_info = null;
-				
-				 }
-				 else if(diffDays>7&&returnuser.getIsDelay()==null)
-				 {
-				   c1.setTime(date);
-				   c1.add(Calendar.DATE, diffDays-7);
-				   delay_info = new java.sql.Date(c1.getTimeInMillis());
-				 }
-				 else if(diffDays>7 && returnuser.getIsDelay()!=null) {
-					 c1.setTime(delay_info);
-					 c1.add(Calendar.DATE, diffDays-7);
-					 delay_info = new java.sql.Date(c1.getTimeInMillis());
-				 }
-				 else {
-					 delay_info=null;
-				 }
-				 
-				 
-			 
-			 returnuser.setBorrowDates(countfind,null);
-			 returnuser.setBorrowBooks(countfind, null);
+			}
+			else if(diffDays>7 && user.getIsDelay()==null)
+			{
+				c1.setTime(date);
+				c1.add(Calendar.DATE, diffDays-7);
+				delay_info = new java.sql.Date(c1.getTimeInMillis());
+			}
+			else if(diffDays>7 && user.getIsDelay()!=null)
+			{
+				c1.setTime(delay_info);
+				c1.add(Calendar.DATE, diffDays-7);
+				delay_info = new java.sql.Date(c1.getTimeInMillis());
+			}
+			else
+			{
+				delay_info=null;
+			}
+			user.setBorrowDates(countfind,null);
+			user.setBorrowBooks(countfind, null);
 			
 			String sql = "update borrowbooksanddates set ";
 			sql += "book"+(countfind +1)+ " = ?,";
@@ -403,31 +399,22 @@ public void returnbook (User returnuser, Book returnbook)
 			pstmt.setString(1, null);
 			pstmt.setDate(2, null);
 			pstmt.setDate(3,delay_info);
-			pstmt.setString(4,returnuser.getID());
+			pstmt.setString(4,user.getID());
 			pstmt.executeUpdate();
-			returnbook.subCount();
+			book.subCount();
 			sql = "update book_list set borrowcount = ? where(id = ?)";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1,returnbook.getBorrowCount());
-			pstmt.setString(2,returnbook.getId());
+			pstmt.setInt(1,book.getBorrowCount());
+			pstmt.setString(2,book.getId());
 			pstmt.executeUpdate();
-			returnuser.setDelay(delay_info);
-		}catch(Exception e)
-		{
+			user.setDelay(delay_info);
+		} catch(Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			DBManager.close();
-			}
-}
-		
+		}
+	}
 	
-	
-	
-	
-	
-	
-
-
 	//유저 추가
 	public void insertUser(User newuser) {
 		Connection conn=null;

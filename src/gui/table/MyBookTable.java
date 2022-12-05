@@ -20,7 +20,6 @@ public class MyBookTable {
 		private final String[] myBookColumnName = {"도서명","저자명","출판사","분류","KDC","BookID","대여일자","반납기한"};
 		
 		//allBookTable의 데이터 //TODO DB에서 가져왔던 내 도서 벡터로 초기화
-		private Object myBookData[];
 		private Object defaultMyBookData[][];
 		//allBookTable의 테이블모델
 		private DefaultTableModel myBookTableModel;
@@ -31,6 +30,10 @@ public class MyBookTable {
 		//allBookTable테이블 리턴하는 메소드
 		public JTable getMyBookTable() { return myBookTable; }
 		
+		public MyBookTable() {
+			initMyBookTable();
+		}
+		
 		public void initMyBookTable() {
 			//TODO make myBookTable은 로그인 성공 시 마다 설정
 			myBookTableModel = new DefaultTableModel(defaultMyBookData,myBookColumnName);
@@ -38,13 +41,14 @@ public class MyBookTable {
 			myBookTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 			User myUser = new User(); 
 			Book myBook = new Book();
-			myUser = UserManager.getInstance().findUser(StartPageComponent.getUser().getID());
+			myUser = UserManager.getInstance().findUser(StartPageComponent.getUser().getID());	//로그인한 유저
 			Calendar c = Calendar.getInstance();
 			java.util.Date afterDate;
-			myBookData = new Object[8];
 			for(int i=0;i<3;i++) {
 				if(myUser.getBorrowBooks()[i]!=null) {
 					myBook = BookManager.getInstance().getlist().get(myUser.getBorrowBooks()[i]);
+					Object myBookData[] = new Object[8];
+
 					myBookData[0] = myBook.getName();
 					myBookData[1] = myBook.getAuthor();
 					myBookData[2] = myBook.getPublisher();

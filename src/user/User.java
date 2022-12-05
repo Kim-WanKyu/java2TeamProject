@@ -14,7 +14,7 @@ public class User {
 	private Date delay_date;			
 
 	//대여한 책(들)
-	private String[] borrowBook = new String[3];
+	private String[] borrowBooks = new String[3];
 	private Date[] borrowDates = new java.sql.Date[3];//대여한 날짜(들)
 		//대여한 책의 연체 정보(들)
 
@@ -34,7 +34,7 @@ public class User {
 	public boolean getIsAdmin() { return this.isAdmin; }
 	
 	public Date[] getBorrowDates() { return this.borrowDates; }
-	public String[] getBorrowBooks() { return this.borrowBook; }
+	public String[] getBorrowBooks() { return this.borrowBooks; }
 	public Date getIsDelay() {return this.delay_date;}
 	//set 메소드들
 	public void setName(String name) { this.name = name; }
@@ -44,7 +44,7 @@ public class User {
 	public void setDelay(java.sql.Date delay_date) {this.delay_date = delay_date;}
 	public void setBorrowBooks(int count, String book) 
 	{
-		borrowBook[count] =book;
+		borrowBooks[count] =book;
 	}
 	
 	public void setBorrowDates(int date,Date date2) { this.borrowDates[date] = date2; 

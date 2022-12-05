@@ -8,6 +8,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 
+import book.BookManager;
 import gui.page.mainPage.MainPageComponent;
 import gui.page.optionPage.mainOption.book.editBookPage.EditBookPage;
 import gui.page.optionPage.mainOption.book.insertBookPage.InsertBookPage;
@@ -59,13 +60,16 @@ public class MainAdminPageComponent extends MainPageComponent {
 		AllUserTable.InitAllUserTable();
 		InitTextField();
 		setFieldFromAllBookTable();
+		setFieldFromAllUserTable();
 		
 		//탭의 상태가 변할 시 이벤트 작동 (탭 이동 시 발동)
 		adminTab.addChangeListener(new ChangeListener() {
 			@Override
-			public void stateChanged(ChangeEvent e) {
-				eraseTextComponent(mainAdminTextComponents);
-				MainPageComponent.setTabIndex(adminTab.getSelectedIndex());
+			public void stateChanged(ChangeEvent ce) {
+				eraseTextComponent(mainAdminTextComponents);	//텍스트필드 지움
+				MainPageComponent.setTabIndex(adminTab.getSelectedIndex());		//탭 인덱스를 누른 탭번호으로 설정
+				AllBookTable.getAllBookTable().setModel(AllBookTable.getAllBookTableModel());	//전체도서 테이블 초기화
+				AllUserTable.getAllUserTable().setModel(AllUserTable.getUserTableModel());		//전체유저 테이블 초기화
 			}
 		});
 		
@@ -119,29 +123,57 @@ public class MainAdminPageComponent extends MainPageComponent {
 			}
 		});
 	}
-	private static Object[] setAllUserData;
-	public void InitAllUserTable() {
-		//TODO make Table from DataBase 처음 프로그램 시작될 때 설정
-		AllUserTable.getAllUserTable().setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		setAllUserData = new Object[2];
-		for(User setUser: UserManager.getInstance().getUserVector()) {
-			if(setUser.getIsAdmin()==false) {
-						setAllUserData[0]=setUser.getID();
-						setAllUserData[1]=setUser.getName();
-						AllUserTable.getUserTableModel().addRow(setAllUserData);
-						//borrowDateTextFields[]
-					
+	
+	public void setFieldFromAllUserTable() {
+		//마우스 이벤트 처리 추가
+		AllUserTable.getAllUserTable().addMouseListener(new MouseAdapter() {
+			@Override
+			//클릭 시 정보 가져오기
+			public void mousePressed(MouseEvent me) {
+				System.out.println("유저테이블 선택된 행"+AllUserTable.getAllUserTable().getSelectedRow());
+				if(AllUserTable.getAllUserTable().getSelectedRow() == -1)
+					return;
+				
+				System.out.println("여기 유저테이블 실행 : ");
+				//선택한 행의 학번
+				Object id = AllUserTable.getAllUserTable().getValueAt(AllUserTable.getAllUserTable().getSelectedRow(), 0);
+				//선택한 학번의 사용자
+				user.User selectedUser = user.UserManager.getInstance().findUser(id.toString());
+				//선택한 학번의 사용자의 빌린 도서들
+				book.Book[] bookOfSelectedUser = new book.Book[3];
+				//선택한 학번의 사용자의 빌린 도서의 아이디들
+				String bookId[] = {selectedUser.getBorrowBooks()[0], selectedUser.getBorrowBooks()[1], selectedUser.getBorrowBooks()[2]};
+				try {
+					for(int i=0; i<3; i++) {
+						if(bookId[i] != null) {
+							bookOfSelectedUser[i] = BookManager.getInstance().getlist().get(selectedUser.getBorrowBooks()[i]);
+							bookNameTextFields[i].setText(bookOfSelectedUser[i].getName().toString());
+							bookAuthorTextFields[i].setText(bookOfSelectedUser[i].getAuthor().toString());
+							bookPublisherTextFields[i].setText(bookOfSelectedUser[i].getPublisher().toString());
+							bookCategoryTextFields[i].setText(book.CategorizeKDC.getCategoryname(bookOfSelectedUser[i].getCategory().toString()));
+							bookIdTextFields[i].setText(bookOfSelectedUser[i].getId().toString());
+							
+							borrowDateTextFields[i].setText(selectedUser.getBorrowDates()[i].toString());
+							returnDateTextFields[i].setText(selectedUser.getBorrowDates()[i].toLocalDate().plusDays(7).toString());
+							isDelayTextFields[i].setText(selectedUser.getIsDelay().toString());
+						}
+						else {
+							bookNameTextFields[i].setText("");
+							bookAuthorTextFields[i].setText("");
+							bookPublisherTextFields[i].setText("");
+							bookCategoryTextFields[i].setText("");
+							bookIdTextFields[i].setText("");
+							
+							borrowDateTextFields[i].setText("");
+							returnDateTextFields[i].setText("");
+							isDelayTextFields[i].setText("");
+						}
+					}
+				} catch(Exception e) {
 				}
 			}
-		
-		//테이블 열 위치 변경 불가
-		AllUserTable.getAllUserTable().getTableHeader().setReorderingAllowed(false);
-		
-		//테이블 내용 수정 불가 처리
-		//MainPageComponent.getAllUserTable().setModel(new DefaultTableModel (MainPageComponent.getAllUserData(), MainPageComponent.getAllUserColumnName()) {
-			//public boolean isCellEditable(int row, int column) { return false; }
-		//} );
-	}
+		});
+	}	
 	
 	public void InitTextField() {
 		//각 텍스트 필드 배열 할당 및 초기화
@@ -248,11 +280,9 @@ public class MainAdminPageComponent extends MainPageComponent {
 	//수정 버튼 작동 메소드 TODO
 	public void onClickEditBookButton() {
 		int totalCount=0;
-		try {
-			totalCount = Integer.parseInt(bookAvailableStockTextField.getText());
-		} catch(NumberFormatException e) {
-			totalCount = 0;
-		}
+		
+		try { totalCount = Integer.parseInt(bookAvailableStockTextField.getText()); }
+		catch(NumberFormatException e) { totalCount = 0; }
 		//생성자 호출
 		new EditBookPage(
 				bookNameTextFields[3].getText(),
@@ -260,8 +290,7 @@ public class MainAdminPageComponent extends MainPageComponent {
 				bookPublisherTextFields[3].getText(),
 				bookCategoryTextFields[3].getText(),
 				bookIdTextFields[3].getText(),
-				totalCount );	
-		
+				totalCount );
 	}
 	
 	//삭제 버튼 작동 메소드 TODO
@@ -271,12 +300,3 @@ public class MainAdminPageComponent extends MainPageComponent {
 	}
 	
 }
-
-/*
- * addMouseListener(new MouseAdapter() {
-		@Override
-		public void mousePressed(MouseEvent e){
-			System.out.println("aaa" + e.getSource());
-		}
-	}
- */

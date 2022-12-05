@@ -17,6 +17,7 @@ import book.BookManager;
 import gui.page.mainPage.MainPageComponent;
 import gui.page.startPage.StartPageComponent;
 import gui.table.AllBookTable;
+import gui.table.AllUserTable;
 import gui.table.MyBookTable;
 import gui.util.MessageBox;
 import user.User;
@@ -34,7 +35,7 @@ public class MainUserPageComponent extends MainPageComponent {
 	private MainPageComponent mainPageComponent = new MainPageComponent(this.frame);
 	
 	private MyBookTable myBookTable = new MyBookTable();
-	private AllBookTable allBookTable = new AllBookTable();
+	public MyBookTable getMyBookTable() { return myBookTable; }
 	
 	private JTabbedPane userTab;
 	
@@ -112,8 +113,10 @@ public class MainUserPageComponent extends MainPageComponent {
 		userTab.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				eraseTextComponent(mainUserTextComponents);
-				MainPageComponent.setTabIndex(userTab.getSelectedIndex());
+				eraseTextComponent(mainUserTextComponents);	//텍스트필드 지움
+				MainPageComponent.setTabIndex(userTab.getSelectedIndex());	//탭 인덱스를 누른 탭번호으로 설정
+				AllBookTable.getAllBookTable().setModel(AllBookTable.getAllBookTableModel());	//전체도서 테이블 초기화
+				myBookTable.getMyBookTable().setModel(myBookTable.getMyBookTableModel());		//내 도서 테이블 초기화
 			}
 		});
 		
@@ -134,12 +137,6 @@ public class MainUserPageComponent extends MainPageComponent {
 		mainUserTextComponents.add(isDelayTextField);
 		mainUserTextComponents.add(bookAvailableStockTextField);
 	}
-	
-	
-	
-	
-
-
 	
 	public void InitTextField(){
 		//각 텍스트 배열의 할당 및 초기화
@@ -164,18 +161,19 @@ public class MainUserPageComponent extends MainPageComponent {
 		isDelayTextField.setEditable(false);
 		bookAvailableStockTextField.setEditable(false);
 	}
+	
 	public void setFieldFromAllBookTable() {
 		//마우스 이벤트 처리 추가
-		allBookTable.getAllBookTable().addMouseListener(new MouseAdapter() {
-			Object[] str = new Object[allBookTable.getAllBookTable().getColumnCount()];
+		AllBookTable.getAllBookTable().addMouseListener(new MouseAdapter() {
+			Object[] str = new Object[AllBookTable.getAllBookTable().getColumnCount()];
 			@Override
 			//클릭 시 정보 가져오기
 			public void mousePressed(MouseEvent me) {
-				if(allBookTable.getAllBookTable().getSelectedRow() == -1)
+				if(AllBookTable.getAllBookTable().getSelectedRow() == -1)
 					return;
-				System.out.println("선택된 행"+allBookTable.getAllBookTable().getSelectedRow());
-				for(int i=0; i<allBookTable.getAllBookTable().getColumnCount();i++)
-						str[i] = allBookTable.getAllBookTable().getValueAt(allBookTable.getAllBookTable().getSelectedRow(), i);				
+				System.out.println("선택된 행"+AllBookTable.getAllBookTable().getSelectedRow());
+				for(int i=0; i<AllBookTable.getAllBookTable().getColumnCount();i++)
+						str[i] = AllBookTable.getAllBookTable().getValueAt(AllBookTable.getAllBookTable().getSelectedRow(), i);				
 					bookNameTextFields[0].setText(str[0].toString());
 					bookAuthorTextFields[0].setText(str[1].toString());
 					bookPublisherTextFields[0].setText(str[2].toString());
@@ -262,8 +260,8 @@ public class MainUserPageComponent extends MainPageComponent {
 		
 		switch(getMessage) {
 			case "Success":
-				allBookTable.getAllBookTable().setValueAt(Integer.toString(borrowBooks.getBorrowCount()), allBookTable.getAllBookTable().getSelectedRow(),7 );
-				allBookTable.getAllBookTable().updateUI();
+				AllBookTable.getAllBookTable().setValueAt(Integer.toString(borrowBooks.getBorrowCount()), AllBookTable.getAllBookTable().getSelectedRow(),7 );
+				AllBookTable.getAllBookTable().updateUI();
 				
 				LocalDate dateAndtime = LocalDate.now();
 				
@@ -287,25 +285,28 @@ public class MainUserPageComponent extends MainPageComponent {
 				 break;
 			case "delay":
 				MessageBox.printWarningMessageBox("책 빌리기 불가!! 책 연체 됨!!");
+				break;
+			case "bookOverlap":
+				MessageBox.printWarningMessageBox("동일 도서 중복 대여 불가!!");
+				break;
 		}
 	}
 	//반납하기 버튼 작동 메소드 TODO
 	public void onClickReturnBookButton() {
 		MessageBox.printInfoMessageBox("반납하기");
-		Book returnBooks = new Book();
-		returnBooks = BookManager.getInstance().getlist().get(bookIdTextFields[1].getText());
-		UserManager.getInstance().returnbook(StartPageComponent.getUser(), returnBooks);
-		allBookTable.getAllBookTable().setValueAt(Integer.toString(returnBooks.getBorrowCount()), allBookTable.getAllBookTable().getSelectedRow(),7 );
-		allBookTable.getAllBookTable().updateUI();
+		Book returnBook = new Book();
+		returnBook = BookManager.getInstance().getlist().get(bookIdTextFields[1].getText());
+		UserManager.getInstance().returnBook(StartPageComponent.getUser(), returnBook);
+		
+		int tableRow = 0;
+		for(int i=0; i<AllBookTable.getAllBookTable().getRowCount(); i++) {
+			if(AllBookTable.getAllBookTable().getValueAt(tableRow, 5) == returnBook.getId())
+				break;
+			tableRow++;
+		}
+		
+		AllBookTable.getAllBookTable().setValueAt(returnBook.getBorrowCount(), tableRow,7 );
+		AllBookTable.getAllBookTable().updateUI();
 		myBookTable.getMyBookTableModel().removeRow(myBookTable.getMyBookTable().getSelectedRow());
 	}
 }
-
-/*
- * addMouseListener(new MouseAdapter() {
-		@Override
-		public void mousePressed(MouseEvent e){
-			System.out.println("aaa" + e.getSource());
-		}
-	}
- */

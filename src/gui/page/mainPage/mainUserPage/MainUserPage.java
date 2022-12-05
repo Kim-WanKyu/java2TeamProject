@@ -12,8 +12,8 @@ import gui.util.WhitePanel;
 public class MainUserPage extends MainPage {
 
 	MainUserPageComponent mainUserPageComponent = new MainUserPageComponent(this);
-	MyBookTable myBookTable = new MyBookTable();
-	AllBookTable allBookTable = new AllBookTable();
+	MyBookTable myBookTable = mainUserPageComponent.getMyBookTable();
+	
 	//MainUserPage 생성자
 	public MainUserPage() {
 		setTitle(super.getTitle() + "_사용자 화면");
@@ -100,7 +100,7 @@ public class MainUserPage extends MainPage {
 						rightPanel.add(mainUserPageComponent.getBorrowBookButton(), BorderLayout.SOUTH);
 					}
 					//전체도서 테이블 (왼쪽)
-					JScrollPane allBookScrollPane = new JScrollPane(allBookTable.getAllBookTable());
+					JScrollPane allBookScrollPane = new JScrollPane(AllBookTable.getAllBookTable());
 					
 					allBookPanel.add(allBookScrollPane);
 					allBookPanel.add(rightPanel);
@@ -186,7 +186,7 @@ public class MainUserPage extends MainPage {
 							infoPanel.setBorder(BorderFactory.createLineBorder(new Color(127, 255, 127), 4));
 							
 						}
-						myBookRightPanel.add(infoPanel);
+						myBookRightPanel.add(infoPanel, BorderLayout.CENTER);
 						myBookRightPanel.add(mainUserPageComponent.getReturnBookButton(), BorderLayout.SOUTH);
 					}
 					myBookPanel.add(myBookLeftPanel);
