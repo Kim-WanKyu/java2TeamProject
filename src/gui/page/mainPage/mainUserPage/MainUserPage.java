@@ -108,11 +108,25 @@ public class MainUserPage extends MainPage {
 				//2.내도서 / myBookPanel = 사용자 탭의 내도서로 들어갈 패널
 				WhitePanel myBookPanel = new WhitePanel();
 				{
-					//myBookLeftPanel 패널 (bookTable 테이블, searchPanel 패널 포함)
+					//myBookLeftPanel 패널 (bookTable 테이블, noticePanel 패널 포함)
 					WhitePanel myBookLeftPanel = new WhitePanel(new BorderLayout());
 					{
-						JScrollPane myBookScrollPane = new JScrollPane(myBookTable.getMyBookTable());
+						JScrollPane myBookScrollPane = new JScrollPane(mainUserPageComponent.getMyBookTable().getMyBookTable());
+						WhitePanel noticePanel = new WhitePanel(new GridLayout(2,1));
+						{
+							WhitePanel noticePanel1 = new WhitePanel(new FlowLayout(FlowLayout.RIGHT));
+							{
+								noticePanel1.add(MainUserPageComponent.getDelayNoticeLabel1());
+							}
+							WhitePanel noticePanel2 = new WhitePanel(new FlowLayout(FlowLayout.RIGHT));
+							{
+								noticePanel2.add(MainUserPageComponent.getDelayNoticeLabel2());
+							}
+							noticePanel.add(noticePanel1);
+							noticePanel.add(noticePanel2);
+						}
 						myBookLeftPanel.add(myBookScrollPane, BorderLayout.CENTER);
+						myBookLeftPanel.add(noticePanel, BorderLayout.SOUTH);
 					}
 					/*오른쪽*/
 					//myBookRightPanel 패널
@@ -202,23 +216,3 @@ public class MainUserPage extends MainPage {
 		ct.add(mainUserPanel);
 	}
 }
-
-
-
-/*
-
-case "대여하기":
-	//대여
-	/*if(유저가 대출가능한지 && 재고가 남았는지)
-	 * 해당 도서 정보 유저에 저장하고 도서 재고-1
-	 * else
-	 * 	경고메세지 (대출 불가)
-	 *
-	 * break;
-	 * 
-	 * 
-	 * + case "반납하기":
-	 * 
-	 * 	break;
-	 * 
-	 * */

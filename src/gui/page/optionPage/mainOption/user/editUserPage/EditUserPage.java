@@ -60,7 +60,7 @@ public class EditUserPage extends Page{
 			}
 			WhitePanel editButtonPanel = new WhitePanel(new GridLayout(3,1,0,5));
 			{
-				editButtonPanel.add(editUserPageComponent.getChangePwButton());
+				editButtonPanel.add(editUserPageComponent.getChangeUserInfoButton());
 				editButtonPanel.add(new JLabel(""));	//위치 맟추기 위한 빈 레이블 추가
 				editButtonPanel.add(editUserPageComponent.getExitButton());
 			}

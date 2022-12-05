@@ -93,8 +93,8 @@ public class UserManager {
 				}
 			}	
 			else {
-				System.out.println("아이디 없음");
-				break;
+				System.out.println("아이디 없음"+id);
+				
 			}
 		}
 		return password;
@@ -198,7 +198,7 @@ public class UserManager {
 		 borrowDates = nowuser.getBorrowDates();
 		Calendar c = Calendar.getInstance();
 		System.out.println("130번째 실행");
-		if(nowuser.getIsDelay()!=null&&nowuser.getIsDelay().before(date)) {
+		if(nowuser.getDelayDate()!=null&&nowuser.getDelayDate().before(date)) {
 			System.out.println("135번째 줄!! 책 연체됨 빌리기 불가!! 함수 종료");
 			return "delay";
 		}
@@ -358,7 +358,7 @@ public class UserManager {
 		}
 		
 		java.sql.Date delay_info = null;
-		
+		delay_info = user.getDelayDate();
 		java.util.Date dt = new java.util.Date();
 		java.sql.Date date = new java.sql.Date(dt.getTime());
 		Calendar c1 = Calendar.getInstance();
@@ -372,20 +372,20 @@ public class UserManager {
 			int diffDays;
 			set_Date = user.getBorrowDates()[countfind];
 			diffDays = (int) ((dt.getTime()-set_Date.getTime()) / (24*60*60*1000));
-			System.out.println(user.getIsDelay());
+			System.out.println(user.getDelayDate());
 			
-			if(diffDays<7 && user.getIsDelay()==null)
+			if(diffDays<7 && user.getDelayDate()==null)
 			{
 				delay_info = null;
 			}
-			else if(diffDays>7 && user.getIsDelay()==null)
+			else if(diffDays>7 && user.getDelayDate()==null)
 			{
 				c1.setTime(date);
 				c1.add(Calendar.DATE, diffDays-7);
 				delay_info = new java.sql.Date(c1.getTimeInMillis());
 			}
-			else if(diffDays>7 && user.getIsDelay()!=null)
-			{
+			else if(diffDays>7 && user.getDelayDate()!=null)
+			{	System.out.println(delay_info);
 				c1.setTime(delay_info);
 				c1.add(Calendar.DATE, diffDays-7);
 				delay_info = new java.sql.Date(c1.getTimeInMillis());
@@ -436,15 +436,12 @@ public class UserManager {
 			String hakbun = newuser.getID();
 			String name  = newuser.getName();
 			String password = newuser.getPassword();
-			int isadmin ;
-			if(newuser.getIsAdmin()) {
-				isadmin = 1;
+			int isAdmin;
 			
-			}
-			else
-				isadmin = 0;
+			if(newuser.getIsAdmin()) { isAdmin = 1; }
+			else { isAdmin = 0; }
 			
-			String sql =  " insert into student(hakbun, name, password, is_admin) VALUES('"+hakbun+"', '"+name+"' ,'"+password+"' ,'"+isadmin+"')";
+			String sql =  " insert into student(hakbun, name, password, is_admin) VALUES('"+hakbun+"', '"+name+"' ,'"+password+"' ,'"+isAdmin+"')";
 			System.out.println(sql);
 			stmt.executeUpdate(sql);
 			 sql =  " insert into borrowbooksanddates(hakbun) VALUES('"+hakbun+"')";
@@ -458,49 +455,48 @@ public class UserManager {
 	
 }
 	//유저 삭제 메서드
-	public void deleteUser(User deleteuser)  {
-		String isSuccess;
+	public boolean deleteUser(User deleteuser)  {
 		Connection conn=null;
 		java.sql.Statement stmt;
-		ResultSet result;
+
+		
+		//유저가 빌린 도서를 전부 반납하지 않으면 탈퇴 불가]
 		for(User isUser : userList) {
 			if(deleteuser.getID().equals(isUser.getID())) {
 				deleteuser = isUser;
-					System.out.println("여기 값있음....");
-					for(int i =0; i<deleteuser.getBorrowBooks().length;i++)
+				System.out.println("여기 값있음....");
+				for(int i =0; i<deleteuser.getBorrowBooks().length;i++)
+				{
+					if(deleteuser.getBorrowBooks()[i]!=null) 
 					{
-						if(deleteuser.getBorrowBooks()[i]!=null) {
-							System.out.println("책 반납후 회원탈퇴 바람!!");
-							isSuccess = "bookStockOver";
+						System.out.println("책 반납후 회원탈퇴 바람!!");
+						DBManager.close();
+						return false;
 					}
-						}
-					System.out.println("유저 리스트 삭제");
-					userList.remove(isUser);
-					isSuccess = "Success";
-					break;
-			
+				}
+				break;
 			}
 		}
+	
+		//탈퇴한 회원 정보 삭제
+		userList.remove(deleteuser);
 		
+		//탈퇴한 회원 DB 삭제
 		try {
-			
-		conn=DBManager.connect();
-		stmt = conn.createStatement();
-		String delete = "delete from student where hakbun = "+deleteuser.getID();
-		stmt.executeUpdate(delete);
-		System.out.println("데베 유저 삭제");
-		
-				
-				
-		
+			conn = DBManager.connect();
+			stmt = conn.createStatement();
+			String delete = "delete from student where hakbun = "+deleteuser.getID();
+			stmt.executeUpdate(delete);
+			System.out.println("데베 유저 삭제");
 		}	
-	catch(Exception e) {
-		e.printStackTrace();
-	}finally {
-		DBManager.close();
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			DBManager.close();			
+		}
 		
-	}
-		
+		return true;
 	}
 	//유저 정보변경
 	public void changeInform(User userInformation) {
@@ -513,26 +509,26 @@ public class UserManager {
 				userList.set(count, userInformation);
 				break;
 			}
-			
 		}
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs =null;
-		String sql = "update student set password = ? where(hakbun = ?)";
+		String sql = "update student set name = ?, password = ? where(hakbun = ?)";
 		try {
-		conn = DBManager.connect();
-		pstmt = conn.prepareStatement(sql);
-		pstmt.setString(1,userInformation.getPassword());
-		pstmt.setString(2, userInformation.getID());
-		pstmt.executeUpdate();
-			}
+			conn = DBManager.connect();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userInformation.getName());
+			pstmt.setString(2,userInformation.getPassword());
+			pstmt.setString(3, userInformation.getID());
+			pstmt.executeUpdate();
+		}
 		catch(Exception e) {
 			e.printStackTrace();
 			}
 		finally {
 			DBManager.close();
 		}
-		}
+	}
 	
 	//로그인도와주는 메서드
 	
@@ -559,28 +555,5 @@ public class UserManager {
 		}
 		return isuser;
 	}
-	
-	//책을 빌리면 출력해주는 메서드
-	public void printRecipt(User reciptUser, Book reciptBook) throws Exception{
-		String title;
-		String mainText;
-		LocalDate currentDate = LocalDate.now();
-		LocalDate returnDate = currentDate.plusDays(7);
-		title = reciptUser.getID()+"_"+reciptBook.getName()+"_"+currentDate.toString();
-		FileWriter fw = new FileWriter(title);
-		mainText ="학번(ID) : "+reciptUser.getID()+"\n";
-		mainText = "이름 : " +reciptUser.getName()+"\n";
-		mainText = "도서명 : "+reciptBook.getName()+"\n";
-		mainText = "저자 : "+reciptBook.getAuthor()+"\n";
-		mainText = "출판사 : "+reciptBook.getPublisher()+"\n";
-		mainText = "분류 : "+CategorizeKDC.getCategoryname(reciptBook.getCategory())+"\n";
-		mainText = "ISBN: "+reciptBook.getId()+"\n";
-		mainText = "대여일자: "+currentDate.toString()+"\n";
-		mainText = "반납예정일자 : "+returnDate.toString()+"\n";
-		fw.write(mainText);
-		fw.close();
-	}
-	
-
 }
 	

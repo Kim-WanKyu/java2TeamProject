@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
+import book.BookManager;
 import gui.page.PageComponent;
 
 //EditBookPage의 컴포넌트를 위한 클래스
@@ -30,6 +31,8 @@ public class EditBookPageComponent extends PageComponent {
 	public EditBookPageComponent(JFrame frame) {
 		super.frame = frame;
 		
+		bookIdTextField.setEditable(false);
+		
 		editButton.addActionListener(this);
 		exitButton.addActionListener(this);
 	}
@@ -44,7 +47,6 @@ public class EditBookPageComponent extends PageComponent {
 	public JSpinner getBookTotalCountSpinner() { return bookTotalCountSpinner; }
 	public JSpinner getBookBorrowCountSpinner() { return bookBorrowCountSpinner; }
 	
-	//public JButton getInsertButton() { return insertButton; }
 	public JButton getEditButton() { return editButton; }
 	public JButton getExitButton() { return exitButton; }
 	@Override
@@ -60,10 +62,35 @@ public class EditBookPageComponent extends PageComponent {
 		}	
 	}
 	
-	//TODO
 	public void onClickEditButton() {
+		String id = getBookIdTextField().getText();
+		
+		book.Book editBook = book.BookManager.getInstance().getlist().get(id);
+		String name = editBook.getName();
+		String author = editBook.getAuthor();
+		String publisher = editBook.getPublisher();
+		String kdc = editBook.getCategory();
+		
+		int totalCount = editBook.getTotalCount();
+		
+		if(getBookNameTextField().getText() != null)
+			name = getBookNameTextField().getText();
+
+		if(getBookAuthorTextField().getText() != null)
+			author = getBookAuthorTextField().getText();
+		
+		if(getBookPublisherTextField().getText() != null)
+			publisher = getBookPublisherTextField().getText();
+
+		if(getBookCategoryTextField().getText() != null)
+			kdc = book.CategorizeKDC.getKDCCode(getBookCategoryTextField().getText());
+
+		if(getBookTotalCountSpinner().getValue() != null)
+			totalCount = Integer.parseInt(getBookTotalCountSpinner().getValue().toString());
+		
+		BookManager.getInstance().editBook(name, author, publisher, kdc, totalCount, id);
+		
 		frame.dispose();
-		//책 정보 수정 DB도 수정 테이블이나, 벡터도 수정
 	}
 	
 	//TODO

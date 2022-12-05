@@ -24,6 +24,7 @@ import gui.page.startPage.StartPage;
 import gui.page.startPage.StartPageComponent;
 import gui.table.AllBookTable;
 import gui.table.AllUserTable;
+import gui.table.MyBookTable;
 import gui.table.SearchTable;
 import gui.util.MessageBox;
 import user.User;
@@ -197,6 +198,53 @@ public class MainPageComponent extends PageComponent {
 					}					
 					searchUserModel.fireTableRowsUpdated(0, searchUserModel.getRowCount() -1);
 					AllUserTable.getAllUserTable().updateUI();				
+				}
+			}
+			else if(userIsAdmin == false) {
+				if(tabIndex == 0) {
+					//도서 검색메서드 실행
+					DefaultTableModel searchBookModel = new DefaultTableModel(null, AllBookTable.getAllBookColumnName());
+					AllBookTable.getAllBookTable().setModel(searchBookModel);
+					
+					Vector<book.Book> bookList = BookManager.getInstance().findBook(category, str);					
+					for(int i=0; i<bookList.size(); i++) {
+						Vector<Object> vector = new Vector<Object>();
+						vector.add(bookList.get(i).getName());
+						vector.add(bookList.get(i).getAuthor());
+						vector.add(bookList.get(i).getPublisher());
+						vector.add(CategorizeKDC.getCategoryname(bookList.get(i).getCategory()));
+						vector.add(bookList.get(i).getCategory());
+						vector.add(bookList.get(i).getId());
+						vector.add(bookList.get(i).getTotalCount());
+						vector.add(bookList.get(i).getBorrowCount());
+						
+						searchBookModel.addRow(vector);
+					}
+					searchBookModel.fireTableRowsUpdated(0, searchBookModel.getRowCount() -1);
+					AllBookTable.getAllBookTable().updateUI();	
+				}
+				else if(tabIndex == 1) {
+					//내 도서 검색 메서드 실행
+					DefaultTableModel searchBookModel = new DefaultTableModel(null, AllBookTable.getAllBookColumnName());
+					MyBookTable myBookTable = new MyBookTable();
+					myBookTable.getMyBookTable().setModel(searchBookModel);
+					
+					Vector<book.Book> bookList = BookManager.getInstance().findBook(category, str);					
+					for(int i=0; i<bookList.size(); i++) {
+						Vector<Object> vector = new Vector<Object>();
+						vector.add(bookList.get(i).getName());
+						vector.add(bookList.get(i).getAuthor());
+						vector.add(bookList.get(i).getPublisher());
+						vector.add(CategorizeKDC.getCategoryname(bookList.get(i).getCategory()));
+						vector.add(bookList.get(i).getCategory());
+						vector.add(bookList.get(i).getId());
+						vector.add(bookList.get(i).getTotalCount());
+						vector.add(bookList.get(i).getBorrowCount());
+						
+						searchBookModel.addRow(vector);
+					}					
+					searchBookModel.fireTableRowsUpdated(0, searchBookModel.getRowCount() -1);
+					myBookTable.getMyBookTable().updateUI();
 				}
 			}
 

@@ -150,12 +150,16 @@ public class MainAdminPageComponent extends MainPageComponent {
 							bookNameTextFields[i].setText(bookOfSelectedUser[i].getName().toString());
 							bookAuthorTextFields[i].setText(bookOfSelectedUser[i].getAuthor().toString());
 							bookPublisherTextFields[i].setText(bookOfSelectedUser[i].getPublisher().toString());
-							bookCategoryTextFields[i].setText(book.CategorizeKDC.getCategoryname(bookOfSelectedUser[i].getCategory().toString()));
-							bookIdTextFields[i].setText(bookOfSelectedUser[i].getId().toString());
-							
+							if(bookOfSelectedUser[i].getCategory().toString() != null) {
+								bookCategoryTextFields[i].setText(book.CategorizeKDC.getCategoryname(bookOfSelectedUser[i].getCategory().toString()));
+							}
+							else {
+								bookCategoryTextFields[i].setText("");
+							}
+							bookIdTextFields[i].setText(bookOfSelectedUser[i].getId().toString());							
 							borrowDateTextFields[i].setText(selectedUser.getBorrowDates()[i].toString());
 							returnDateTextFields[i].setText(selectedUser.getBorrowDates()[i].toLocalDate().plusDays(7).toString());
-							isDelayTextFields[i].setText(selectedUser.getIsDelay().toString());
+							isDelayTextFields[i].setText(selectedUser.getDelayDate().toString());
 						}
 						else {
 							bookNameTextFields[i].setText("");

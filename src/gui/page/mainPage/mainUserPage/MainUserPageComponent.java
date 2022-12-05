@@ -1,30 +1,26 @@
 package gui.page.mainPage.mainUserPage;
 
 import java.awt.event.*;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Vector;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.table.DefaultTableModel;
 
 import book.Book;
 import book.BookManager;
 import gui.page.mainPage.MainPageComponent;
 import gui.page.startPage.StartPageComponent;
 import gui.table.AllBookTable;
-import gui.table.AllUserTable;
 import gui.table.MyBookTable;
 import gui.util.MessageBox;
-import user.User;
 import user.UserManager;
 
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
+
+import util.DelayNoticeRunnable;
+import util.Receipt;
 
 public class MainUserPageComponent extends MainPageComponent {
 
@@ -60,10 +56,11 @@ public class MainUserPageComponent extends MainPageComponent {
 	private JButton borrowBookButton = new JButton("대여하기");	//대여하기 버튼
 	private JButton returnBookButton = new JButton("반납하기");	//반납하기 버튼
 	
-	private JLabel delayNoticeLabel = new JLabel("");	//연체 알림 메세지 레이블
+	private static JLabel delayNoticeLabel1 = new JLabel(" ");	//연체 알림 메세지 레이블
+	private static JLabel delayNoticeLabel2 = new JLabel(" ");	//연체 알림 메세지 레이블
 	
 	
-	//MainAdminPageComponent생성자
+	//MainUserPageComponent생성자
 	public MainUserPageComponent(JFrame frame)  {
 		super(frame);
 		userTab = mainPageComponent.getTabbedPane();		
@@ -91,7 +88,7 @@ public class MainUserPageComponent extends MainPageComponent {
 					bookPublisherTextFields[1].setText(str[2].toString());
 					if(str[3].toString()!=null) {
 						bookCategoryTextFields[1].setText(str[3].toString());
-					}//KDC나 분류둥 하나 없음.
+					}
 					else {
 						bookCategoryTextFields[1].setText("");
 					}
@@ -108,6 +105,11 @@ public class MainUserPageComponent extends MainPageComponent {
 				
 			}
 		});
+		
+		//연체알림을 위한 runnable 객체 생성 및 스레드 실행
+		DelayNoticeRunnable delayNoticeRunnable = new DelayNoticeRunnable();
+		Thread thread = new Thread(delayNoticeRunnable);
+		thread.start();
 		
 		//탭의 상태가 변할 시 이벤트 작동 (탭 이동 시 발동)
 		userTab.addChangeListener(new ChangeListener() {
@@ -212,7 +214,8 @@ public class MainUserPageComponent extends MainPageComponent {
 	public JTextField getBookAvailableStockTextField() { return bookAvailableStockTextField; }
 
 	//get메소드
-	public JLabel getDelayNoticeLabel() { return delayNoticeLabel; }
+	public static JLabel getDelayNoticeLabel1() { return delayNoticeLabel1; }
+	public static JLabel getDelayNoticeLabel2() { return delayNoticeLabel2; }
 	
 	//버튼 클릭 시 이벤트 처리
 	@Override
@@ -257,7 +260,6 @@ public class MainUserPageComponent extends MainPageComponent {
 		borrowBooks = BookManager.getInstance().getlist().get(bookIdTextFields[0].getText());
 		 
 		String getMessage = UserManager.getInstance().borrowBooks(StartPageComponent.getUser(), borrowBooks);
-		
 		switch(getMessage) {
 			case "Success":
 				AllBookTable.getAllBookTable().setValueAt(Integer.toString(borrowBooks.getBorrowCount()), AllBookTable.getAllBookTable().getSelectedRow(),7 );
@@ -269,13 +271,16 @@ public class MainUserPageComponent extends MainPageComponent {
 				inputStr[0] = borrowBooks.getName();
 				inputStr[1] = borrowBooks.getAuthor();
 				inputStr[2] = borrowBooks.getPublisher();
-				inputStr[3] = borrowBooks.getCategory();//TODO
+				inputStr[3] = (borrowBooks.getCategory());
 				inputStr[4] = borrowBooks.getCategory();
 				inputStr[5] = borrowBooks.getId();
 				inputStr[6] = dateAndtime.toString();
 				inputStr[7] = (dateAndtime.plusDays(7).toString());
 				myBookTable.getMyBookTableModel().addRow(inputStr);
 				
+				//영수증 출력 메소드 실행
+				Receipt receipt = new Receipt(StartPageComponent.getUser(), borrowBooks);
+				receipt.printReceipt();
 				break;
 			case "bookOver":
 			    MessageBox.printWarningMessageBox("빌릴 수 있는 책 개수 초과");

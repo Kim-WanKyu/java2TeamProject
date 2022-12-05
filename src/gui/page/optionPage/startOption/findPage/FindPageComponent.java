@@ -64,7 +64,7 @@ public class FindPageComponent extends PageComponent {
 		}
 		else {
 			String password = UserManager.getInstance().findPassword(id, name);
-			if( !password.equals("")) {
+			if(!password.equals("")) {
 				MessageBox.printInfoMessageBox("" + name + "님의 password는\n " + password +"입니다.");
 			}
 			else {

@@ -109,7 +109,39 @@ public class BookManager {
 	
 		//분류 카테고리명
 		
-	
+	public void editBook(String name, String author, String publisher, String kdc, int totalCount, String bookID) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String price = null;
+		String sql = "update book_list set name = ?, author = ?, publisher = ?, kdc = ?, totalcount = ? where(id = ?)";
+		try {
+			//DB갱신
+			conn = DBManager.connect();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, name);
+			pstmt.setString(2, author);
+			pstmt.setString(3, publisher);
+			pstmt.setString(4, kdc);
+			pstmt.setInt(5, totalCount);
+			pstmt.setString(6, bookID);
+			System.out.println("데베 수정 완료");
+			pstmt.executeUpdate();
+			
+			//도서 정보 갱신
+			Book book = Booklist.get(bookID);
+			book.setName(name);
+			book.setAuthor(author);
+			book.setPublisher(publisher);
+			book.setCategory(kdc);
+			book.setTotalCount(totalCount);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			DBManager.close();
+		}
+	}
 
 	
 	//모든 책 품목 설정
