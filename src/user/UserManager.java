@@ -350,7 +350,7 @@ public class UserManager {
 		System.out.println(borrowbookslist[0]);
 		
 		int countfind ;
-		for(countfind=0 ; countfind < user.getBorrowBooks().length; countfind++) {
+		for(countfind = 0 ; countfind < user.getBorrowBooks().length; countfind++) {
 			if(borrowbookslist[countfind]!=null && borrowbookslist[countfind].equals(book.getId())) {
 				System.out.println("인덱스 발견"+countfind);
 				break;

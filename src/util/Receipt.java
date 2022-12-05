@@ -31,8 +31,13 @@ public class Receipt {
 		bookName = borrowBooks.getName();
 		bookAuthor = borrowBooks.getAuthor();
 		bookPublisher = borrowBooks.getPublisher();
-		bookCategoryName = CategorizeKDC.getCategoryname(borrowBooks.getCategory());
+		
+		if(!borrowBooks.getCategory().equals(""))
+			bookCategoryName = CategorizeKDC.getCategoryname(borrowBooks.getCategory());
+		else
+			bookCategoryName = "";
 		bookCategoryCode = borrowBooks.getCategory();
+		
 		bookId = borrowBooks.getId();
 		
 		borrowDay = LocalDate.now();
@@ -80,6 +85,7 @@ public class Receipt {
 			
 			MessageBox.printInfoMessageBox("영수증 출력이 완료되었습니다.");
 		} catch(Exception e) { 
+			e.printStackTrace();
 			MessageBox.printErrorMessageBox("영수증 출력 에러");
 		}
 	}

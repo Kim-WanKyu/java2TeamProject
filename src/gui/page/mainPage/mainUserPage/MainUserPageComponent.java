@@ -7,6 +7,8 @@ import java.util.Date;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import book.Book;
 import book.BookManager;
@@ -86,7 +88,7 @@ public class MainUserPageComponent extends MainPageComponent {
 					bookNameTextFields[1].setText(str[0].toString());
 					bookAuthorTextFields[1].setText(str[1].toString());
 					bookPublisherTextFields[1].setText(str[2].toString());
-					if(str[3].toString()!=null) {
+					if(str[3]!=null) {
 						bookCategoryTextFields[1].setText(str[3].toString());
 					}
 					else {
@@ -95,12 +97,15 @@ public class MainUserPageComponent extends MainPageComponent {
 					bookIdTextFields[1].setText(str[5].toString());
 					borrowDateTextField.setText(str[6].toString());
 					returnDateTextField.setText(str[7].toString());
+
 					java.util.Date now = new java.util.Date();
-					boolean isDelay =now.after((Date) str[7]);
+					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+					Date borrowDate = format.parse(str[7].toString());
+					boolean isDelay =now.after(borrowDate);
 					String isDelayString = isDelay ? "True":"False";
 					isDelayTextField.setText(isDelayString);
 				}catch(Exception e) {
-					e.getStackTrace();
+					e.printStackTrace();
 				}
 				
 			}
@@ -241,13 +246,17 @@ public class MainUserPageComponent extends MainPageComponent {
 			break;
 			
 		case "대여하기":
-			onClickBorrowBookButton();
-			//대여
+			if(!bookIdTextFields[0].getText().equals(""))
+				onClickBorrowBookButton();
+			else
+				MessageBox.printWarningMessageBox("선택된 도서가 없습니다.");
 			break;
 			
 		case "반납하기":
-			onClickReturnBookButton();
-			//반납
+			if(!bookIdTextFields[1].getText().equals(""))
+				onClickReturnBookButton();
+			else
+				MessageBox.printWarningMessageBox("선택된 도서가 없습니다.");
 			break;
 		
 	}
@@ -255,7 +264,6 @@ public class MainUserPageComponent extends MainPageComponent {
 	
 	//대여하기 버튼 작동 메소드 TODO
 	public void onClickBorrowBookButton() {
-		MessageBox.printInfoMessageBox("대여하기");
 		Book borrowBooks = new Book();
 		borrowBooks = BookManager.getInstance().getlist().get(bookIdTextFields[0].getText());
 		 
@@ -277,8 +285,10 @@ public class MainUserPageComponent extends MainPageComponent {
 				inputStr[6] = dateAndtime.toString();
 				inputStr[7] = (dateAndtime.plusDays(7).toString());
 				myBookTable.getMyBookTableModel().addRow(inputStr);
-				
-				//영수증 출력 메소드 실행
+
+			    MessageBox.printInfoMessageBox("도서 대여:" + borrowBooks.getName());
+			    eraseTextComponent(mainUserTextComponents);
+			    //영수증 출력 메소드 실행
 				Receipt receipt = new Receipt(StartPageComponent.getUser(), borrowBooks);
 				receipt.printReceipt();
 				break;
@@ -298,7 +308,6 @@ public class MainUserPageComponent extends MainPageComponent {
 	}
 	//반납하기 버튼 작동 메소드 TODO
 	public void onClickReturnBookButton() {
-		MessageBox.printInfoMessageBox("반납하기");
 		Book returnBook = new Book();
 		returnBook = BookManager.getInstance().getlist().get(bookIdTextFields[1].getText());
 		UserManager.getInstance().returnBook(StartPageComponent.getUser(), returnBook);
@@ -313,5 +322,8 @@ public class MainUserPageComponent extends MainPageComponent {
 		AllBookTable.getAllBookTable().setValueAt(returnBook.getBorrowCount(), tableRow,7 );
 		AllBookTable.getAllBookTable().updateUI();
 		myBookTable.getMyBookTableModel().removeRow(myBookTable.getMyBookTable().getSelectedRow());
+
+	    MessageBox.printInfoMessageBox("도서 반납:" + returnBook.getName());
+	    eraseTextComponent(mainUserTextComponents);
 	}
 }

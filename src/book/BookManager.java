@@ -4,8 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedList;
+
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -19,36 +18,13 @@ public class BookManager {
 	public static BookManager getInstance() {
 		return instance;
 	}
-	private  static TreeMap<String,Book> Booklist ; //전체 책 빌리고 책 목록 출력할때
+	
+	private  static TreeMap<String,Book> Booklist ; //책 전체 리스트 담을 맵 / 전체 책 빌리고 책 목록 출력할때 
 	
 	//모든 책 가져오기
-	public TreeMap<String,Book> getlist(){
-		return Booklist;
-	}
-
-//	public String[][] returnBookData(){
-//	ArrayList<ArrayList<String>> allBookDataString = new ArrayList<ArrayList<String>>();
-//	String allBookData[][];
-//		for(Entry<String, book.Book> entry : Booklist.entrySet()) {
-//			System.out.println("52번째 줄 실행");
-//			ArrayList<String> a1 = new ArrayList<String>();
-//			book.Book  getValue= entry.getValue();
-//			a1.add(getValue.getName());
-//			a1.add(getValue.getAuthor());
-//			a1.add(getValue.getPublisher());
-//			a1.add(getValue.getCategory());
-//			a1.add(getValue.getCategory());
-//			a1.add(String.valueOf(getValue.getTotalCount()));
-//			a1.add(String.valueOf(getValue.getBorrowCount()));
-//			allBookDataString.add(a1);
-//		}
-//			System.out.println(allBookDataString.get(0));
-//			allBookData = allBookDataString.toArray(new String[allBookDataString.size()][7]);
-//		for(int i=0;i<allBookData.length;i++) {
-//				System.out.println(allBookData[i][0]);
-//			System.out.println("출력 실행");			}
-//			return allBookData;
-//	} 
+	public TreeMap<String,Book> getlist() { return Booklist; }
+	
+	//도서 검색 메소드
 	public Vector<Book> findBook(String getCategory, String word) {
 		Vector <Book> searchedBooksVector = new Vector<Book>();		
 		
@@ -96,19 +72,12 @@ public class BookManager {
 
 		default:
 			MessageBox.printWarningMessageBox("검색분류가 올바르지 않습니다.");
+			break;
 		}
-		
-		System.out.println("여긴 실행");
 		return searchedBooksVector;
 	}
 	
-	
-	//책 카테고리 분류
-	
-
-	
-		//분류 카테고리명
-		
+	//도서 수정 메소드
 	public void editBook(String name, String author, String publisher, String kdc, int totalCount, String bookID) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -142,9 +111,8 @@ public class BookManager {
 			DBManager.close();
 		}
 	}
-
 	
-	//모든 책 품목 설정
+	//모든 책 품목 초기화 메소드
 	public  void setAllBook() throws SQLException{
 		System.out.println("책 초기화 실행");
 		Booklist = new TreeMap<String,Book>();//isbn 책 객체
@@ -153,8 +121,7 @@ public class BookManager {
 		ResultSet rs = null;
 		String price = null;
 		String sql = "select *from book_list";
-		try
-		{
+		try {
 			conn = DBManager.connect();
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
@@ -175,10 +142,9 @@ public class BookManager {
 		}finally {
 			DBManager.close();
 		}
-		
 	}
 
-	//책 품목 추가
+	//도서 등록(추가) 메소드
 	public void insertBook(Book book) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -196,37 +162,38 @@ public class BookManager {
 			pstmt.setInt(6, book.getTotalCount());
 			pstmt.setInt(7, book.getBorrowCount());
 			pstmt.executeUpdate();
-			Booklist.put(book.getId(),book);
 			
+			Booklist.put(book.getId(),book);
 		}catch(Exception e){
 			//오류 출력 이 메소드를 호출하게 되면 예외 발생 당시의 호출 스택(Call stack)에 있던 메소드의 정보와 예외 결과를 화면에 출력한다.
 			e.printStackTrace();
 		}finally {
 			DBManager.close();
 		}
-		
 	}
-	//책 삭제
+	
+	//도서 삭제 메소드
 	public void deleteBook(String id ) {
+		System.out.print("삭제 실행" +id);
 		if(Booklist.get(id).getBorrowCount()!=0) {
+			MessageBox.printErrorMessageBox("책을 모두 회수한 후 \n삭제가 가능합니다.");
 			System.out.println("책을 모두 회수한 다음 책을 삭제해주세요");
 			return;
 		}
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String sql ="delete from book_list (where id = ?)";
+		String sql ="delete from book_list where id = ?";
 		try {
 			conn = DBManager.connect();
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, id);
 			pstmt.executeUpdate();
+			
 			Booklist.remove(id);
 		}catch(Exception e) {
-			
+			e.printStackTrace();
 		}finally {
 			DBManager.close();
 		}
 	}
-
 }
-
