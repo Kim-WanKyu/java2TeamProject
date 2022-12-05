@@ -166,7 +166,8 @@ public class UserManager {
 	
 	//책 빌리는 메서드
 	public String borrowBooks(User nowuser,Book borrowbook) {
-		BookManager BOOKDB = new BookManager().getInstance();
+		new BookManager();
+		BookManager BOOKDB = BookManager.getInstance();
 		borrowbook =  BOOKDB.getlist().get(borrowbook.getId());
 		System.out.println(borrowbook.getTotalCount());
 		System.out.println(borrowbook.getTotalCount()>=borrowbook.getBorrowCount());
@@ -232,6 +233,14 @@ public class UserManager {
 			System.out.println("빌릴 수 있는 책 개수 초과");
 			return "bookOver";
 		}
+		else {
+			for(int i=0;i<3;i++) {
+				if(nowuser.getBorrowBooks()[i]!=null&&borrowbook.getId().equals(nowuser.getBorrowBooks()[i])) {
+					System.out.println("동일 도서 중복 대여 불가");
+					return "bookOverlap";					
+				}
+			}
+		}
 			
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -253,8 +262,6 @@ public class UserManager {
 			c.setTime(date);
 			book = nowuser.getBorrowBooks();
 			//동일 도서 중복 대여 방지
-			if((book[0]==book[1]||book[1]==book[2]||book[2]==book[0])&&(book[0]!=null||book[1]!=null||book[2]!=null))
-				return "bookoverlap";
 			if(book[0] == null) {
 				sql +="book1 = ?, date1 = ?, delay_info = ? where(hakbun = ?)";
 				System.out.println(sql);
