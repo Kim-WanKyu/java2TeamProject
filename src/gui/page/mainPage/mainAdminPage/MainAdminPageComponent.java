@@ -298,8 +298,9 @@ public class MainAdminPageComponent extends MainPageComponent {
 				totalCount );
 	}
 	
-	//삭제 버튼 작동 메소드 TODO
+	//삭제 버튼 작동 메소드
 	public void onClickDeleteBookButton() {
+		//삭제 성공시 테이블도 갱신
 		if(BookManager.getInstance().deleteBook(bookIdTextFields[3].getText())) {
 			AllBookTable.getAllBookTableModel().removeRow(AllBookTable.getAllBookTable().getSelectedRow());
 			AllBookTable.getAllBookTable().updateUI();

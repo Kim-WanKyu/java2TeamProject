@@ -78,7 +78,12 @@ public class SignupPageComponent extends PageComponent implements ItemListener {
 				MessageBox.printWarningMessageBox("비밀번호 확인 입력값이 \n입력하신 비밀번호와 \n일치하지 않습니다.");
 				return;
 			}
-			//빈 텍스트가 없으면 버튼 작동
+			//ID중복 시 버튼 작동 전 리턴
+			if(! user.UserManager.getInstance().findUser(getIdTextField().getText()).getID().equals("") ) {
+				MessageBox.printWarningMessageBox("이미 등록된 ID입니다.");
+				return;				
+			}
+			//이상이 없으면 버튼 작동
 			onClickSignupButton();
 			break;
 		
@@ -106,12 +111,13 @@ public class SignupPageComponent extends PageComponent implements ItemListener {
 	
 	//등록하기 버튼 작동 메소드
 	public void onClickSignupButton() {
+		
 		String userId = getIdTextField().getText();
 		String userName = getNameTextField().getText();
 		String userPassword = getPwTextField().getText();
 		boolean isAdmin = getAdminRadioButton().isSelected();
 		
-		MessageBox.printInfoMessageBox(userId +'\n'+ userName +'\n'+ userPassword +"\n관리자여부"+ isAdmin);
+		MessageBox.printInfoMessageBox("ID:" +userId + "\n이름:"+userName +"\n비밀번호:"+ userPassword +"\n관리자여부:"+ isAdmin);
 
 		User newuser = new User();
 		newuser.setID(userId);

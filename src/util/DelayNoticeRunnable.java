@@ -107,12 +107,12 @@ public class DelayNoticeRunnable implements Runnable{
 					}
 					else {	//미반납 도서는 있으나 연체X이면
 						MainUserPageComponent.getDelayNoticeLabel2().setForeground(Color.BLACK);
-						str2.append(userName); str2.append("님은 현재 대여 가능합니다.");
+						str2.append(userName); str2.append("님은 현재 연체가 아닙니다.");
 					}
 				}
 				else {	//연체기록이 없고, 빌린 도서도 없는 경우
 					MainUserPageComponent.getDelayNoticeLabel2().setForeground(Color.BLACK);
-					str2.append(userName); str2.append("님은 현재 대여 가능합니다.");
+					str2.append(userName); str2.append("님은 현재 연체가 아닙니다.");
 				}
 				MainUserPageComponent.getDelayNoticeLabel2().setText(str2.toString());	//재대출 가능 일자 알림 텍스트 세팅
 

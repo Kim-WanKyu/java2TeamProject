@@ -132,8 +132,8 @@ public class BookManager {
 				book.setTotalCount(rs.getInt("totalcount"));
 				book.setAuthor(rs.getString("author"));
 				book.setBorrowCount(rs.getInt("borrowcount"));
-				Booklist.put(book.getId(),book);
 				
+				Booklist.put(book.getId(),book);
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
