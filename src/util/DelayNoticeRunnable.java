@@ -43,6 +43,8 @@ public class DelayNoticeRunnable implements Runnable{
 
 		int index=0;
 		while(true) {
+			LocalDate localNow = LocalDate.ofInstant(now.toInstant(), ZoneId.systemDefault());	//현재
+			
 			MyBookTable myBookTable = new MyBookTable();
 			try {
 				//returnDay 계산
@@ -54,59 +56,54 @@ public class DelayNoticeRunnable implements Runnable{
 					}
 				}
 				
+				//개별 도서 연체 알림
 				if(myBookTable.getMyBookTable().getRowCount() > 0) {
-					//도서명
-					bookName = myBookTable.getMyBookTable().getValueAt(index, 0).toString();
-					
+					bookName = myBookTable.getMyBookTable().getValueAt(index, 0).toString();	//도서명
 					//이름이 너무 긴 경우 문자열 자름(최대25자)
 					if(bookName.length() > 25)
 						bookName = bookName.substring(0, 25) + "…";
 					
-					//returnDay가 null이 아니면
+					//returnDay가 null이 아니면 => 책 미반납
 					if(returnDay[index] != null) {
 						LocalDate localReturnDay = LocalDate.ofInstant(returnDay[index].toInstant(), ZoneId.systemDefault());	//반납일
-						LocalDate localNow = LocalDate.ofInstant(now.toInstant(), ZoneId.systemDefault());	//현재
-
-						//개별 책 연체 알림
+						
+						//개별 책 연체 알림 /날짜 차이
 						int dayDiff = (int) ChronoUnit.DAYS.between(localReturnDay, localNow);	//반납기한과 오늘날짜와의 차이
 						
 						str1.delete(0, str1.length());	//문자열버퍼 지움
-						if(dayDiff < 0) {
+						if(dayDiff < 0) {	//미반납 연체X
 							MainUserPageComponent.getDelayNoticeLabel1().setForeground(Color.BLUE);
 							str1.append(bookName); str1.append("은(는) 반납일까지 "); str1.append(-dayDiff); str1.append("일 남았습니다.");
 						}
-						else {
+						else {	//미반납 연체O
 							MainUserPageComponent.getDelayNoticeLabel1().setForeground(Color.RED);
 							str1.append(bookName); str1.append("은(는) 반납일로부터 "); str1.append(dayDiff); str1.append("일 지났습니다.");
 						}
 						
-						//재대출 가능 기간 알림
-						str2.delete(0, str2.length());	//문자열버퍼 지움
-						LocalDate localDelayDate;
-						if(delayDate != null) {
-							localDelayDate = LocalDate.ofInstant(delayDate.toInstant(), ZoneId.systemDefault());
-							
-							if (/*임시*/ (int) (ChronoUnit.DAYS.between(localDelayDate, localNow)) > 0 /*연체자이면,*/) {					
-								str2.append(userName); str2.append("님은 오늘 기준 ");
-								str2.append(ChronoUnit.DAYS.between(localDelayDate, localNow)); str2.append("일 후 대여할 수 있습니다.");
-							}
-							else { str2.append(" "); }
-						}
-						//알림 텍스트set
+						//개별 책 알림 텍스트 세팅
 						MainUserPageComponent.getDelayNoticeLabel1().setText(str1.toString());
-						MainUserPageComponent.getDelayNoticeLabel2().setText(str2.toString());
 					}
-					else {
-						//returnDay가 null인 경우
+					else {	//returnDay[i] == null => 빌린 도서 없음
 						MainUserPageComponent.getDelayNoticeLabel1().setText(" ");
-						MainUserPageComponent.getDelayNoticeLabel2().setText(" ");
 					}
 				}
-				else {	//빌린 도서가 없는 경우
+				else {	//빌린 도서가 하나도 없는 경우
 					MainUserPageComponent.getDelayNoticeLabel1().setText(" ");
-					MainUserPageComponent.getDelayNoticeLabel2().setText(" ");
 				}
-				
+
+				//연체 시 재 대출 가능 일자 / 재대출 가능 기간 알림
+				LocalDate localDelayDate;
+				if(delayDate != null) {
+					localDelayDate = LocalDate.ofInstant(delayDate.toInstant(), ZoneId.systemDefault());
+					
+					str2.delete(0, str2.length());	//문자열버퍼 지움
+					if ( (int) (ChronoUnit.DAYS.between(localDelayDate, localNow)) > 0 ) {
+						str2.append(userName); str2.append("님은 오늘 기준 ");
+						str2.append(ChronoUnit.DAYS.between(localDelayDate, localNow)); str2.append("일 후 대여할 수 있습니다.");
+					}
+					else { str2.append(" "); }
+				}
+				MainUserPageComponent.getDelayNoticeLabel2().setText(" ");
 				Thread.sleep(5000);	//5000ms = 5sec
 				
 				
