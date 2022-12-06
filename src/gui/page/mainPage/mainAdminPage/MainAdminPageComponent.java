@@ -2,11 +2,11 @@ package gui.page.mainPage.mainAdminPage;
 
 import java.awt.event.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.table.DefaultTableModel;
 
 import book.BookManager;
 import gui.page.mainPage.MainPageComponent;
@@ -136,21 +136,23 @@ public class MainAdminPageComponent extends MainPageComponent {
 				
 				System.out.println("여기 유저테이블 실행 : ");
 				//선택한 행의 학번
-				Object id = AllUserTable.getAllUserTable().getValueAt(AllUserTable.getAllUserTable().getSelectedRow(), 0);
+				String id = AllUserTable.getAllUserTable().getValueAt(AllUserTable.getAllUserTable().getSelectedRow(), 0).toString();
 				//선택한 학번의 사용자
-				user.User selectedUser = user.UserManager.getInstance().findUser(id.toString());
+				user.User selectedUser = user.UserManager.getInstance().findUser(id);
 				//선택한 학번의 사용자의 빌린 도서들
 				book.Book[] bookOfSelectedUser = new book.Book[3];
 				//선택한 학번의 사용자의 빌린 도서의 아이디들
 				String bookId[] = {selectedUser.getBorrowBooks()[0], selectedUser.getBorrowBooks()[1], selectedUser.getBorrowBooks()[2]};
 				try {
 					for(int i=0; i<3; i++) {
-						if(bookId[i] != null) {
-							bookOfSelectedUser[i] = BookManager.getInstance().getlist().get(selectedUser.getBorrowBooks()[i]);
+						//유저가 빌린 책이 있으면
+						if(bookId[i] != null) {							
+							 bookOfSelectedUser[i] = BookManager.getInstance().getlist().get(selectedUser.getBorrowBooks()[i]);
+							
 							bookNameTextFields[i].setText(bookOfSelectedUser[i].getName().toString());
 							bookAuthorTextFields[i].setText(bookOfSelectedUser[i].getAuthor().toString());
 							bookPublisherTextFields[i].setText(bookOfSelectedUser[i].getPublisher().toString());
-							if(bookOfSelectedUser[i].getCategory().toString() != null) {
+							if(bookOfSelectedUser[i].getCategory().toString().equals("")) {
 								bookCategoryTextFields[i].setText(book.CategorizeKDC.getCategoryname(bookOfSelectedUser[i].getCategory().toString()));
 							}
 							else {
@@ -159,7 +161,15 @@ public class MainAdminPageComponent extends MainPageComponent {
 							bookIdTextFields[i].setText(bookOfSelectedUser[i].getId().toString());							
 							borrowDateTextFields[i].setText(selectedUser.getBorrowDates()[i].toString());
 							returnDateTextFields[i].setText(selectedUser.getBorrowDates()[i].toLocalDate().plusDays(7).toString());
-							isDelayTextFields[i].setText(selectedUser.getDelayDate().toString());
+							
+							DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+							LocalDate returnDate = LocalDate.parse(returnDateTextFields[i].getText().toString(), formatter);
+							LocalDate now = LocalDate.now();
+							//도서 연체시
+							if(returnDate.isAfter(now))
+								isDelayTextFields[i].setText("true");
+							else
+								isDelayTextFields[i].setText("false");
 						}
 						else {
 							bookNameTextFields[i].setText("");
@@ -251,37 +261,30 @@ public class MainAdminPageComponent extends MainPageComponent {
 			
 		case "등록":
 			onClickInsertBookButton();
-			//등록
-			/*
-			 * DB에 추가 테이블에서도 추가
-			 */
 			break;
 			
 		case "수정":
-			onClickEditBookButton();
-			//등록
-			/*
-			 * DB에 추가 테이블에서도 추가
-			 */
+			if(!bookIdTextFields[3].getText().equals(""))
+				onClickEditBookButton();
+			else
+				MessageBox.printWarningMessageBox("선택된 도서가 없습니다.");
 			break;
 			
 		case "삭제":
-			onClickDeleteBookButton();
-			
-			//삭제
-			/*
-			 * DB에서 삭제 테이블에서도 삭제 
-			 */
+			if(!bookIdTextFields[3].getText().equals(""))
+				onClickDeleteBookButton();
+			else
+				MessageBox.printWarningMessageBox("선택된 도서가 없습니다.");
 			break;
 		}
 	}
 	
-	//등록 버튼 작동 메소드 TODO
+	//등록 버튼 작동 메소드
 	public void onClickInsertBookButton() {
 		new InsertBookPage();
 	}
 	
-	//수정 버튼 작동 메소드 TODO
+	//수정 버튼 작동 메소드
 	public void onClickEditBookButton() {
 		int totalCount = (BookManager.getInstance().getlist().get(bookIdTextFields[3].getText()).getTotalCount());
 		

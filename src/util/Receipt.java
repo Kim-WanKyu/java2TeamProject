@@ -52,9 +52,11 @@ public class Receipt {
 	
 	//영수증 파일 생성하는 메소드
 	private File makeFile() {
-		//fileName = receipts폴더에 "학번(ID)_도서명_대여일자.txt"를 생성하기 위한 파일이름
-		String fileName = "receipts/" + userId + "_" + bookName + "_" + borrowDay + ".txt";
-		File file = new File(fileName);
+		//fileName = "학번(ID)_대여일자.txt"를 생성하기 위한 파일이름
+		String fileName = userId + "_" + borrowDay;
+		//filePath = receipts폴더 하위에 fileName.txt 파일 경로
+		String filePath = "receipts/" + fileName + ".txt";
+		File file = new File(filePath);
 		
 		return file;
 	}
