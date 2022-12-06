@@ -64,8 +64,8 @@ public class BookManager {
 				Book getBook = entry.getValue();
 				if(getBook.getCategory()!=null && getBook.getCategory().length()!=0) {
 					categoryName = CategorizeKDC.getCategoryname(getBook.getCategory());
-					if(categoryName.contains(word))
-						searchedBooksVector.add(getBook);	
+					if(categoryName!=null && categoryName.contains(word))
+						searchedBooksVector.add(getBook);
 				}
 			}
 			break;

@@ -206,7 +206,7 @@ public class MainPageComponent extends PageComponent {
 					DefaultTableModel searchBookModel = new DefaultTableModel(null, AllBookTable.getAllBookColumnName());
 					AllBookTable.getAllBookTable().setModel(searchBookModel);
 					
-					Vector<book.Book> bookList = BookManager.getInstance().findBook(category, str);					
+					Vector<book.Book> bookList = BookManager.getInstance().findBook(category, str);
 					for(int i=0; i<bookList.size(); i++) {
 						Vector<Object> vector = new Vector<Object>();
 						vector.add(bookList.get(i).getName());

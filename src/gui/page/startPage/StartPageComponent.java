@@ -85,7 +85,7 @@ public class StartPageComponent extends PageComponent {
 		//new MainPage(); //메인화면 창 생성
 		
 		//로그인 메소드 성공
-		if(UserManager.getInstance().Login(id, password))		//임시로 지정
+		if(UserManager.getInstance().login(id, password))		//임시로 지정
 		{	//TODO 임시
 			boolean isAdmin = false;//임시 사용자 기본 //관리자
 			isAdmin = UserManager.getInstance().findUser(id).getIsAdmin();

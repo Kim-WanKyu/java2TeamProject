@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import book.Book;
 import book.BookManager;
 import gui.page.mainPage.MainPageComponent;
 import gui.page.optionPage.mainOption.book.editBookPage.EditBookPage;
@@ -166,7 +167,7 @@ public class MainAdminPageComponent extends MainPageComponent {
 							LocalDate returnDate = LocalDate.parse(returnDateTextFields[i].getText().toString(), formatter);
 							LocalDate now = LocalDate.now();
 							//도서 연체시
-							if(returnDate.isAfter(now))
+							if(now.isAfter(returnDate))
 								isDelayTextFields[i].setText("true");
 							else
 								isDelayTextFields[i].setText("false");
@@ -301,6 +302,7 @@ public class MainAdminPageComponent extends MainPageComponent {
 	//삭제 버튼 작동 메소드
 	public void onClickDeleteBookButton() {
 		//삭제 성공시 테이블도 갱신
+		for(book.Book book : book.BookManager.getInstance().getlist().values())
 		if(BookManager.getInstance().deleteBook(bookIdTextFields[3].getText())) {
 			AllBookTable.getAllBookTableModel().removeRow(AllBookTable.getAllBookTable().getSelectedRow());
 			AllBookTable.getAllBookTable().updateUI();

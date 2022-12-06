@@ -79,7 +79,7 @@ public class SignupPageComponent extends PageComponent implements ItemListener {
 				return;
 			}
 			//ID중복 시 버튼 작동 전 리턴
-			if(! user.UserManager.getInstance().findUser(getIdTextField().getText()).getID().equals("") ) {
+			if( user.UserManager.getInstance().findUser(getIdTextField().getText()) != null ) {
 				MessageBox.printWarningMessageBox("이미 등록된 ID입니다.");
 				return;				
 			}

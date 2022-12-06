@@ -75,32 +75,32 @@ public class MainUserPageComponent extends MainPageComponent {
 		
 		//테이블에 마우스 이벤트 처리 추가
 		myBookTable.getMyBookTable().addMouseListener(new MouseAdapter() {
-			Object[] str = new Object[myBookTable.getMyBookTable().getColumnCount()];
+			String [] str = new String[myBookTable.getMyBookTable().getColumnCount()];
 			@Override
 			//클릭 시 정보 가져오기
 			public void mousePressed(MouseEvent me) {
 				for(int i=0; i<myBookTable.getMyBookTable().getColumnCount();i++)
 				{	
 					System.out.println(myBookTable.getMyBookTable().getSelectedRow());
-					str[i] = myBookTable.getMyBookTable().getValueAt(myBookTable.getMyBookTable().getSelectedRow(), i);
+					str[i] = myBookTable.getMyBookTable().getValueAt(myBookTable.getMyBookTable().getSelectedRow(), i).toString();
 				}
 				try {
-					bookNameTextFields[1].setText(str[0].toString());
-					bookAuthorTextFields[1].setText(str[1].toString());
-					bookPublisherTextFields[1].setText(str[2].toString());
+					bookNameTextFields[1].setText(str[0]);
+					bookAuthorTextFields[1].setText(str[1]);
+					bookPublisherTextFields[1].setText(str[2]);
 					if(str[3]!=null) {
-						bookCategoryTextFields[1].setText(str[3].toString());
+						bookCategoryTextFields[1].setText(str[3]);
 					}
 					else {
 						bookCategoryTextFields[1].setText("");
 					}
-					bookIdTextFields[1].setText(str[5].toString());
-					borrowDateTextField.setText(str[6].toString());
-					returnDateTextField.setText(str[7].toString());
+					bookIdTextFields[1].setText(str[5]);
+					borrowDateTextField.setText(str[6]);
+					returnDateTextField.setText(str[7]);
 
 					java.util.Date now = new java.util.Date();
 					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-					Date borrowDate = format.parse(str[7].toString());
+					Date borrowDate = format.parse(str[7]);
 					boolean isDelay =now.after(borrowDate);
 					String isDelayString = isDelay ? "True":"False";
 					isDelayTextField.setText(isDelayString);
@@ -264,8 +264,7 @@ public class MainUserPageComponent extends MainPageComponent {
 	
 	//대여하기 버튼 작동 메소드 TODO
 	public void onClickBorrowBookButton() {
-		Book borrowBooks = new Book();
-		borrowBooks = BookManager.getInstance().getlist().get(bookIdTextFields[0].getText());
+		Book borrowBooks = BookManager.getInstance().getlist().get(bookIdTextFields[0].getText());
 		 
 		String getMessage = UserManager.getInstance().borrowBooks(StartPageComponent.getUser(), borrowBooks);
 		switch(getMessage) {
@@ -279,7 +278,7 @@ public class MainUserPageComponent extends MainPageComponent {
 				inputStr[0] = borrowBooks.getName();
 				inputStr[1] = borrowBooks.getAuthor();
 				inputStr[2] = borrowBooks.getPublisher();
-				inputStr[3] = (borrowBooks.getCategory());
+				inputStr[3] = book.CategorizeKDC.getCategoryname(borrowBooks.getCategory());
 				inputStr[4] = borrowBooks.getCategory();
 				inputStr[5] = borrowBooks.getId();
 				inputStr[6] = dateAndtime.toString();
