@@ -81,9 +81,7 @@ public class BookManager {
 	public void editBook(String name, String author, String publisher, String kdc, int totalCount, String bookID) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		String price = null;
-		String sql = "update book_list set name = ?, author = ?, publisher = ?, kdc = ?, totalcount = ? where(id = ?)";
+		String sql = "update book_list set name = ?, author = ?, publisher = ?, kdc = ?, totalcount = ? where id = ?";
 		try {
 			//DB갱신
 			conn = DBManager.connect();
@@ -94,8 +92,8 @@ public class BookManager {
 			pstmt.setString(4, kdc);
 			pstmt.setInt(5, totalCount);
 			pstmt.setString(6, bookID);
-			System.out.println("데베 수정 완료");
 			pstmt.executeUpdate();
+			System.out.println("데베 수정 완료");
 			
 			//도서 정보 갱신
 			Book book = Booklist.get(bookID);
@@ -146,11 +144,16 @@ public class BookManager {
 
 	//도서 등록(추가) 메소드
 	public void insertBook(Book book) {
+		//ID중복 시 등록x
+		if(Booklist.get(book.getId()) != null) {
+			MessageBox.printErrorMessageBox("도서 ID 중복");
+			return;
+		}
+		
+		//데베에 책을 추가
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		//데베에 책을 추가
 		String sql = "insert into book_list (id, name, author, publisher, kdc, totalcount, borrowcount) VALUES(?,?,?,?,?,?,?)";
-		
 		try {
 			conn = DBManager.connect();
 			pstmt = conn.prepareStatement(sql);
@@ -173,12 +176,13 @@ public class BookManager {
 	}
 	
 	//도서 삭제 메소드
-	public void deleteBook(String id ) {
+	public boolean deleteBook(String id ) {
 		System.out.print("삭제 실행" +id);
 		if(Booklist.get(id).getBorrowCount()!=0) {
 			MessageBox.printErrorMessageBox("책을 모두 회수한 후 \n삭제가 가능합니다.");
 			System.out.println("책을 모두 회수한 다음 책을 삭제해주세요");
-			return;
+			DBManager.close();
+			return false;
 		}
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -195,5 +199,6 @@ public class BookManager {
 		}finally {
 			DBManager.close();
 		}
+		return true;
 	}
 }

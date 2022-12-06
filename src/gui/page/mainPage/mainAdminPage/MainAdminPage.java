@@ -70,7 +70,7 @@ public class MainAdminPage extends MainPage {
 							//bookCategoryPanel KDC
 							WhitePanel bookCategoryPanel = new WhitePanel(new FlowLayout(FlowLayout.RIGHT));
 							{
-								bookCategoryPanel.add(new JLabel("KDC : "));
+								bookCategoryPanel.add(new JLabel("분류명 : "));
 								bookCategoryPanel.add(mainAdminPageComponent.getBookCategoryTextFields()[3]);
 								bookCategoryPanel.setBackground(new Color(255,255,200));
 							}

@@ -294,20 +294,18 @@ public class MainAdminPageComponent extends MainPageComponent {
 				bookNameTextFields[3].getText(),
 				bookAuthorTextFields[3].getText(),
 				bookPublisherTextFields[3].getText(),
-				bookCategoryTextFields[3].getText(),
+				book.CategorizeKDC.getKDCCode(bookCategoryTextFields[3].getText()),
 				bookIdTextFields[3].getText(),
 				totalCount );
 	}
 	
 	//삭제 버튼 작동 메소드 TODO
 	public void onClickDeleteBookButton() {
-		BookManager.getInstance().deleteBook(bookIdTextFields[3].getText());
-		
-		int row = 
-		AllBookTable.getAllBookTableModel().removeRow(row);
-		AllBookTable.getAllBookTable().updateUI();
-		
-		MessageBox.printInfoMessageBox("삭제");
+		if(BookManager.getInstance().deleteBook(bookIdTextFields[3].getText())) {
+			AllBookTable.getAllBookTableModel().removeRow(AllBookTable.getAllBookTable().getSelectedRow());
+			AllBookTable.getAllBookTable().updateUI();
+			MessageBox.printInfoMessageBox("삭제");
+		}
 	}
 	
 }

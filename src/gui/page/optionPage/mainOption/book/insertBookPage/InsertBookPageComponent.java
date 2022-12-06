@@ -16,6 +16,7 @@ import book.BookManager;
 import gui.page.PageComponent;
 import gui.page.mainPage.MainPageComponent;
 import gui.table.AllBookTable;
+import gui.util.MessageBox;
 
 public class InsertBookPageComponent extends PageComponent{
 		//InsertBookPage의 모든 텍스트필드를 담는 ArrayList변수
@@ -72,6 +73,33 @@ public class InsertBookPageComponent extends PageComponent{
 		//TODO
 		public void onClickInsertButton() {
 			Book newBook = new Book();
+			if(getBookIdTextField().getText().toString().equals("")) {
+				MessageBox.printWarningMessageBox("책 ID를 지정해주세요");
+				return;
+			}
+			else if(getBookNameTextField().getText().toString().equals("")) {
+				MessageBox.printWarningMessageBox("책 이름을 지정해주세요");
+				return;
+			}
+			else if(getBookAuthorTextField().getText().toString().equals("")) {
+				MessageBox.printWarningMessageBox("저자를 지정해주세요");
+				return;
+			}
+			else if(getBookPublisherTextField().getText().toString().equals("")) {
+				MessageBox.printWarningMessageBox("출판사 지정해주세요");
+				return;
+			}
+			else if(getBookTotalCountSpinner().getValue().toString().equals("")) {
+				MessageBox.printWarningMessageBox("수량을 지정해주세요");
+				return;
+			}
+			//kdc가 빈칸이 아니고, && 정수부가 3자릿수이면 (소수점x)
+			else if((!getBookCategoryTextField().getText().equals("") ) && (!getBookCategoryTextField().getText().matches("^\\d{3}")))
+			{
+				MessageBox.printWarningMessageBox("KDC가 올바르지 않습니다.");
+				return;
+			}
+			System.out.println("정보 출력"+getBookPublisherTextField().getText() +'.');
 			newBook.setName(getBookNameTextField().getText());
 			newBook.setAuthor(getBookAuthorTextField().getText());
 			newBook.setPublisher(getBookPublisherTextField().getText());

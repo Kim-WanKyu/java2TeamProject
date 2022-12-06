@@ -71,7 +71,7 @@ public class EditBookPage extends Page{
 				}
 				WhitePanel editBookCategoryPanel = new WhitePanel(new FlowLayout(FlowLayout.RIGHT));
 				{
-					editBookCategoryPanel.add(new JLabel("분류 : "));
+					editBookCategoryPanel.add(new JLabel("KDC : "));
 					editBookCategoryPanel.add(editBookPageComponent.getBookCategoryTextField());
 				}
 				WhitePanel editBookIdPanel = new WhitePanel(new FlowLayout(FlowLayout.RIGHT));

@@ -7,6 +7,7 @@ import javax.swing.*;
 
 import book.BookManager;
 import gui.page.PageComponent;
+import gui.table.AllBookTable;
 
 //EditBookPage의 컴포넌트를 위한 클래스
 public class EditBookPageComponent extends PageComponent {
@@ -73,23 +74,39 @@ public class EditBookPageComponent extends PageComponent {
 		
 		int totalCount = editBook.getTotalCount();
 		
-		if(getBookNameTextField().getText() != null)
+		if(!getBookNameTextField().getText().equals(""))
 			name = getBookNameTextField().getText();
 
-		if(getBookAuthorTextField().getText() != null)
+		if(!getBookAuthorTextField().getText().equals(""))
 			author = getBookAuthorTextField().getText();
 		
-		if(getBookPublisherTextField().getText() != null)
+		if(!getBookPublisherTextField().getText().equals(""))
 			publisher = getBookPublisherTextField().getText();
 
-		if(getBookCategoryTextField().getText() != null)
-			kdc = book.CategorizeKDC.getKDCCode(getBookCategoryTextField().getText());
+		if(!getBookCategoryTextField().getText().equals(""))
+			kdc = getBookCategoryTextField().getText();
 
-		if(getBookTotalCountSpinner().getValue() != null)
+		if(!getBookTotalCountSpinner().getValue().equals(""))
 			totalCount = Integer.parseInt(getBookTotalCountSpinner().getValue().toString());
 		
 		BookManager.getInstance().editBook(name, author, publisher, kdc, totalCount, id);
 		
+		int row=0;
+		for(int i=0;i<AllBookTable.getAllBookTable().getRowCount();i++) {
+			if(id.equals(AllBookTable.getAllBookTable().getValueAt(i, 4))) {
+				row++;
+				break;
+			}			
+		}
+		
+		//테이블 갱신
+		AllBookTable.getAllBookTable().setValueAt(name, row, 0);
+		AllBookTable.getAllBookTable().setValueAt(author, row, 1);
+		AllBookTable.getAllBookTable().setValueAt(publisher, row, 2);
+		AllBookTable.getAllBookTable().setValueAt(book.CategorizeKDC.getCategoryname(kdc), row, 3);
+		AllBookTable.getAllBookTable().setValueAt(kdc, row, 4);
+		AllBookTable.getAllBookTable().setValueAt(totalCount, row, 6);
+
 		frame.dispose();
 	}
 	

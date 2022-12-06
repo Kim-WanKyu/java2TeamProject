@@ -130,7 +130,7 @@ public class CategorizeKDC {
 	//KDC코드로 분류명 찾아내 리턴
 	public static String getCategoryname(String kdc) {
 		String category = null;
-		if(kdc!=null && kdc.length()!=0) {
+		if(kdc!="" && kdc!=null && kdc.length()!=0) {
 			int i = Character.getNumericValue(kdc.charAt(0));
 			int j = Character.getNumericValue(kdc.charAt(1));
 			category = categoryName[i][j];
