@@ -311,7 +311,6 @@ public class MainUserPageComponent extends MainPageComponent {
 		Book returnBook = new Book();
 		returnBook = BookManager.getInstance().getlist().get(bookIdTextFields[1].getText());
 		UserManager.getInstance().returnBook(StartPageComponent.getUser(), returnBook);
-		
 		int tableRow = 0;
 		for(int i=0; i<AllBookTable.getAllBookTable().getRowCount(); i++) {
 			if(AllBookTable.getAllBookTable().getValueAt(tableRow, 5) == returnBook.getId())

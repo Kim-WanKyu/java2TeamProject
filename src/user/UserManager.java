@@ -169,11 +169,6 @@ public class UserManager {
 		new BookManager();
 		BookManager BOOKDB = BookManager.getInstance();
 		borrowbook =  BOOKDB.getlist().get(borrowbook.getId());
-		System.out.println(borrowbook.getTotalCount());
-		System.out.println(borrowbook.getTotalCount()>=borrowbook.getBorrowCount());
-		System.out.println(borrowbook.getBorrowCount());
-	
-		
 		
 		Connection conn = null;
 	
@@ -198,7 +193,8 @@ public class UserManager {
 		 borrowDates = nowuser.getBorrowDates();
 		Calendar c = Calendar.getInstance();
 		System.out.println("130번째 실행");
-		if(nowuser.getDelayDate()!=null&&nowuser.getDelayDate().before(date)) {
+		System.out.println(nowuser.getDelayDate());
+		if(nowuser.getDelayDate()!=null &&nowuser.getDelayDate().after(date)) {
 			System.out.println("135번째 줄!! 책 연체됨 빌리기 불가!! 함수 종료");
 			return "delay";
 		}
@@ -374,11 +370,8 @@ public class UserManager {
 			diffDays = (int) ((dt.getTime()-set_Date.getTime()) / (24*60*60*1000));
 			System.out.println(user.getDelayDate());
 			
-			if(diffDays<7 && user.getDelayDate()==null)
-			{
-				delay_info = null;
-			}
-			else if(diffDays>7 && user.getDelayDate()==null)
+		
+			 if(diffDays>7 && user.getDelayDate()==null)
 			{
 				c1.setTime(date);
 				c1.add(Calendar.DATE, diffDays-7);
@@ -390,13 +383,10 @@ public class UserManager {
 				c1.add(Calendar.DATE, diffDays-7);
 				delay_info = new java.sql.Date(c1.getTimeInMillis());
 			}
-			else
-			{
-				delay_info=null;
-			}
+			
 			user.setBorrowDates(countfind,null);
 			user.setBorrowBooks(countfind, null);
-			
+			user.setDelay(delay_info);
 			String sql = "update borrowbooksanddates set ";
 			sql += "book"+(countfind +1)+ " = ?,";
 			sql += "date"+(countfind +1)+" = ?,";
@@ -414,7 +404,7 @@ public class UserManager {
 			pstmt.setInt(1,book.getBorrowCount());
 			pstmt.setString(2,book.getId());
 			pstmt.executeUpdate();
-			user.setDelay(delay_info);
+			System.out.println(delay_info);
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {

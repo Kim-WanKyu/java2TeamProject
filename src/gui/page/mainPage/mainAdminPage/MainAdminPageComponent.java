@@ -283,11 +283,7 @@ public class MainAdminPageComponent extends MainPageComponent {
 	
 	//수정 버튼 작동 메소드 TODO
 	public void onClickEditBookButton() {
-		int totalCount=0;
-		try {
-			totalCount = Integer.parseInt(bookAvailableStockTextField.getText());
-		}
-		catch(NumberFormatException e) { totalCount = 0; }
+		int totalCount = (BookManager.getInstance().getlist().get(bookIdTextFields[3].getText()).getTotalCount());
 		
 		//생성자 호출
 		new EditBookPage(

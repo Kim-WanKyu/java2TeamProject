@@ -8,6 +8,7 @@ import javax.swing.*;
 import book.BookManager;
 import gui.page.PageComponent;
 import gui.table.AllBookTable;
+import gui.util.MessageBox;
 
 //EditBookPage의 컴포넌트를 위한 클래스
 public class EditBookPageComponent extends PageComponent {
@@ -86,26 +87,26 @@ public class EditBookPageComponent extends PageComponent {
 		if(!getBookCategoryTextField().getText().equals(""))
 			kdc = getBookCategoryTextField().getText();
 
-		if(!getBookTotalCountSpinner().getValue().equals(""))
-			totalCount = Integer.parseInt(getBookTotalCountSpinner().getValue().toString());
+		if(!getBookTotalCountSpinner().getValue().equals("")) {
+			if(Integer.parseInt(getBookTotalCountSpinner().getValue().toString()) >= BookManager.getInstance().getlist().get(id).getBorrowCount())
+				totalCount = Integer.parseInt(getBookTotalCountSpinner().getValue().toString());			
+			else {
+				MessageBox.printWarningMessageBox("변경하려는 수량이 대여된 책의 개수보다 적습니다.");
+				MessageBox.printWarningMessageBox("수량:" + totalCount);
+			}
+		}
 		
 		BookManager.getInstance().editBook(name, author, publisher, kdc, totalCount, id);
 		
-		int row=0;
-		for(int i=0;i<AllBookTable.getAllBookTable().getRowCount();i++) {
-			if(id.equals(AllBookTable.getAllBookTable().getValueAt(i, 4))) {
-				row++;
-				break;
-			}			
-		}
-		
 		//테이블 갱신
+		int row = AllBookTable.getAllBookTable().getSelectedRow();
 		AllBookTable.getAllBookTable().setValueAt(name, row, 0);
 		AllBookTable.getAllBookTable().setValueAt(author, row, 1);
 		AllBookTable.getAllBookTable().setValueAt(publisher, row, 2);
 		AllBookTable.getAllBookTable().setValueAt(book.CategorizeKDC.getCategoryname(kdc), row, 3);
 		AllBookTable.getAllBookTable().setValueAt(kdc, row, 4);
 		AllBookTable.getAllBookTable().setValueAt(totalCount, row, 6);
+		AllBookTable.getAllBookTable().updateUI();
 
 		frame.dispose();
 	}

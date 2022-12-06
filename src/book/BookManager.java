@@ -128,7 +128,7 @@ public class BookManager {
 				book.setId(rs.getString("id"));
 				book.setName(rs.getString("name"));
 				book.setPublisher(rs.getString("publisher"));
-				book.setCategory(rs.getString("kdc"));
+				book.setCategory(rs.getString("kdc"));	
 				book.setTotalCount(rs.getInt("totalcount"));
 				book.setAuthor(rs.getString("author"));
 				book.setBorrowCount(rs.getInt("borrowcount"));
