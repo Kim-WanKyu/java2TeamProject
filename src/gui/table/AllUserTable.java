@@ -12,7 +12,7 @@ public class AllUserTable {
 	private final static String[] userColumnName = {"ID","이름"};
 	public static String[] getAllUserColumnName() { return userColumnName; }
 	
-	//userTable의 데이터 //TODO DB에서 가져왔던 전체 유저 벡터로 초기화
+	//userTable의 데이터
 	private static String [][]defaultUserData ;
 	public static String[][] getAllUserData() { return defaultUserData; }
 	
@@ -21,12 +21,12 @@ public class AllUserTable {
 	public static DefaultTableModel getUserTableModel() {return allUserTableModel;};
 	
 	//userTable테이블
-	private static JTable allUserTable = new JTable(allUserTableModel); //
-	public static JTable getAllUserTable() { return allUserTable; }
+	private static NonEditableTable allUserTable = new NonEditableTable(allUserTableModel);
+	public static NonEditableTable getAllUserTable() { return allUserTable; }
 	
 	//allUserTable 초기화 메소드
 	public static void InitAllUserTable() {
-		allUserTable = new JTable(allUserTableModel);
+		allUserTable = new NonEditableTable(allUserTableModel);
 		allUserTableModel = new DefaultTableModel(userColumnName, 0);
 
 		//필드 너비 제한 해제
@@ -38,7 +38,7 @@ public class AllUserTable {
 		
 	}
 	
-	//
+	//allUserTable 값 초기화 메소드
 	public static void setDefaultVector() {
 		String[] dataVectorRow = new String[2];
 		for(User setUser: UserManager.getInstance().getUserVector()) {

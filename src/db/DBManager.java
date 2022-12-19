@@ -1,12 +1,9 @@
 package db;
-import javax.swing.*;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import gui.util.MessageBox;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.DriverPropertyInfo;
-import java.sql.SQLException;
 
 public class DBManager {
 	public static final String databaseDriver = "com.mysql.cj.jdbc.Driver";
@@ -24,7 +21,7 @@ public class DBManager {
 			else System.out.println("Connection Failed");
 			
 		}catch(Exception e) {
-			JOptionPane.showMessageDialog(null, "데이터베이스가 연결되지 않았습니다", "경고!!", JOptionPane.WARNING_MESSAGE);
+			MessageBox.printErrorMessageBox("데이터베이스가 연결되지 않았습니다");
 			System.err.println("Connection Error!"+e.getMessage());
 			e.printStackTrace();
 		}

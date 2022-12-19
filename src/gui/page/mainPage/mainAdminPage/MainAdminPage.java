@@ -4,7 +4,6 @@ import java.awt.*;
 import javax.swing.*;
 
 import gui.page.mainPage.MainPage;
-import gui.page.mainPage.MainPageComponent;
 import gui.table.AllBookTable;
 import gui.table.AllUserTable;
 import gui.util.WhitePanel;
@@ -12,7 +11,6 @@ import gui.util.WhitePanel;
 public class MainAdminPage extends MainPage {
 	
 	MainAdminPageComponent mainAdminPageComponent = new MainAdminPageComponent(this);
-	private AllBookTable allBookTable = new AllBookTable();
 	
 	//MainAdminPage 생성자
 	public MainAdminPage(){
@@ -35,6 +33,9 @@ public class MainAdminPage extends MainPage {
 				//1.전체도서 / allBookPanel = 관리자 탭의 전체도서로 들어갈 패널
 				WhitePanel allBookPanel = new WhitePanel();
 				{
+					//전체도서 테이블 (왼쪽)
+					JScrollPane allBookScrollPane = new JScrollPane(AllBookTable.getAllBookTable());
+					
 					//rightPanel = 오른쪽 패널
 					WhitePanel rightPanel = new WhitePanel(new BorderLayout());
 					{
@@ -107,12 +108,10 @@ public class MainAdminPage extends MainPage {
 						rightPanel.add(textPanel, BorderLayout.CENTER);
 						rightPanel.add(optionButtonPanel, BorderLayout.SOUTH);
 					}
-					//전체도서 테이블 (왼쪽)
-					JScrollPane allBookScrollPane = new JScrollPane(allBookTable.getAllBookTable());
-					
 					allBookPanel.add(allBookScrollPane);
 					allBookPanel.add(rightPanel);
 				}
+				
 				//2.전체회원 / allUserPanel = 관리자 탭의 전체회원으로 들어갈 패널
 				WhitePanel allUserPanel = new WhitePanel();
 				{
@@ -223,4 +222,3 @@ public class MainAdminPage extends MainPage {
 		ct.add(mainAdminPanel);		
 	}
 }
-

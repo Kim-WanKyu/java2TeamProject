@@ -1,31 +1,20 @@
 package gui.page.mainPage;
 
 import java.awt.event.ActionEvent;
-import java.awt.print.Book;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Map.Entry;
-import java.util.TreeMap;
 import java.util.Vector;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
 
 import book.BookManager;
 import book.CategorizeKDC;
 import gui.page.PageComponent;
-import gui.page.mainPage.mainAdminPage.MainAdminPage;
-import gui.page.mainPage.mainAdminPage.MainAdminPageComponent;
-import gui.page.optionPage.mainOption.book.editBookPage.EditBookPage;
 import gui.page.optionPage.mainOption.user.editSignoutUserPage.EditSignoutUserPage;
 import gui.page.startPage.StartPage;
 import gui.page.startPage.StartPageComponent;
 import gui.table.AllBookTable;
 import gui.table.AllUserTable;
 import gui.table.MyBookTable;
-import gui.table.SearchTable;
 import gui.util.MessageBox;
 import user.User;
 import user.UserManager;
@@ -65,17 +54,11 @@ public class MainPageComponent extends PageComponent {
 		AllBookTable.InitAllBookTable();
 	}
 	
-	
-	
 	//get 메소드들
 	public JComboBox<String> getSearchCategoryComboBox() { return searchCategoryComboBox; }
-	
 	public JTextField getSearchTextField() { return searchTextField; }
-	
 	public JTabbedPane getTabbedPane() { return tabbedPane; }
-
 	public String[] getSearchCategoryString() { return searchCategoryString; }
-	
 	public JButton getSearchButton() { return searchButton;  }
 	public JButton getEditSignoutButton() { return editSignoutButton; }
 	public JButton getLogoutButton() { return logoutButton; }
@@ -84,67 +67,26 @@ public class MainPageComponent extends PageComponent {
 	//버튼 클릭 시 이벤트 처리
 	@Override
 	public void actionPerformed(ActionEvent ae) {
-
 		switch(ae.getActionCommand()) {
 		case "검색":
 			onClickSearchButton();
 			break;
 			
 		case "변경/탈퇴":
-			//변경/탈퇴
 			new EditSignoutUserPage();
-			/*
-			 * 창 띄우고  버튼 비활성화
-			 */
 			break;
 			
 		case "로그아웃":
-			try {
-				onClickLogoutButton();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-
 			onClickLogoutButton();
-
 			break;
 
 		case "종료하기":
 			onClickExitButton();
 			break;
-			
-			//관리자
-		case "등록":
-			new EditBookPage();
-			//등록
-			/*
-			 * DB에 추가 테이블에서도 추가
-			 */
-			break;
-			
-			//관리자
-		case "수정":
-			new EditBookPage();
-			//등록
-			/*
-			 * DB에 추가 테이블에서도 추가
-			 */
-			break;
-			
-			//관리자
-		case "삭제":
-			MessageBox.printInfoMessageBox("삭제");
-			//삭제
-			/*
-			 * DB에서 삭제 테이블에서도 삭제 
-			 */
-			break;
 		}
 	}
 
-	//검색 버튼 작동 메소드 TODO
+	//검색 버튼 작동 메소드
 	public void onClickSearchButton() {
 		String category = this.getSearchCategoryComboBox().getSelectedItem().toString();
 		String str = getSearchTextField().getText();
@@ -160,8 +102,7 @@ public class MainPageComponent extends PageComponent {
 			
 			if(userIsAdmin == true) {	//관리자이면(0.전체도서/1.전체유저)
 				if(tabIndex == 0)	//전체 도서
-				{
-					//도서 검색메서드 실행
+				{	//도서 검색메서드 실행
 					DefaultTableModel searchBookModel = new DefaultTableModel(null, AllBookTable.getAllBookColumnName());
 					AllBookTable.getAllBookTable().setModel(searchBookModel);
 					
@@ -254,24 +195,20 @@ public class MainPageComponent extends PageComponent {
 		}
 	}
 		
-	//변경/탈퇴 버튼 작동 메소드 TODO
+	//변경/탈퇴 버튼 작동 메소드
 	public void onClickEditSignoutButton() {
 		new EditSignoutUserPage();
 	}
 	
-	//로그아웃 버튼 작동 메소드 TODO
-
+	//로그아웃 버튼 작동 메소드
 	public void onClickLogoutButton()  {
 		//켜져있는 모든 창 끄고
-		try {
 		for(int i = 0; i< MainPage.getOwnerlessWindows().length;i++)
 			MainPage.getOwnerlessWindows()[i].dispose();
 		new StartPage();//초기화면 창 생성
-	}catch(Exception e) {
-		e.printStackTrace();
 	}
-	}
-	//종료하기 버튼 작동 메소드 TODO
+	
+	//종료하기 버튼 작동 메소드
 	public void onClickExitButton() {
 		System.exit(0);
 	}

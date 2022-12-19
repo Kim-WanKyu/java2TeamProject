@@ -153,7 +153,6 @@ public class CategorizeKDC {
 			}
 			if(isFind) { break; }
 		}
-		
 		return code;
 	}
 }

@@ -129,7 +129,8 @@ public class DelayNoticeRunnable implements Runnable{
 					break;
 				}
 			} catch(ArrayIndexOutOfBoundsException e) {
-				System.out.print("도서 삭제");	//스레드 실행 중 도서 반납 시 발생하는 인덱스 오류
+				System.out.print("도서 삭제");	//스레드 실행 중 도서 반납 시 발생하는 인덱스 
+				index=0;
 			} catch(InterruptedException e) {
 				System.out.print("스레드종료");	//인터럽트 발생시 스레드 종료
 				return;

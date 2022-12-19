@@ -70,7 +70,6 @@ public class InsertBookPageComponent extends PageComponent{
 			}	
 		}
 		
-		//TODO
 		public void onClickInsertButton() {
 			Book newBook = new Book();
 			if(getBookIdTextField().getText().toString().equals("")) {
@@ -94,7 +93,7 @@ public class InsertBookPageComponent extends PageComponent{
 				return;
 			}
 			//kdc가 빈칸이 아니고, && 정수부가 3자릿수이면 (소수점x)
-			else if((!getBookCategoryTextField().getText().equals("") ) && (!getBookCategoryTextField().getText().matches("^\\d{3}")))
+			else if((!getBookCategoryTextField().getText().equals("") ) && (!getBookCategoryTextField().getText().matches("\\d{3}")))
 			{
 				MessageBox.printWarningMessageBox("KDC가 올바르지 않습니다.");
 				return;
@@ -120,10 +119,8 @@ public class InsertBookPageComponent extends PageComponent{
 			newBookData[6] = newBook.getTotalCount();
 			newBookData[7] = newBook.getBorrowCount();
 			
-//			MainPageComponent.getAllBookTable().setModel(new DefaultTableModel(MainPageComponent.setAllBookData(),MainPageComponent.getAllBookColumnName()));
 			AllBookTable.getAllBookTableModel().addRow(newBookData);
 			AllBookTable.getAllBookTable().updateUI();
-			
 
 			frame.dispose();
 		}
