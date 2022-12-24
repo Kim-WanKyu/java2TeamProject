@@ -7,6 +7,8 @@ import javax.swing.*;
 
 import gui.page.PageComponent;
 import gui.util.MessageBox;
+import user.User;
+import user.UserManager;
 //FindPage의 컴포넌트를 위한 클래스
 public class FindPageComponent extends PageComponent {
 
@@ -55,7 +57,20 @@ public class FindPageComponent extends PageComponent {
 	
 	//비밀번호 찾기 작동 메소드
 	public void onClickFindPwButton() {
-		MessageBox.printInfoMessageBox("비밀번호 찾기");
+		String id = getIdTextField().getText(); //입력한 id
+		String name = getNameTextField().getText(); //입력한 이름
+		if(id.equals("") || name.equals("")) {
+			MessageBox.printWarningMessageBox("ID 또는 이름이 \n입력되지 않았습니다.");			
+		}
+		else {
+			String password = UserManager.getInstance().findPassword(id, name);
+			if(!password.equals("")) {
+				MessageBox.printInfoMessageBox("" + name + "님의 password는\n " + password +"입니다.");
+			}
+			else {
+				MessageBox.printWarningMessageBox("입력된 정보가 존재하지 않습니다.");
+			}
+		}
 	}
 	
 	

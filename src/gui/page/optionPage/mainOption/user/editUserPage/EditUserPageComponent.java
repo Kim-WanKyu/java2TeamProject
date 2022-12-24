@@ -8,7 +8,10 @@ import javax.swing.JFrame;
 import javax.swing.JTextField;
 
 import gui.page.PageComponent;
+import gui.page.startPage.StartPageComponent;
 import gui.util.MessageBox;
+import user.User;
+import user.UserManager;
 
 public class EditUserPageComponent extends PageComponent {
 
@@ -20,13 +23,13 @@ public class EditUserPageComponent extends PageComponent {
 	private JTextField oldPwTextField = new JTextField(15);	//원래 pw 입력 텍스트필드
 	private JTextField newPwTextField = new JTextField(15);	//새 pw 입력 텍스트필드
 
-	private JButton changePwButton = new JButton("비밀번호 변경");	//비밀번호 변경 버튼
-	private JButton exitButton = new JButton("나가기");			//나가기 버튼
+	private JButton changeUserInfoButton = new JButton("회원 정보 변경");	//회원 정보 변경 버튼
+	private JButton exitButton = new JButton("나가기");	//나가기 버튼
 		
 	public EditUserPageComponent(JFrame frame) {
 		super.frame = frame;
 
-		changePwButton.addActionListener(this);
+		changeUserInfoButton.addActionListener(this);
 		exitButton.addActionListener(this);
 		
 		editUserTextComponent = new ArrayList<>();
@@ -41,10 +44,8 @@ public class EditUserPageComponent extends PageComponent {
 	public JTextField getOldPwTextField() {return oldPwTextField; }	//id 입력 텍스트필드
 	public JTextField getNewPwTextField() {return newPwTextField; }	//id 입력 텍스트필드
 
-	public JButton getChangePwButton() { return changePwButton; }	//비밀번호 변경 버튼
-	public JButton getExitButton() { return exitButton; }			//나가기 버튼
-	
-	
+	public JButton getChangeUserInfoButton() { return changeUserInfoButton; }	//회원 정보 변경 버튼
+	public JButton getExitButton() { return exitButton; }						//나가기 버튼
 	
 	@Override
 	public void actionPerformed(ActionEvent ae) {
@@ -53,38 +54,69 @@ public class EditUserPageComponent extends PageComponent {
 			frame.dispose();
 			break;
 			
-		case "비밀번호 변경":
-			onChangePwButton();
+		case "회원 정보 변경":
+			onChangeUserInfoButton();
 			break;
 		}
 	}
 	
 	//TODO
-	//비밀번호 변경 메소드
-	public void onChangePwButton() {
+	//회원 정보 변경 메소드
+	public void onChangeUserInfoButton() {
 		try {
-			boolean isInDB = true;
-			if(isInDB = idTextField.getText().equals("123"/*해당 유저의 DB 정보*/)) {
-				boolean isCorrect;// = true;
-				if(isCorrect = true/*해당 유저의 DB 정보의 이름과 비말번호가 모두 일치하면*/) {
-					/*새 비밀번호의 텍스트로 비밀번호 변경 메소드 실행*/
-					///*유저의 비밀번호 = */newPwTextField.getText();
+			User editUser = UserManager.getInstance().findUser(StartPageComponent.getUser().getID());
+			
+			//ID가 일지하는 경우
+			if(idTextField.getText().equals(editUser.getID())) {
+				String name = editUser.getName();
+				String password = editUser.getPassword();
+				nameTextField.getText().equals("");
+				
+				//이름과 비밀번호 모두 빈칸인 경우 갱신 X
+				if(nameTextField.getText().equals("") && oldPwTextField.getText().equals(""))
+				{
+					MessageBox.printWarningMessageBox("이름 또는 비밀번호를 입력하세요.");
+					return;
+				}
+				else {	//갱신
+					//비밀번호가 입력된 경우 비밀번호 갱신
+					if(!oldPwTextField.getText().equals("")) {
+						//비밀번호가 일치하는 경우
+						if(oldPwTextField.getText().equals(editUser.getPassword())) {
+							//새 비밀번호가 입력된 경우
+							if(!newPwTextField.getText().equals("")) {
+								password = newPwTextField.getText();
+							}
+							else {
+								MessageBox.printWarningMessageBox("변경할 새 비밀번호를 입력하세요.");
+								return;
+							}
+						}
+						//비밀번호가 일치하지 않는 경우
+						else {
+							MessageBox.printWarningMessageBox("입력한 현재 비밀번호가 일치하지 않습니다.");
+							return;
+						}
+					}
+					//이름이 입력된 경우 이름 갱신
+					if(!nameTextField.getText().equals("")) {
+						name = nameTextField.getText();
+					}
+
+					//정보 갱신 준비
+					editUser.setName(name);
+					editUser.setPassword(password);
 					
-					/*그 후에 메세지 띄우고 창 나감*/
-					MessageBox.printInfoMessageBox("정보가 변경되었습니다.");
-					MessageBox.printInfoMessageBox("회원 정보 변경 창을 닫습니다.");
+					//정보변경 메소드 실행
+					UserManager.getInstance().changeInform(editUser);
+					MessageBox.printInfoMessageBox("변경된 이름 : " + name + "\n변경된 비밀번호 : " + password);
 					frame.dispose();
 				}
-				else {
-					MessageBox.printWarningMessageBox("입력하신 회원 정보가 일치하지 않습니다.");
-					//텍스트필드 지우기
-					eraseTextComponent(editUserTextComponent);
-				}
 			}
-			else {
+			else {	//ID가 일지하지 않는 경우
 				MessageBox.printWarningMessageBox("입력하신 ID 정보가 존재하지 않습니다.");
-				//텍스트필드 지우기
-				eraseTextComponent(editUserTextComponent);
+				eraseTextComponent(editUserTextComponent);	//텍스트필드 지우기
+				return;
 			}
 		}
 		catch(Exception e) {
@@ -92,7 +124,5 @@ public class EditUserPageComponent extends PageComponent {
 			MessageBox.printErrorMessageBox("회원 정보 변경 창을 닫습니다.");
 			frame.dispose();
 		}
-
 	}
-
 }

@@ -24,16 +24,21 @@ public class Receipt {
 	private LocalDate returnDay;
 	
 	//Receipt 생성자
-	public Receipt(user.User borrowUser, book.Book borrowBook) {
+	public Receipt(user.User borrowUser, book.Book borrowBooks) {
 		userId = borrowUser.getID();
-		userName = borrowUser.getName();
+		userName = user.UserManager.getInstance().findUser(userId).getName();
 		
-		bookName = borrowBook.getName();
-		bookAuthor = borrowBook.getAuthor();
-		bookPublisher = borrowBook.getPublisher();
-		bookCategoryName = CategorizeKDC.getCategoryname(borrowBook.getCategory());
-		bookCategoryCode = borrowBook.getCategory();
-		bookId = borrowBook.getId();
+		bookName = borrowBooks.getName();
+		bookAuthor = borrowBooks.getAuthor();
+		bookPublisher = borrowBooks.getPublisher();
+		
+		if(!borrowBooks.getCategory().equals(""))
+			bookCategoryName = CategorizeKDC.getCategoryname(borrowBooks.getCategory());
+		else
+			bookCategoryName = "";
+		bookCategoryCode = borrowBooks.getCategory();
+		
+		bookId = borrowBooks.getId();
 		
 		borrowDay = LocalDate.now();
 		returnDay = LocalDate.now().plusDays(7);
@@ -47,9 +52,13 @@ public class Receipt {
 	
 	//영수증 파일 생성하는 메소드
 	private File makeFile() {
-		//fileName = receipts폴더에 "학번(ID)_도서명_대여일자.txt"를 생성하기 위한 파일이름
-		String fileName = "receipts/" + userId + "_" + bookName + "_" + borrowDay + ".txt";
-		File file = new File(fileName);
+		//fileName = "학번(ID)_대여일자.txt"를 생성하기 위한 파일이름
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH시mm분ss초");
+		String borrowDateTime = LocalDateTime.now().format(formatter);
+		String fileName = userId + "_" + borrowDateTime;
+		//filePath = receipts폴더 하위에 fileName.txt 파일 경로
+		String filePath = "receipts/" + fileName + ".txt";
+		File file = new File(filePath);
 		
 		return file;
 	}
@@ -80,6 +89,7 @@ public class Receipt {
 			
 			MessageBox.printInfoMessageBox("영수증 출력이 완료되었습니다.");
 		} catch(Exception e) { 
+			e.printStackTrace();
 			MessageBox.printErrorMessageBox("영수증 출력 에러");
 		}
 	}

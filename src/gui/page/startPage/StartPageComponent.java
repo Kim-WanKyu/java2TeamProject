@@ -11,6 +11,8 @@ import gui.page.mainPage.mainUserPage.MainUserPage;
 import gui.page.optionPage.startOption.findPage.FindPage;
 import gui.page.optionPage.startOption.signupPage.SignupPage;
 import gui.util.MessageBox;
+import user.User;
+import user.UserManager;
 
 //StartPage의 컴포넌트를 위한 클래스
 public class StartPageComponent extends PageComponent {
@@ -69,19 +71,25 @@ public class StartPageComponent extends PageComponent {
 			break;
 		}
 	}
-	
+	private static User loginUser = new User();
+	public static User getUser() {
+		return loginUser;
+	}
 	//로그인 버튼 작동 메소드
 	public void onClickLoginButton() {
 		String id = getIdTextField().getText(); //입력한 id
 		String password = new String(getPwPasswordField().getPassword()); //입력한 pw
+		loginUser.setID(id);
+		
 		
 		//new MainPage(); //메인화면 창 생성
 		
 		//로그인 메소드 성공
-		if(/*로그인메소드*/id.equals("123") && password.equals("123"))		//임시로 지정
+		if(UserManager.getInstance().login(id, password))		//임시로 지정
 		{	//TODO 임시
-			boolean isAdmin = false;	//임시 사용자 기본 //관리자
-			// 로그인 할 때, userDB의 isAdmin 값을 추출하여 isAdmin에 넣음.
+			boolean isAdmin = false;//임시 사용자 기본 //관리자
+			isAdmin = UserManager.getInstance().findUser(id).getIsAdmin();
+			
 			//관리자
 			if(isAdmin == true) {
 				//켜져있는 모든 창 끄기
@@ -99,12 +107,6 @@ public class StartPageComponent extends PageComponent {
 			//user가 맞는지 확인 if(user's_id & id's_pw isIn userDB)
 			
 		}
-		else if(id.equals("qwe")) {
-			//켜져있는 모든 창 끄기
-			for(int i=0; i<StartPage.getOwnerlessWindows().length;i++)
-				StartPage.getOwnerlessWindows()[i].dispose();
-			new MainAdminPage();
-		}
 		else
 		{	/*입력한 내용을 지우고, 메세지를 띄움*/
 			eraseTextComponent(startTextComponent);
@@ -112,3 +114,4 @@ public class StartPageComponent extends PageComponent {
 		}
 	}
 }
+

@@ -42,7 +42,7 @@ public class EditSignoutUserPageComponent extends PageComponent{
 			break;
 		}
 	}
-	
+
 	//회원 변경 버튼 작동 메소드
 	public void onClickEditButton() {
 		frame.dispose();

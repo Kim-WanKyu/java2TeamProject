@@ -1,5 +1,6 @@
 package gui.page.optionPage.mainOption.user.signoutUserPage;
 
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
@@ -9,7 +10,10 @@ import javax.swing.JTextField;
 
 import gui.page.PageComponent;
 import gui.page.startPage.StartPage;
+import gui.page.startPage.StartPageComponent;
 import gui.util.MessageBox;
+import user.User;
+import user.UserManager;
 
 public class SignoutUserPageComponent extends PageComponent {
 
@@ -51,39 +55,51 @@ public class SignoutUserPageComponent extends PageComponent {
 			break;
 			
 		case "회원 탈퇴":
+			for(JTextField jtf : signoutUserTextComponent) {
+				if(jtf.getText().equals("")) {
+					MessageBox.printWarningMessageBox("입력한 정보가 없습니다. \n모든 정보를 입력하세요.");
+					return;
+				}
+			}
 			onClickSignoutButton();
 			break;
 		}
 	}
 	
 	
-	//로그인 버튼 작동 메소드
+	//회원 탈퇴 버튼 작동 메소드
 	public void onClickSignoutButton() {
 		try {
-			boolean isInDB = true;
-			if(isInDB = idTextField.getText().equals("123"/*해당 유저의 DB 정보*/)) {
-				boolean isCorrect;// = true;
-				if(isCorrect = true/*해당 유저의 DB 정보의 이름과 비말번호가 모두 일치하면*/) {
-					/*새 비밀번호의 텍스트로 비밀번호 변경 메소드 실행*/
-					///*유저의 비밀번호 = */newPwTextField.getText();
-					
-					/*그 후에 메세지 띄우고 모든 창 나가고, 다시 초기화면 띄움*/
-					MessageBox.printInfoMessageBox("탈퇴 되었습니다.");
-					
-					//켜져있는 모든 창 끄기
-					for(int i=0; i<frame.getOwnerlessWindows().length;i++)
-						frame.getOwnerlessWindows()[i].dispose();
-					new StartPage();	//초기화면 창 생성
+			//삭제할 유저
+			User deleteUser = new User();
+			deleteUser = UserManager.getInstance().findUser(StartPageComponent.getUser().getID());
+
+			//해당 유저의 DB 정보와 일치한지 확인
+			//ID 일치 여부 확인
+			if(idTextField.getText().equals(deleteUser.getID())) {
+				//이름, 비밀번호 일치 여부 확인
+				if(deleteUser.getName().equals(nameTextField.getText()) && deleteUser.getPassword().equals(pwTextField.getText())) {
+					//회원 탈퇴 성공 시
+					if(UserManager.getInstance().deleteUser(deleteUser)) {
+						MessageBox.printInfoMessageBox("탈퇴 되었습니다.");
+						//켜져있는 모든 창 끄기
+						for(int i=0; i<Window.getOwnerlessWindows().length;i++)
+							Window.getOwnerlessWindows()[i].dispose();
+						
+						new StartPage();	//초기화면 창 생성						
+					}
+					else { //반납하지 않은 도서가 있는 경우
+						MessageBox.printWarningMessageBox("반납하지 않은 도서가 있습니다. \n전부 반납 하신 후 탈퇴가 가능합니다.");
+						eraseTextComponent(signoutUserTextComponent);
+					}
 				}
-				else {
-					MessageBox.printWarningMessageBox("입력하신 회원 정보가 일치하지 않습니다.");
-					//텍스트필드 지우기
-					eraseTextComponent(signoutUserTextComponent);
-				}
+				else {	//이름 또는 비밀번호가 일치하지 않는 경우
+					MessageBox.printWarningMessageBox("입력하신 이름 또는 비밀번호가 일치하지 않습니다.");
+					eraseTextComponent(signoutUserTextComponent);					
+				}				
 			}
-			else {
+			else {	//ID가 일치하지 않는 경우
 				MessageBox.printWarningMessageBox("입력하신 ID 정보가 존재하지 않습니다.");
-				//텍스트필드 지우기
 				eraseTextComponent(signoutUserTextComponent);
 			}
 		}

@@ -4,12 +4,14 @@ import java.awt.*;
 import javax.swing.*;
 
 import gui.page.mainPage.MainPage;
-import gui.page.mainPage.MainPageComponent;
+import gui.table.AllBookTable;
+import gui.table.MyBookTable;
 import gui.util.WhitePanel;
 
 public class MainUserPage extends MainPage {
-	MainUserPageComponent mainUserPageComponent = new MainUserPageComponent(this);
 
+	MainUserPageComponent mainUserPageComponent = new MainUserPageComponent(this);
+	MyBookTable myBookTable = mainUserPageComponent.getMyBookTable();
 	
 	//MainUserPage 생성자
 	public MainUserPage() {
@@ -31,6 +33,9 @@ public class MainUserPage extends MainPage {
 				//1.전체도서 / allBookPanel = 관리자 탭의 전체도서로 들어갈 패널
 				WhitePanel allBookPanel = new WhitePanel();
 				{
+					//전체도서 테이블 (왼쪽)
+					JScrollPane allBookScrollPane = new JScrollPane(AllBookTable.getAllBookTable());
+					
 					//rightPanel = 오른쪽 패널
 					WhitePanel rightPanel = new WhitePanel(new BorderLayout());
 					{
@@ -66,7 +71,7 @@ public class MainUserPage extends MainPage {
 							//bookCategoryPanel KDC
 							WhitePanel bookCategoryPanel = new WhitePanel(new FlowLayout(FlowLayout.RIGHT));
 							{
-								bookCategoryPanel.add(new JLabel("KDC : "));
+								bookCategoryPanel.add(new JLabel("분류명 : "));
 								bookCategoryPanel.add(mainUserPageComponent.getBookCategoryTextFields()[0]);
 								bookCategoryPanel.setBackground(new Color(255,255,200));
 							}
@@ -95,20 +100,18 @@ public class MainUserPage extends MainPage {
 						}						
 						rightPanel.add(textPanel, BorderLayout.CENTER);
 						rightPanel.add(mainUserPageComponent.getBorrowBookButton(), BorderLayout.SOUTH);
-					}
-					//전체도서 테이블 (왼쪽)
-					JScrollPane allBookScrollPane = new JScrollPane(MainPageComponent.getAllBookTable());
-						
+					}					
 					allBookPanel.add(allBookScrollPane);
 					allBookPanel.add(rightPanel);
 				}
+				
 				//2.내도서 / myBookPanel = 사용자 탭의 내도서로 들어갈 패널
 				WhitePanel myBookPanel = new WhitePanel();
 				{
 					//myBookLeftPanel 패널 (bookTable 테이블, noticePanel 패널 포함)
 					WhitePanel myBookLeftPanel = new WhitePanel(new BorderLayout());
 					{
-						JScrollPane myBookScrollPane = new JScrollPane(mainUserPageComponent.getMyBookTable());
+						JScrollPane myBookScrollPane = new JScrollPane(mainUserPageComponent.getMyBookTable().getMyBookTable());
 						WhitePanel noticePanel = new WhitePanel(new GridLayout(2,1));
 						{
 							WhitePanel noticePanel1 = new WhitePanel(new FlowLayout(FlowLayout.RIGHT));
@@ -125,9 +128,10 @@ public class MainUserPage extends MainPage {
 						myBookLeftPanel.add(myBookScrollPane, BorderLayout.CENTER);
 						myBookLeftPanel.add(noticePanel, BorderLayout.SOUTH);
 					}
+					/*오른쪽*/
 					//myBookRightPanel 패널
 					WhitePanel myBookRightPanel = new WhitePanel(new BorderLayout());
-					{	//정보 출력 패널
+					{//정보 출력 패널
 						WhitePanel infoPanel = new WhitePanel(new GridLayout(9,1));
 						{
 							WhitePanel labelPanel = new WhitePanel();
@@ -155,7 +159,7 @@ public class MainUserPage extends MainPage {
 							}
 							WhitePanel bookCategoryPanel = new WhitePanel(new FlowLayout(FlowLayout.RIGHT));
 							{
-								bookCategoryPanel.add(new JLabel("분류 : "));
+								bookCategoryPanel.add(new JLabel("분류명 : "));
 								bookCategoryPanel.add(mainUserPageComponent.getBookCategoryTextFields()[1]);
 								bookCategoryPanel.setBackground(new Color(127, 215, 127));
 							}
@@ -194,9 +198,8 @@ public class MainUserPage extends MainPage {
 							infoPanel.add(isDelayDatePanel);
 						
 							infoPanel.setBorder(BorderFactory.createLineBorder(new Color(127, 255, 127), 4));
-							
 						}
-						myBookRightPanel.add(infoPanel);
+						myBookRightPanel.add(infoPanel, BorderLayout.CENTER);
 						myBookRightPanel.add(mainUserPageComponent.getReturnBookButton(), BorderLayout.SOUTH);
 					}
 					myBookPanel.add(myBookLeftPanel);

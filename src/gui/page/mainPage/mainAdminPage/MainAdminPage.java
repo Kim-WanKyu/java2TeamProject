@@ -4,7 +4,8 @@ import java.awt.*;
 import javax.swing.*;
 
 import gui.page.mainPage.MainPage;
-import gui.page.mainPage.MainPageComponent;
+import gui.table.AllBookTable;
+import gui.table.AllUserTable;
 import gui.util.WhitePanel;
 
 public class MainAdminPage extends MainPage {
@@ -32,6 +33,9 @@ public class MainAdminPage extends MainPage {
 				//1.전체도서 / allBookPanel = 관리자 탭의 전체도서로 들어갈 패널
 				WhitePanel allBookPanel = new WhitePanel();
 				{
+					//전체도서 테이블 (왼쪽)
+					JScrollPane allBookScrollPane = new JScrollPane(AllBookTable.getAllBookTable());
+					
 					//rightPanel = 오른쪽 패널
 					WhitePanel rightPanel = new WhitePanel(new BorderLayout());
 					{
@@ -67,7 +71,7 @@ public class MainAdminPage extends MainPage {
 							//bookCategoryPanel KDC
 							WhitePanel bookCategoryPanel = new WhitePanel(new FlowLayout(FlowLayout.RIGHT));
 							{
-								bookCategoryPanel.add(new JLabel("KDC : "));
+								bookCategoryPanel.add(new JLabel("분류명 : "));
 								bookCategoryPanel.add(mainAdminPageComponent.getBookCategoryTextFields()[3]);
 								bookCategoryPanel.setBackground(new Color(255,255,200));
 							}
@@ -104,19 +108,17 @@ public class MainAdminPage extends MainPage {
 						rightPanel.add(textPanel, BorderLayout.CENTER);
 						rightPanel.add(optionButtonPanel, BorderLayout.SOUTH);
 					}
-					//전체도서 테이블 (왼쪽)
-					JScrollPane allBookScrollPane = new JScrollPane(MainPageComponent.getAllBookTable());
-					
 					allBookPanel.add(allBookScrollPane);
 					allBookPanel.add(rightPanel);
 				}
+				
 				//2.전체회원 / allUserPanel = 관리자 탭의 전체회원으로 들어갈 패널
 				WhitePanel allUserPanel = new WhitePanel();
 				{
 					//allUserLeftPanel 패널 (bookTable 테이블, searchPanel 패널 포함)
 					WhitePanel allUserLeftPanel = new WhitePanel(new BorderLayout());
 					{
-						JScrollPane allUserScrollPane = new JScrollPane(MainPageComponent.getAllUserTable());
+						JScrollPane allUserScrollPane = new JScrollPane(AllUserTable.getAllUserTable());
 						allUserLeftPanel.add(allUserScrollPane, BorderLayout.CENTER);
 						allUserScrollPane.setPreferredSize(
 								new Dimension(	allUserScrollPane.getPreferredSize().width/2,
@@ -220,4 +222,3 @@ public class MainAdminPage extends MainPage {
 		ct.add(mainAdminPanel);		
 	}
 }
-

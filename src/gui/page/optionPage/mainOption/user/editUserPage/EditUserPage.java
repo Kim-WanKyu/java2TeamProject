@@ -14,7 +14,7 @@ public class EditUserPage extends Page{
 	//EditUserPage 생성자
 	public EditUserPage(){
 		setTitle(super.getTitle() + "_회원 정보 변경 화면");
-		
+	
 		this.addWindowListener(new WindowAdapter() {	//창 끄기 버튼 누를 시 이벤트 처리
 			public void windowClosing(WindowEvent e) {
 				dispose();
@@ -60,7 +60,7 @@ public class EditUserPage extends Page{
 			}
 			WhitePanel editButtonPanel = new WhitePanel(new GridLayout(3,1,0,5));
 			{
-				editButtonPanel.add(editUserPageComponent.getChangePwButton());
+				editButtonPanel.add(editUserPageComponent.getChangeUserInfoButton());
 				editButtonPanel.add(new JLabel(""));	//위치 맟추기 위한 빈 레이블 추가
 				editButtonPanel.add(editUserPageComponent.getExitButton());
 			}

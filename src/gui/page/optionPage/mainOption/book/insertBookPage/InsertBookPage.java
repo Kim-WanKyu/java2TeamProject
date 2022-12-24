@@ -51,7 +51,7 @@ public class InsertBookPage extends Page{
 				}
 				WhitePanel insertBookCategoryPanel = new WhitePanel(new FlowLayout(FlowLayout.RIGHT));
 				{
-					insertBookCategoryPanel.add(new JLabel("분류 : "));
+					insertBookCategoryPanel.add(new JLabel("KDC : "));
 					insertBookCategoryPanel.add(insertBookPageComponent.getBookCategoryTextField());
 				}
 				WhitePanel insertBookIdPanel = new WhitePanel(new FlowLayout(FlowLayout.RIGHT));

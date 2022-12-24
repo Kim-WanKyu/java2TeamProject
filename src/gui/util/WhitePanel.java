@@ -19,5 +19,4 @@ public class WhitePanel extends JPanel{
 		setLayout(manager);
 		setBackground(Color.WHITE);
 	}
-	
 }

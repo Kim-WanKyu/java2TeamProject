@@ -9,13 +9,21 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.table.DefaultTableModel;
 
+import book.Book;
+import book.BookManager;
 import gui.page.PageComponent;
+import gui.page.mainPage.MainPageComponent;
+import gui.table.AllBookTable;
+import gui.util.MessageBox;
 
 public class InsertBookPageComponent extends PageComponent{
-	//InsertBookPage의 모든 텍스트필드를 담는 ArrayList변수
+		//InsertBookPage의 모든 텍스트필드를 담는 ArrayList변수
 		private ArrayList<JTextField> insertBookTextComponent;
 
+		private AllBookTable allBookTable = new AllBookTable();
+		
 		private JTextField bookNameTextField = new JTextField(15);		//도서명 텍스트필드
 		private JTextField bookAuthorTextField = new JTextField(15);	//저자명 텍스트필드
 		private JTextField bookPublisherTextField = new JTextField(15);	//출판사 텍스트필드
@@ -62,10 +70,59 @@ public class InsertBookPageComponent extends PageComponent{
 			}	
 		}
 		
-		//TODO
 		public void onClickInsertButton() {
+			Book newBook = new Book();
+			if(getBookIdTextField().getText().toString().equals("")) {
+				MessageBox.printWarningMessageBox("책 ID를 지정해주세요");
+				return;
+			}
+			else if(getBookNameTextField().getText().toString().equals("")) {
+				MessageBox.printWarningMessageBox("책 이름을 지정해주세요");
+				return;
+			}
+			else if(getBookAuthorTextField().getText().toString().equals("")) {
+				MessageBox.printWarningMessageBox("저자를 지정해주세요");
+				return;
+			}
+			else if(getBookPublisherTextField().getText().toString().equals("")) {
+				MessageBox.printWarningMessageBox("출판사 지정해주세요");
+				return;
+			}
+			else if(getBookTotalCountSpinner().getValue().toString().equals("")) {
+				MessageBox.printWarningMessageBox("수량을 지정해주세요");
+				return;
+			}
+			//kdc가 빈칸이 아니고, && 정수부가 3자릿수이면 (소수점x)
+			else if((!getBookCategoryTextField().getText().equals("") ) && (!getBookCategoryTextField().getText().matches("\\d{3}")))
+			{
+				MessageBox.printWarningMessageBox("KDC가 올바르지 않습니다.");
+				return;
+			}
+			System.out.println("정보 출력"+getBookPublisherTextField().getText() +'.');
+			newBook.setName(getBookNameTextField().getText());
+			newBook.setAuthor(getBookAuthorTextField().getText());
+			newBook.setPublisher(getBookPublisherTextField().getText());
+			newBook.setCategory(getBookCategoryTextField().getText());
+			newBook.setId(getBookIdTextField().getText());
+			newBook.setTotalCount(Integer.parseInt(getBookTotalCountSpinner().getValue().toString()));
+			newBook.setBorrowCount(0);
+			
+			BookManager.getInstance().insertBook(newBook);
+			
+			Object [] newBookData = new Object[8];
+			newBookData[0] = newBook.getName();
+			newBookData[1] = newBook.getAuthor();
+			newBookData[2] = newBook.getPublisher();
+			newBookData[3] = newBook.getCategory();
+			newBookData[4] = book.CategorizeKDC.getCategoryname(newBook.getCategory());
+			newBookData[5] = newBook.getId();
+			newBookData[6] = newBook.getTotalCount();
+			newBookData[7] = newBook.getBorrowCount();
+			
+			AllBookTable.getAllBookTableModel().addRow(newBookData);
+			AllBookTable.getAllBookTable().updateUI();
+
 			frame.dispose();
-			//책 정보 수정 DB도 추가 테이블이나, 벡터도 추가
 		}
 		
 		//TODO

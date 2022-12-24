@@ -5,7 +5,10 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
+import book.BookManager;
 import gui.page.PageComponent;
+import gui.table.AllBookTable;
+import gui.util.MessageBox;
 
 //EditBookPage의 컴포넌트를 위한 클래스
 public class EditBookPageComponent extends PageComponent {
@@ -30,6 +33,8 @@ public class EditBookPageComponent extends PageComponent {
 	public EditBookPageComponent(JFrame frame) {
 		super.frame = frame;
 		
+		bookIdTextField.setEditable(false);
+		
 		editButton.addActionListener(this);
 		exitButton.addActionListener(this);
 	}
@@ -44,7 +49,6 @@ public class EditBookPageComponent extends PageComponent {
 	public JSpinner getBookTotalCountSpinner() { return bookTotalCountSpinner; }
 	public JSpinner getBookBorrowCountSpinner() { return bookBorrowCountSpinner; }
 	
-	//public JButton getInsertButton() { return insertButton; }
 	public JButton getEditButton() { return editButton; }
 	public JButton getExitButton() { return exitButton; }
 	@Override
@@ -60,10 +64,51 @@ public class EditBookPageComponent extends PageComponent {
 		}	
 	}
 	
-	//TODO
 	public void onClickEditButton() {
+		String id = getBookIdTextField().getText();
+		
+		book.Book editBook = book.BookManager.getInstance().getlist().get(id);
+		String name = editBook.getName();
+		String author = editBook.getAuthor();
+		String publisher = editBook.getPublisher();
+		String kdc = editBook.getCategory();
+		
+		int totalCount = editBook.getTotalCount();
+		
+		if(!getBookNameTextField().getText().equals(""))
+			name = getBookNameTextField().getText();
+
+		if(!getBookAuthorTextField().getText().equals(""))
+			author = getBookAuthorTextField().getText();
+		
+		if(!getBookPublisherTextField().getText().equals(""))
+			publisher = getBookPublisherTextField().getText();
+
+		if(!getBookCategoryTextField().getText().equals(""))
+			kdc = getBookCategoryTextField().getText();
+
+		if(!getBookTotalCountSpinner().getValue().equals("")) {
+			if(Integer.parseInt(getBookTotalCountSpinner().getValue().toString()) >= BookManager.getInstance().getlist().get(id).getBorrowCount())
+				totalCount = Integer.parseInt(getBookTotalCountSpinner().getValue().toString());			
+			else {
+				MessageBox.printWarningMessageBox("변경하려는 수량이 대여된 책의 개수보다 적습니다.");
+				MessageBox.printWarningMessageBox("수량:" + totalCount);
+			}
+		}
+		
+		BookManager.getInstance().editBook(name, author, publisher, kdc, totalCount, id);
+		
+		//테이블 갱신
+		int row = AllBookTable.getAllBookTable().getSelectedRow();
+		AllBookTable.getAllBookTable().setValueAt(name, row, 0);
+		AllBookTable.getAllBookTable().setValueAt(author, row, 1);
+		AllBookTable.getAllBookTable().setValueAt(publisher, row, 2);
+		AllBookTable.getAllBookTable().setValueAt(book.CategorizeKDC.getCategoryname(kdc), row, 3);
+		AllBookTable.getAllBookTable().setValueAt(kdc, row, 4);
+		AllBookTable.getAllBookTable().setValueAt(totalCount, row, 6);
+		AllBookTable.getAllBookTable().updateUI();
+
 		frame.dispose();
-		//책 정보 수정 DB도 수정 테이블이나, 벡터도 수정
 	}
 	
 	//TODO
